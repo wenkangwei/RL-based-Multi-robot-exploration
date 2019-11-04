@@ -550,8 +550,12 @@ class GridWorld(object):
         while self.Roomba.Available()<0:
             pass
         self.Roomba.Move(0, self.rot_sp* sign)
+
+        t=cur_t
         while np.abs(cur_t-init_t)< tol+np.abs(ArcLen/self.rot_sp):
-            if np.abs(cur_t-init_t)>= self.backup_time:
+
+            if np.abs(cur_t-t)>= self.backup_time:
+                t= cur_t
                 # keep track of postion and check if at terminal state, like hitting wall or obstacle
                 old_real_state, new_real_state, r, is_terminal= self.observe_Env()
                 print(old_real_state, new_real_state, r, is_terminal)
@@ -566,15 +570,17 @@ class GridWorld(object):
         # reset time
         init_t = time.time()
         cur_t = init_t
-        
+
         while self.Roomba.Available()<0:
             pass
         #Roomba moves forward
         print("Move forward. . .")
         self.Roomba.Move(self.sp, 0)
+        t =cur_t
         while np.abs(cur_t-init_t)< tol+t:
             # check obstacle and terminal state
-            if np.abs(cur_t-init_t)>= self.backup_time:
+            if np.abs(cur_t-t)>= self.backup_time:
+                t =cur_t
                 # keep track of postion and check if at terminal state, like hitting wall or obstacle
                 old_real_state, new_real_state, r, is_terminal= self.observe_Env()
                 print(old_real_state, new_real_state, r, is_terminal)
@@ -583,10 +589,11 @@ class GridWorld(object):
                     # self.Roomba.Move(0,0)
                     break
                 pass
+            cur_t = time.time()
+
                 # Move roomba
         # pause roomba after reaching desired position
         self.Roomba.Move(0, 0)
-        cur_t = time.time()
         # record real trajectory here
         ##############################
 
