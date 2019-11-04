@@ -118,8 +118,8 @@ class MotorEncoder():
         if R_cnt == None:
             R_cnt = self.R_cur_cnt
 
-        L_del_cnt  = self.deltaCnt(L_cnt,self.L_past_cnt)
-        R_del_cnt = self.deltaCnt(R_cnt, self.R_past_cnt)
+        L_del_cnt,self.L_past_cnt  = self.deltaCnt(L_cnt,self.L_past_cnt)
+        R_del_cnt,self.R_past_cnt = self.deltaCnt(R_cnt, self.R_past_cnt)
 
         # update heading angle theta
         self.old_theta= self.theta
@@ -191,7 +191,7 @@ class LighBumper():
 
 
 class GridWorld(object):
-    def __init__(self,file_name=None,real_state=[0.0,0.0,0.0],world_w=50, world_h=50):
+    def __init__(self,file_name=None,real_state=None,world_w=50, world_h=50):
         # --------Parameters---------
         # -------parameters for defining grid world------
         # State space, define grid world here
@@ -228,6 +228,9 @@ class GridWorld(object):
         # parameters used for Q-learning
         # Notes: Q-learning will be applied with grid world states, not real continuous states
         #Initial position Current real continuous state: (x,y, theta), theta: heading angles
+        if real_state == None:
+            real_state= [0.0,0.0,0.0]
+            
         self.real_state = real_state
         #Initial position discrete state in grid world
         self.grid_state = self.get_gridState(real_state)
