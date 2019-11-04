@@ -208,6 +208,7 @@ class GridWorld(object):
         self.obs_ls = []
 
         #------Variables used for recording data----------
+        self.Roomba = RoombaCI_lib.Create_2("/dev/ttyS0", 115200)
         self.Roomba.ddPin = 23  # Set Roomba dd pin number
         self.backup_time = 1.0  # Amount of time spent backing up
         self.corner_time = 1.5  # Amount of time that it takes before the roomba starts turning more sharply (makes sure it turns around corners)
@@ -222,7 +223,7 @@ class GridWorld(object):
         self.sp = 100.0
         self.rot_sp = 50.0
 
-        self.Roomba = RoombaCI_lib.Create_2("/dev/ttyS0", 115200)
+
 
         # parameters used for Q-learning
         # Notes: Q-learning will be applied with grid world states, not real continuous states
