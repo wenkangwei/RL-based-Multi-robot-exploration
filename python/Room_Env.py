@@ -538,8 +538,9 @@ class GridWorld(object):
 
         # using time delay method to reach desired position
         # Rotate Roomba to certain degree
+        sign = 1 if d_theta >= 0 else -1
         while np.abs(cur_t-init_t)< tol+np.abs(ArcLen/self.rot_sp):
-            self.Roomba.Move(0, self.rot_sp* (d_theta)/abs(d_theta))
+            self.Roomba.Move(0, self.rot_sp* sign)
             if np.abs(cur_t-init_t)>= self.backup_time:
                 # keep track of postion and check if at terminal state, like hitting wall or obstacle
                 old_real_state, new_real_state, r, is_terminal= self.observe_Env()
