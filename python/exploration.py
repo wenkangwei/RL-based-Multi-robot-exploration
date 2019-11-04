@@ -6,8 +6,8 @@ if __name__ == '__main__':
 
     Env =GridWorld()
     action_set = Env.action_space
-    a = random.randint(0, len(action_set)-1)
+    a = random.choice(action_set)
     print('action: ',a)
     s_new, r, is_terminal = Env.step(a)
     Env.terminate()
-    
+
