@@ -438,6 +438,7 @@ class GridWorld(object):
             strength[i] = 1 if strength[i] >=threshold else 0
 
         cnt = strength.sum()
+        print('bump: {0:0>8b}:',bump)
         if bump != 0 or cnt >=2:
             # May need reset the position of roomba to previous position using  grid world position (center of last grid)
             # since roomba may drift after hitting obstacle and the data will be incorrect
@@ -558,7 +559,7 @@ class GridWorld(object):
                 t= cur_t
                 # keep track of postion and check if at terminal state, like hitting wall or obstacle
                 old_real_state, new_real_state, r, is_terminal= self.observe_Env()
-                print(old_real_state, new_real_state, r, is_terminal)
+                print(new_real_state, r, is_terminal)
             cur_t = time.time()
 
         print("Spinning t:", np.abs(cur_t-init_t))
@@ -583,7 +584,7 @@ class GridWorld(object):
                 t =cur_t
                 # keep track of postion and check if at terminal state, like hitting wall or obstacle
                 old_real_state, new_real_state, r, is_terminal= self.observe_Env()
-                print(old_real_state, new_real_state, r, is_terminal)
+                print(new_real_state, r, is_terminal)
                 if is_terminal:
                     # if terminal, stop immediately
                     # self.Roomba.Move(0,0)
