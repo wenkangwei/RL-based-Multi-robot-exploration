@@ -282,8 +282,8 @@ class GridWorld(object):
     def spaces_init(self, world_r=50,world_c=50):
         # Initialize Grid world observation space
         # defaule 50m * 50m. num of grids are 50*1000/grid_size
-        r= world_r*1000/self.grid_size
-        c= world_c*1000/self.grid_size
+        r= int(world_r*1000/self.grid_size)
+        c= int(world_c*1000/self.grid_size)
         self.observation_map= np.ones([r,c])
 
         # Initialize Action Space
