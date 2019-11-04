@@ -391,7 +391,9 @@ class GridWorld(object):
             # map reward
             r1 = float(self.observation_map[self.grid_state[0],self.grid_state[1]])
             # immediate reward from sensors
-            r2 = -1.0* np.mean(AnalogBump / float(np.sum(AnalogBump)))
+            L, FL, CL, CR, FR, R = AnalogBump
+            AnalogBump =np.array([L, FL, CL, CR, FR, R])
+            r2 = -1.0* np.mean(AnalogBump/ float(np.sum(AnalogBump)))
             # final reward = weighted sum of two reward/penalty
             r_new = (r1+r2)/2.0
         # calculate Gaussian penalty based on obstacles already explored: min: -1
@@ -400,7 +402,8 @@ class GridWorld(object):
         if len(self.obs_ls) <1:
             self.observation_map[self.grid_state[0], self.grid_state[1]] = 0.0
         else:
-            self.observation_map[self.grid_state[0], self.grid_state[1]] = (1/len(self.obs_ls))*np.exp(self.obs_ls)
+            self.observation_map[self.grid_state[0], self.grid_state[1]] = 0.0
+            # self.observation_map[self.grid_state[0], self.grid_state[1]] = (1/len(self.obs_ls))*np.exp(self.obs_ls)
         return r_new
 
 
