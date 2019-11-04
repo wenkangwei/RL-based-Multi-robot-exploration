@@ -438,7 +438,7 @@ class GridWorld(object):
             strength[i] = 1 if strength[i] >=threshold else 0
 
         cnt = strength.sum()
-        print('bump: {0:0>8b}:',bump)
+        print('bump: {0:0>8b}:'.format(bump))
         if bump != 0 or cnt >=2:
             # May need reset the position of roomba to previous position using  grid world position (center of last grid)
             # since roomba may drift after hitting obstacle and the data will be incorrect
@@ -491,7 +491,7 @@ class GridWorld(object):
         old_state = self.real_state.copy()
 
         L_cnt, R_cnt, bump,DLightBump, AnalogBump = self.achieve_data()
-        # print('Sensor data:',L_cnt, R_cnt, bump,DLightBump, AnalogBump)
+        print('Sensor data:',L_cnt, R_cnt, bump,DLightBump, AnalogBump)
         # Check if current state is terminal
         terminal,obs = self.check_terminal(bump,DLightBump, AnalogBump)
 
