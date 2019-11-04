@@ -10,7 +10,10 @@ if __name__ == '__main__':
     a = random.choice(action_set)
     print('action: ',a)
     try:
-        s_new, r, is_terminal = Env.step(a)
+        while True:
+            old_real_state, new_real_state, r, is_terminal = Env.observe_Env()
+            print(old_real_state, new_real_state, r, is_terminal)
+        # s_new, r, is_terminal = Env.step(a)
     except KeyboardInterrupt:
         Env.terminate()
 
