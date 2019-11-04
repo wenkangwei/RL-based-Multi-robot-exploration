@@ -196,7 +196,7 @@ class GridWorld(object):
         # -------parameters for defining grid world------
         # State space, define grid world here
         # each grid is 800mmx800 mm
-        self.grid_size = 800
+        self.grid_size = 100
         self.observation_space = None
         # Action space:
         self.action_space = None
@@ -281,8 +281,10 @@ class GridWorld(object):
 
     def spaces_init(self, world_r=50,world_c=50):
         # Initialize Grid world observation space
-        # defaule 500*grid_size mm=50*800mm = 40m, 40mx40m grid world
-        self.observation_map= np.ones([world_r,world_c])
+        # defaule 50m * 50m. num of grids are 50*1000/grid_size
+        r= world_r*1000/self.grid_size
+        c= world_c*1000/self.grid_size
+        self.observation_map= np.ones([r,c])
 
         # Initialize Action Space
         # d: distance to move
@@ -392,10 +394,11 @@ class GridWorld(object):
             r1 = float(self.observation_map[self.grid_state[0],self.grid_state[1]])
             # immediate reward from sensors
             L, FL, CL, CR, FR, R = AnalogBump
-            AnalogBump =np.array([L, FL, CL, CR, FR, R])
-            r2 = -1.0* np.mean(AnalogBump/ float(np.sum(AnalogBump)))
+            # AnalogBump =np.array([L, FL, CL, CR, FR, R])
+            # r2 = -1.0* np.mean(AnalogBump/ float(np.sum(AnalogBump)))
             # final reward = weighted sum of two reward/penalty
-            r_new = (r1+r2)/2.0
+            # r_new = (r1+r2)/2.0
+            r_new =0
         # calculate Gaussian penalty based on obstacles already explored: min: -1
         # calculate the penalty from sensor: min: -1 max: 0
         # update map reward at this position
