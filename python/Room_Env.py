@@ -546,7 +546,7 @@ class GridWorld(object):
         # Rotate Roomba to certain degree
         sign = 1 if d_theta >= 0 else -1
         print("Spinning: ")
-        
+
         while np.abs(cur_t-init_t)< tol+np.abs(ArcLen/self.rot_sp):
             self.Roomba.Move(0, self.rot_sp* sign)
             if np.abs(cur_t-init_t)>= self.backup_time:
@@ -555,11 +555,11 @@ class GridWorld(object):
                 print(old_real_state, new_real_state, r, is_terminal)
             cur_t = time.time()
 
-        print("dt:", np.abs(cur_t-init_t))
+        print("Spinning t:", np.abs(cur_t-init_t))
         print('cur s:', new_real_state)
         # Pause roomba for a while
         self.Roomba.Move(0, 0)
-        time.sleep(1)
+        time.sleep(0.5)
 
         # reset time
         init_t = time.time()
@@ -579,17 +579,18 @@ class GridWorld(object):
                     # self.Roomba.Move(0,0)
                     break
                 pass
-            cur_t = time.time()
+        # pause roomba after reaching desired position
+        self.Roomba.Move(0, 0)
+        cur_t = time.time()
             # record real trajectory here
             ##############################
 
             ##############################
-        print("dt:", np.abs(cur_t - init_t))
+        print("forward t:", np.abs(cur_t - init_t))
 
 
 
-        # pause roomba after reaching desired position
-        self.Roomba.Move(0, 0)
+
 
         # Compute reward and new state after the motion
         self.grid_state = s_new
