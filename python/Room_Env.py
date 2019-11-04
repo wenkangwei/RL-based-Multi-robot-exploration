@@ -521,7 +521,7 @@ class GridWorld(object):
         d_theta = a[1]*(math.pi/180.0)
         ArcLen = self.Motion.Agl2ArcLen(d_theta)
         # Compute period of motion
-        t = d / self.sp
+
         init_t = time.time()
         cur_t = init_t
         # tolerance of time difference
@@ -577,7 +577,7 @@ class GridWorld(object):
         print("Move forward. . .")
         self.Roomba.Move(self.sp, 0)
         t =cur_t
-        while np.abs(cur_t-init_t)< tol+t:
+        while np.abs(cur_t-init_t)< tol+d / self.sp:
             # check obstacle and terminal state
             if np.abs(cur_t-t)>= self.backup_time:
                 t =cur_t
@@ -590,8 +590,6 @@ class GridWorld(object):
                     break
                 pass
             cur_t = time.time()
-
-                # Move roomba
         # pause roomba after reaching desired position
         self.Roomba.Move(0, 0)
         # record real trajectory here
