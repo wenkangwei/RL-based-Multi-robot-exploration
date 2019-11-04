@@ -44,8 +44,8 @@
       <file leaf-file-name="Room_Env.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/python/Room_Env.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="69">
-              <caret line="560" column="48" selection-start-line="560" selection-end-line="561" />
+            <state relative-caret-position="339">
+              <caret line="534" column="23" selection-start-line="534" selection-end-line="535" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
@@ -74,8 +74,8 @@
       <file leaf-file-name="exploration.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/python/exploration.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="16" column="29" lean-forward="true" selection-start-line="16" selection-start-column="29" selection-end-line="16" selection-end-column="29" />
+            <state relative-caret-position="255">
+              <caret line="15" column="113" selection-start-line="15" selection-start-column="113" selection-end-line="15" selection-end-column="113" />
               <folding>
                 <element signature="e#0#22#0" expanded="true" />
               </folding>
@@ -386,16 +386,16 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Roomba-Tests/MoveTest.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-978" />
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/python/RoombaCI_lib.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="162">
           <caret line="575" column="8" selection-start-line="575" selection-start-column="8" selection-end-line="575" selection-end-column="8" />
         </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Roomba-Tests/MoveTest.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-978" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/python/MapAndMove.py">
@@ -408,16 +408,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/python/Room_Env.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="69">
-          <caret line="560" column="48" selection-start-line="560" selection-end-line="561" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Roomba-Tests/LightBumperTestCode.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="323">
@@ -425,10 +415,20 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/python/Room_Env.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="339">
+          <caret line="534" column="23" selection-start-line="534" selection-end-line="535" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/python/exploration.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="16" column="29" lean-forward="true" selection-start-line="16" selection-start-column="29" selection-end-line="16" selection-end-column="29" />
+        <state relative-caret-position="255">
+          <caret line="15" column="113" selection-start-line="15" selection-start-column="113" selection-end-line="15" selection-end-column="113" />
           <folding>
             <element signature="e#0#22#0" expanded="true" />
           </folding>

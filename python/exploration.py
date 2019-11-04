@@ -11,8 +11,11 @@ if __name__ == '__main__':
     print('action: ',a)
     try:
         while True:
-            old_real_state, new_real_state, r, is_terminal = Env.observe_Env()
-            print(old_real_state, new_real_state, r, is_terminal)
+
+            if Env.Roomba.Avaliable():
+                Env.Roomba.StartQueryStream(7, 43, 44, 45, 46, 47, 48, 49, 50, 51)  # Start getting bumper values
+                old_real_state, new_real_state, r, is_terminal = Env.observe_Env()
+                print(old_real_state, new_real_state, r, is_terminal)
         # s_new, r, is_terminal = Env.step(a)
     except KeyboardInterrupt:
         Env.terminate()
