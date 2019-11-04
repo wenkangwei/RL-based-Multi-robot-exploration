@@ -245,7 +245,7 @@ class GridWorld(object):
         # Open a text file for data retrieval
         if file_name is None:
             dir_path = '../Data/'  # Directory path to save file
-            file_name_input = input("Name for data file: ")
+            file_name_input = 'data' #input("Name for data file: ")
             file_name = os.path.join(dir_path, file_name_input + ".txt")  # text file extension
         self.file = open(file_name, "w")  # Open a text file for storing data
 
