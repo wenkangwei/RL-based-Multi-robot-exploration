@@ -196,7 +196,7 @@ class GridWorld(object):
         # -------parameters for defining grid world------
         # State space, define grid world here
         # each grid is 800mmx800 mm
-        self.grid_size = 100
+        self.grid_size = 200
         self.observation_space = None
         # Action space:
         self.action_space = None
@@ -220,7 +220,7 @@ class GridWorld(object):
         self.LBump_ratio = 3000.0/10.0
 
         # moving speed 100mm/s, rotate 50mm/s
-        self.sp = 100
+        self.sp = 50
         self.rot_sp = 50
 
 
