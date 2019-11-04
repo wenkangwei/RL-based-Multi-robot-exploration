@@ -547,6 +547,8 @@ class GridWorld(object):
         sign = 1 if d_theta >= 0 else -1
         print("Spinning: ")
 
+        while self.Roomba.Available()<0:
+            pass
         self.Roomba.Move(0, self.rot_sp* sign)
         while np.abs(cur_t-init_t)< tol+np.abs(ArcLen/self.rot_sp):
             if np.abs(cur_t-init_t)>= self.backup_time:
@@ -564,6 +566,9 @@ class GridWorld(object):
         # reset time
         init_t = time.time()
         cur_t = init_t
+        
+        while self.Roomba.Available()<0:
+            pass
         #Roomba moves forward
         print("Move forward. . .")
         self.Roomba.Move(self.sp, 0)
