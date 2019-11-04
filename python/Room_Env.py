@@ -230,7 +230,7 @@ class GridWorld(object):
         #Initial position Current real continuous state: (x,y, theta), theta: heading angles
         if real_state == None:
             real_state= [0.0,0.0,0.0]
-            
+
         self.real_state = real_state
         #Initial position discrete state in grid world
         self.grid_state = self.get_gridState(real_state)
@@ -397,8 +397,10 @@ class GridWorld(object):
         # calculate Gaussian penalty based on obstacles already explored: min: -1
         # calculate the penalty from sensor: min: -1 max: 0
         # update map reward at this position
-        self.observation_map[self.grid_state[0], self.grid_state[1]] = 0.0
-        self.observation_map[self.grid_state[0], self.grid_state[1]] = (1/len(self.obs_ls))*np.exp(self.obs_ls)
+        if len(self.obs_ls) <1:
+            self.observation_map[self.grid_state[0], self.grid_state[1]] = 0.0
+        else:
+            self.observation_map[self.grid_state[0], self.grid_state[1]] = (1/len(self.obs_ls))*np.exp(self.obs_ls)
         return r_new
 
 
