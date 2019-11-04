@@ -40,20 +40,15 @@ class MotorEncoder():
     Class used to store and calcuate information of movement
     based on Left Right encoders of motors
     """
-    def __init__(self, L_init_cnt=None,R_init_cnt=None):
-        if L_init_cnt ==None:
-            self.L_cur_cnt =0
-            self.L_past_cnt=0
-        else:
-            self.L_cur_cnt = L_init_cnt
-            self.L_past_cnt = L_init_cnt
-
-        if R_init_cnt ==None:
-            self.R_cur_cnt = 0
-            self.R_past_cnt = 0
-        else:
-            self.R_cur_cnt = R_init_cnt
-            self.R_past_cnt = R_init_cnt
+    def __init__(self, L_init_cnt=0,R_init_cnt=0):
+        # ------Parameters-----------------
+        # Notes:
+        # all angles are in rad unit, not degree unless convert it to degree
+        # record  encoder counts
+        self.L_cur_cnt = L_init_cnt
+        self.L_past_cnt = L_init_cnt
+        self.R_cur_cnt = R_init_cnt
+        self.R_past_cnt = R_init_cnt
 
         # delta distance after each movement
         self.delta_d= 0
@@ -67,7 +62,8 @@ class MotorEncoder():
         # Robot Heading angles
         self.theta = 0
         self.old_theta = 0
-        # Constant settings of Robot
+
+        # -----------Constant settings of Robot----------
         self.wheel_diameter = 72
         self.counts_per_rev = 508.8
         self.distance_between_wheels = 235
@@ -75,9 +71,27 @@ class MotorEncoder():
         self.distance_per_count = (self.wheel_diameter * math.pi) / self.counts_per_rev
         pass
 
+    def reset(self, L_init_cnt=0,R_init_cnt = 0):
+        self.delta_d = 0
+        # change of angle afer a movement
+        self.delta_agl = 0
+        # angle difference tolerance
+        self.agl_tol = 0
+        # current position obtained by dead reckoning
+        self.x = 0
+        self.y = 0
+        # Robot Heading angles
+        self.theta = 0
+        self.old_theta = 0
+        self.L_cur_cnt = L_init_cnt
+        self.R_cur_cnt = L_init_cnt
+        self.L_past_cnt = R_init_cnt
+        self.R_past_cnt = R_init_cnt
+
     def deltaCnt(self,new_cnt, past_cnt):
         """
-
+        Calculate difference between current encoder data
+        and the last encoder data and check if values roll over
         :param new_cnt:
         :param past_cnt:
         :return: delta
@@ -92,6 +106,12 @@ class MotorEncoder():
         return delta, old_cnt
 
     def cnt2Agl_Dist(self, L_cnt=None,R_cnt=None):
+        """
+        convert counts to rotated angle
+        :param L_cnt:
+        :param R_cnt:
+        :return:
+        """
         if L_cnt ==None:
             L_cnt =self.L_cur_cnt
 
@@ -112,33 +132,36 @@ class MotorEncoder():
 
         # update distance
         if L_del_cnt - R_del_cnt <=self.agl_tol:
-            delta_d = 0.5 * (R_del_cnt + L_del_cnt) * self.distance_per_count
+            self.delta_d = 0.5 * (R_del_cnt + L_del_cnt) * self.distance_per_count
         else:
-            delta_d = 2 * (235 * (L_del_cnt / (L_del_cnt - R_del_cnt) - .5)) * math.sin(delta_theta / 2)
+            self.delta_d = 2 * (235 * (L_del_cnt / (L_del_cnt - R_del_cnt) - .5)) * math.sin(delta_theta / 2)
 
-        self.delta_d =delta_d
         self.delta_agl =delta_theta
 
         return self.theta, self.delta_agl, self.delta_d
 
-    def deg2ArcLen(self,degree):
+    def Agl2ArcLen(self,agl):
         """
-        Convert degree to arc length in mm to rotate
-        :param degree:
-        :return: degree*(2pi/360) * radius
+        Convert angle to arc length in mm to rotate
+        :param angle:
+        :return: angle(rad) * radius
         """
-        return (self.distance_between_wheels/2)* degree*2*math.pi/360
+
+        return (self.distance_between_wheels/2)*agl
+
     def get_CurPos(self, L_enc_cnt, R_enc_cnt):
         """
         Dead reckoning for computing current location: x, y, theta
         :return:
         """
-        # update counts
+        # update current counts
         self.L_past_cnt =self.L_cur_cnt
         self.R_past_cnt =self.R_cur_cnt
         self.L_cur_cnt = L_enc_cnt
         self.R_cur_cnt = R_enc_cnt
+        # Compute distance, angle moved since last update
         theta,del_agl,d = self.cnt2Agl_Dist(L_enc_cnt,R_enc_cnt)
+        # Update current position
         self.x += self.x + d*math.cos(theta-0.5*del_agl)
         self.y += self.y + d * math.sin(theta - 0.5 * del_agl)
         return self.x, self.y, self.theta
@@ -160,30 +183,73 @@ class LighBumper():
     def analogBump(self):
         pass
 
+    def reset(self):
+        self.bump_mode = False  # Used to tell whether or not the roomba has bumped into something and is supposed to be "tracking"
+        self.bump_code = 0  # Used to distinguish if the right, left, or center bumpers are being triggered
+        self.bump_count = 0  # Keeps track of how many times the bumper has detected a bump
+
 
 
 class GridWorld(object):
-    def __init__(self,path):
-        # Parameters
+    def __init__(self,file_name=None,real_state=[0.0,0.0,0.0],world_w=50, world_h=50):
+        # --------Parameters---------
         self.Roomba = RoombaCI_lib.Create_2("/dev/ttyS0", 115200)
 
-        #  #parameters used for Q-learning
-        # state: (x,y, theta), theta: heading angles
-        self.state = [0.0,0.0,0.0]
-        # actions: [d,theta1]: +/- d distance to move, theta1: change of heading angle
+        # parameters used for Q-learning
+        # Notes: Q-learning will be applied with grid world states, not real continuous states
+        #Initial position Current real continuous state: (x,y, theta), theta: heading angles
+        self.real_state = real_state
+        #Initial position discrete state in grid world
+        self.grid_state = self.get_gridState(real_state)
+        # Current actions: [d,theta1]: d distance to move forward, theta1: change of heading angle
         self.action = [0.0,0.0]
-        # if use Q-learning no need for possibility model
-        self.trans_model = []
 
+        # reward table: it is to define the updated reward of the explored area
+        self.reward_tb= {'terminal':-1, 'path':0,'goal':1}
+        # a list of obstacles detected
+        self.obs_ls = []
+        # State space, define grid world here
+        # each grid is 800mmx800 mm
+        self.grid_size = 800
+        self.observation_space=None
+        # Action space:
+        self.action_space=None
+        # if use Q-learning no need for possibility model
+        self.trans_model = None
+        # moving speed 100mm/s, rotate 50mm/s
+        self.sp = 100.0
+        self.rot_sp = 50.0
+
+        # Initialize action space, state space
+        self.spaces_init(world_w,world_h)
 
         # Variables used for recording data
         self.Roomba.ddPin = 23  # Set Roomba dd pin number
         self.backup_time = 1.0  # Amount of time spent backing up
         self.corner_time = 1.5  # Amount of time that it takes before the roomba starts turning more sharply (makes sure it turns around corners)
         self.data_time = time.time()
+        # Assume distance to obstacle and signal strength are proportional
+        # 10mm return 3000
+        self.LBump_ratio = 3000.0/10.0
 
+        # initialize GPIO
+        self.GPIO_init()
+        # Open a text file for data retrieval
+        if file_name is None:
+            dir_path = '../Data/'  # Directory path to save file
+            file_name_input = input("Name for data file: ")
+            file_name = os.path.join(dir_path, file_name_input + ".txt")  # text file extension
+        self.file = open(file_name, "w")  # Open a text file for storing data
 
+        # Start achieving data
+        self.start_time = time.time()
+        [left_start, right_start] = self.Roomba.Query(43, 44)
+        self.Motion = MotorEncoder(left_start, right_start)
+        # Initialize Bumper
+        self.bumper= LighBumper()
+        pass
 
+    def GPIO_init(self):
         # Setup Code #
         GPIO.setmode(GPIO.BCM)  # Use BCM pin numbering for GPIO
         DisplayDateTime()  # Display current date and time
@@ -196,39 +262,30 @@ class GridWorld(object):
         print(" Starting ROOMBA... ")
         GPIO.setup(self.Roomba.ddPin, GPIO.OUT, initial=GPIO.LOW)
         self.Roomba.WakeUp(131)  # Start up Roomba in Safe Mode
+
         # 131 = Safe Mode; 132 = Full Mode (Be ready to catch it!)
         self.Roomba.BlinkCleanLight()  # Blink the Clean light on Roomba
         if self.Roomba.Available() > 0:  # If anything is in the Roomba receive buffer
             x = self.Roomba.DirectRead(self.Roomba.Available())  # Clear out Roomba boot-up info
         print(" ROOMBA Setup Complete")
         GPIO.output(gled, GPIO.LOW)
-
-
-        # Open a text file for data retrieval
-        file_name_input = input("Name for data file: ")
-        dir_path = path  # Directory path to save file
-        file_name = os.path.join(dir_path, file_name_input + ".txt")  # text file extension
-        self.file = open(file_name, "w")  # Open a text file for storing data
-
-
-        # Start achieving data
-        self.start_time = time.time()
-        [left_start, right_start] = self.Roomba.Query(43, 44)
-        self.Motion = MotorEncoder(left_start, right_start)
-
         pass
 
-    def check_Obs(self):
-        """
-        Check obstacles around current position by rotating robot 1 round
-        :return:
-             a list of angle and distance from current position to detected obstacles
-        """
-        pass
-    def start(self):
-        # start running Roomba and achieve data
-        self.Roomba.StartQueryStream(7, 43, 44, 45)  # Start getting bumper values
+    def spaces_init(self, world_r=50,world_c=50):
+        # Initialize Grid world observation space
+        # defaule 500*grid_size mm=50*800mm = 40m, 40mx40m grid world
+        self.observation_map= np.ones([world_r,world_c])
 
+        # Initialize Action Space
+        # d: distance to move
+        # Note: d>0: move forward along heading direction. d<0: move backward
+        d = self.grid_size
+        # Angle set: each num is in degree
+        angle_set =[0,45,90,135,180,-45,-90,-135,-180]
+        self.action_space=[]
+        for theta in angle_set:
+            self.action_space.append((d,theta))
+        pass
 
     def achieve_data(self, selection='be'):
         """
@@ -243,17 +300,24 @@ class GridWorld(object):
         """
         bump, L_cnt, R_cnt, DLightBump, AnalogBump = None,None,None,None,None
         if selection == 'b':
+            # read bumper data only
             bump,DLightBump, L, FL, CL, CR, FR, R = self.Roomba.ReadQueryStream(7,45, 46, 47,48, 49, 50, 51)
             AnalogBump = (L, FL, CL, CR, FR, R)
         elif selection == 'e':
+            # read encoder data only
             L_cnt, R_cnt= self.Roomba.ReadQueryStream( 43, 44)
         else:
+            # read all data
             bump, L_cnt,R_cnt, DLightBump, L,FL, CL,CR,FR,R =self.Roomba.ReadQueryStream(7, 43, 44, 45, 46,47,48,49,50,51 )
             AnalogBump = (L,FL, CL,CR,FR,R)
+
         return  L_cnt,R_cnt, bump, DLightBump,AnalogBump
 
-    def stop(self):
-        # Stop roomba and exploration task
+    def terminate(self):
+        """
+        Stop roomba and clean data after exploration is finished
+        :return:
+        """
         self.Roomba.PauseQueryStream()
         if self.Roomba.Available() > 0:
             z = self.Roomba.DirectRead(self.Roomba.Available())
@@ -264,76 +328,248 @@ class GridWorld(object):
         self.Roomba.ShutDown()  # Shutdown Roomba serial connection
         GPIO.cleanup()  # Reset GPIO pins for next program
         pass
-    def get_reward(self,bump,DLightBump,AnalogBump):
+
+    def reset(self):
         """
-        Compute reward based on data from bumper, digital light bumper and analog light bumper
+        This function is to clean env data and reset environment
+        """
+        # reset Wheel encoders
+        self.start_time = time.time()
+        [left_start, right_start] = self.Roomba.Query(43, 44)
+        self.Motion.reset(left_start, right_start)
+        # reset bumper
+        self.bumper.reset()
+
+        #reset grid world data
+        self.action=[0.0,0.0]
+        self.grid_state= [0,0,0]
+        self.real_state = [0.0, 0.0, 0.0]
+        self.trans_model = None
+        pass
+
+    def get_gridState(self,real_state=None):
+        """
+        Convert continuous position, heading angle theta to discrete int position and int theta
+        :param real_state:
+        :return:
+        discrete int state values:x,y, theta
+        """
+        if real_state is None:
+            r_state =self.real_state
+        else:
+            r_state = real_state
+
+        grid_state = [0,0,0]
+        grid_state[0],grid_state[1],grid_state[2] = int(r_state[0]//self.grid_size), int(r_state[1]//self.grid_size),int(r_state[2])
+        return grid_state
+
+    def cal_reward(self,bump,DLightBump,AnalogBump):
+        """
+        Strategy to compute reward based on data from bumper, digital light bumper and analog light bumper
+        Use Gaussian distribution to update reward
         :param bump:
         :param DLightBump:
         :param AnalogBump:
         :return:
         """
+        #
         # Put calculation here
-        return None
 
-    def get_StateReward(self):
+
+        r_old= float(self.observation_map[self.grid_state[0],self.grid_state[1]])
+        if r_old ==self.reward_tb['goal']:
+            r_new = self.reward_tb['goal']
+        else:
+            # map reward
+            r1 = float(self.observation_map[self.grid_state[0],self.grid_state[1]])
+            # immediate reward from sensors
+            r2 = -1.0* np.mean(AnalogBump / float(np.sum(AnalogBump)))
+            # final reward = weighted sum of two reward/penalty
+            r_new = (r1+r2)/2.0
+        # calculate Gaussian penalty based on obstacles already explored: min: -1
+        # calculate the penalty from sensor: min: -1 max: 0
+        # update map reward at this position
+        self.observation_map[self.grid_state[0], self.grid_state[1]] = 0.0
+        self.observation_map[self.grid_state[0], self.grid_state[1]] = (1/len(self.obs_ls))*np.exp(self.obs_ls)
+        return r_new
+
+
+    def check_terminal(self,bump,DLightBump, AnalogBump):
         """
-        Update current state after achieving data
+        Strategy to determine if current state is terminal
+        :param bump:
+        :param DLightBump:
+        :param AnalogBump:
         :return:
+            terminal: flag indicating if state is terminal
+            obstacles: a list of obstacles detected
         """
-        L_cnt, R_cnt,bump,DLightBump, AnalogBump = self.achieve_data()
+        terminal = False
+        # signal returned from distance to obstacle /terminal 50 mm,5cm
+        d_obs = 500
+        threshold = d_obs/3000.0
+        obstacles = []
+
+        # using digital light bumper
+        # if DLightBump !=0:
+        #     terminal = True
+        L, FL, CL, CR, FR, R = AnalogBump
+        # using analog light bumper
+        prob_obs =np.array([L, FL, CL, CR, FR, R])
+        # prob_obs = np.convolve(prob_obs, (0.1,0.8,0.1))[1:-2]
+        strength = prob_obs/3000.0  # maximum signal strength light bumper can receive
+        for i in range(len(strength)):
+            strength[i] = 1 if strength[i] >=threshold else 0
+
+        cnt = prob_obs.sum()
+        if bump != 0 or cnt >=2:
+            # May need reset the position of roomba to previous position using  grid world position (center of last grid)
+            # since roomba may drift after hitting obstacle and the data will be incorrect
+            terminal=True
+            # stop immediately
+            self.Roomba.Move(0,0)
+
+            #-------------determine position of obstacles-------------
+            l_bump = 1 if bump&2 !=0 else 0
+            r_bump = 1 if bump& 1 !=0 else 0
+            # Assume Left , right bumpers are at -45 degree, 45 degree
+            # Then find the average degree of object
+            b_avg_angle = 45*(r_bump -l_bump)
+
+            prob_obs /= float(prob_obs.sum())
+            # average angles of obstacle detected by light bumper
+            # [-90, -60,-30,30,60,90] are heading angles of 6 analog light bumper
+            lb_avg_agl = np.dot(prob_obs,[-90, -60,-30,30,60,90])
+
+            # check if there are 2 obstacles or 1 obstacle
+            if np.abs(lb_avg_agl - b_avg_angle)>=60 or (np.sign(lb_avg_agl) !=np.sign(b_avg_angle)):
+                th = self.Motion.theta + 0.5 * lb_avg_agl
+                x = self.Motion.x + d_obs * math.cos(th)
+                y = self.Motion.y + d_obs * math.sin(th)
+                s = self.get_gridState(real_state=[x, y, th])
+                obstacles.append(s[0:1])
+                th = self.Motion.theta + 0.5 * b_avg_angle
+                x = self.Motion.x + d_obs * math.cos(th)
+                y = self.Motion.y + d_obs * math.sin(th)
+                # convert real continuous state to discrete grid world state
+                s = self.get_gridState(real_state=[x, y, th])
+                obstacles.append(s[0:1])
+            else:
+                alg = (b_avg_angle+lb_avg_agl)/2.0
+                th= self.Motion.theta+0.5 * alg
+                x = self.Motion.x + d_obs * math.cos(th)
+                y = self.Motion.y + d_obs * math.sin(th)
+                s= self.get_gridState(real_state=[x,y,th])
+
+                obstacles.append(s[0:1])
+            pass
+        return terminal, obstacles
+
+    def observe_Env(self):
+        """
+        Update current continous real world state and the reward at the new state after achieving data
+        :return:
+        old continuous state, new continuous state, reward,flag of terminal
+        """
+        old_state = self.real_state.copy()
+
+        L_cnt, R_cnt, bump,DLightBump, AnalogBump = self.achieve_data()
+
+        # Check if current state is terminal
+        terminal,obs = self.check_terminal(bump,DLightBump, AnalogBump)
+
+        # update list of obstacles
+        if len(obs)>0:
+            self.obs_ls.extend(obs)
 
         # obtain postion and heading angle
-        self.state[0],self.state[1],self.state[2] = self.Motion.get_CurPos(L_cnt,R_cnt)
-
-        #obtain current reward by converting raw data to computed rewards
+        self.real_state[0],self.real_state[1],self.real_state[2] = self.Motion.get_CurPos(L_cnt,R_cnt)
+        # Obtain current reward by converting raw data to computed rewards
         # The reward is the reward obtained after transition (s,a,s')
-        r = self.get_reward(bump,DLightBump,AnalogBump)
-        return self.state,r
+        r = self.cal_reward(bump,DLightBump,AnalogBump)
+
+        return old_state, self.real_state,r, terminal
 
     def step(self,a):
         """
         Move robot to expected position and track the current position and reward
-        :param a: action of Roomba. It is expected to contain rotation angles and +/- moving distance
-         +: move forward  -: move backforward
+        :param a: action of Roomba. It is expected to contain rotation angles and moving distance
         :return:
+        s_new: s' new grid world state
+        r: reward of new state or R(s,a,s')
+        is_terminal: flag to check s is terminal. s is state before taking action
         """
         # change of distance in mm
         d= a[0]
-        # heading angle in degree
-        d_theta = a[1]
-        s_old = self.state
-        # take action
-        # moving speed 100mm/s
-        sp = 100.0
-        t = d/sp
-        init_t = time.time()
-        cur_t  = init_t
-        tol = 1e-4
-        ArcLen = self.Motion.deg2ArcLen(d_theta)
-        # using time delay method to reach desired position
-        while np.abs(cur_t-init_t)< tol+np.abs(ArcLen/50.0):
-            self.Roomba.Move(0,50*d_theta/np.abs(d_theta))
-            cur_t = time.time()
-
+        # convert change of heading angle d_theta from degree to rad, from angle to Arc Length
+        d_theta = a[1]*(math.pi/180.0)
+        ArcLen = self.Motion.Agl2ArcLen(d_theta)
+        # Compute period of motion
+        t = d / self.sp
         init_t = time.time()
         cur_t = init_t
-        while np.abs(cur_t-init_t)< tol+t:
-            self.Roomba.Move(100,0)
+        # tolerance of time difference
+        tol = 1e-4
+        # back up current state s
+        s_old = self.grid_state
+        s_new = s_old
+
+        # determine if s is terminal before taking action
+        # if it is terminal, don't move and return state directly
+        _, _, r, is_terminal = self.observe_Env()
+        if is_terminal:
+            return s_new, r, is_terminal
+
+        # Take action if current state is not terminal
+        # track sensor information when moving
+        self.Roomba.StartQueryStream(7, 43, 44, 45, 46, 47, 48, 49, 50, 51)  # Start getting bumper values
+        # using time delay method to reach desired position
+        # Rotate Roomba to certain degree
+        while np.abs(cur_t-init_t)< tol+np.abs(ArcLen/self.rot_sp):
+            self.Roomba.Move(0,self.rot_sp* np.sign(d_theta))
             cur_t = time.time()
 
-        # using feedback to reach desired position
+        # Pause roomba for a while
+        self.Roomba.Move(0, 0)
+        time.sleep(1)
 
-        # obtain new state and reward
-        state,r = self.get_StateReward()
+        # reset time
+        init_t = time.time()
+        cur_t = init_t
+        #Roomba moves forward
+        while np.abs(cur_t-init_t)< tol+t:
+            # Move roomba
+            self.Roomba.Move(self.sp, 0)
+            # check obstacle and terminal state
+            if np.abs(cur_t-init_t)>= self.backup_time:
+                # keep track of postion and check if at terminal state, like hitting wall or obstacle
+                old_real_state, new_real_state, r, is_terminal= self.observe_Env()
+                if is_terminal:
+                    # if terminal, stop immediately
+                    # self.Roomba.Move(0,0)
+                    break
+                pass
+            cur_t = time.time()
+            # record real trajectory here
+            ##############################
+
+            ##############################
 
 
+
+
+        # pause roomba after reaching desired position
+        self.Roomba.Move(0, 0)
+
+        # Compute reward and new state after the motion
+        self.grid_state = s_new
+
+
+        #May use alternative method : using feedback to reach desired position
+        ########################################
+        ########################################
+
+        self.Roomba.PauseQueryStream()
         pass
+        return s_new, r, is_terminal
 
-    def cal_reward(self,s=None,a=None,s_=None):
-        """
-        Compute the reward after transition from s to s_ after taking action a
-        :param s:
-        :param a:
-        :return:
-        """
-        pass
