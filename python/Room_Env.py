@@ -420,13 +420,13 @@ class GridWorld(object):
         #     terminal = True
         L, FL, CL, CR, FR, R = AnalogBump
         # using analog light bumper
-        prob_obs =np.array([L, FL, CL, CR, FR, R])
+        prob_obs =np.array([L, FL, CL, CR, FR, R]).astype(float)
         # prob_obs = np.convolve(prob_obs, (0.1,0.8,0.1))[1:-2]
         strength = prob_obs/3000.0  # maximum signal strength light bumper can receive
         for i in range(len(strength)):
             strength[i] = 1 if strength[i] >=threshold else 0
 
-        cnt = prob_obs.sum()
+        cnt = strength.sum()
         if bump != 0 or cnt >=2:
             # May need reset the position of roomba to previous position using  grid world position (center of last grid)
             # since roomba may drift after hitting obstacle and the data will be incorrect
@@ -441,7 +441,7 @@ class GridWorld(object):
             # Then find the average degree of object
             b_avg_angle = 45*(r_bump -l_bump)
 
-            prob_obs /= float(prob_obs.sum())
+            prob_obs /= prob_obs.sum()
             # average angles of obstacle detected by light bumper
             # [-90, -60,-30,30,60,90] are heading angles of 6 analog light bumper
             lb_avg_agl = np.dot(prob_obs,[-90, -60,-30,30,60,90])
