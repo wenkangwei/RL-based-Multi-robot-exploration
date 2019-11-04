@@ -5,9 +5,14 @@ import  random
 if __name__ == '__main__':
 
     Env =GridWorld()
+
     action_set = Env.action_space
     a = random.choice(action_set)
     print('action: ',a)
-    s_new, r, is_terminal = Env.step(a)
+    try:
+        s_new, r, is_terminal = Env.step(a)
+    except KeyboardInterrupt:
+        Env.terminate()
+
     Env.terminate()
 
