@@ -490,7 +490,7 @@ class GridWorld(object):
         old_state = self.real_state.copy()
 
         L_cnt, R_cnt, bump,DLightBump, AnalogBump = self.achieve_data()
-        print('Sensor data:',L_cnt, R_cnt, bump,DLightBump, AnalogBump)
+        # print('Sensor data:',L_cnt, R_cnt, bump,DLightBump, AnalogBump)
         # Check if current state is terminal
         terminal,obs = self.check_terminal(bump,DLightBump, AnalogBump)
 
@@ -545,11 +545,14 @@ class GridWorld(object):
         # using time delay method to reach desired position
         # Rotate Roomba to certain degree
         sign = 1 if d_theta >= 0 else -1
+        print("Spinning: ")
+        
         while np.abs(cur_t-init_t)< tol+np.abs(ArcLen/self.rot_sp):
             self.Roomba.Move(0, self.rot_sp* sign)
             if np.abs(cur_t-init_t)>= self.backup_time:
                 # keep track of postion and check if at terminal state, like hitting wall or obstacle
                 old_real_state, new_real_state, r, is_terminal= self.observe_Env()
+                print(old_real_state, new_real_state, r, is_terminal)
             cur_t = time.time()
 
         print("dt:", np.abs(cur_t-init_t))
@@ -562,6 +565,7 @@ class GridWorld(object):
         init_t = time.time()
         cur_t = init_t
         #Roomba moves forward
+        print("Move forward. . .")
         while np.abs(cur_t-init_t)< tol+t:
             # Move roomba
             self.Roomba.Move(self.sp, 0)
@@ -569,6 +573,7 @@ class GridWorld(object):
             if np.abs(cur_t-init_t)>= self.backup_time:
                 # keep track of postion and check if at terminal state, like hitting wall or obstacle
                 old_real_state, new_real_state, r, is_terminal= self.observe_Env()
+                print(old_real_state, new_real_state, r, is_terminal)
                 if is_terminal:
                     # if terminal, stop immediately
                     # self.Roomba.Move(0,0)
