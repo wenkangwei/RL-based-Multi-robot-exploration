@@ -10,3 +10,4 @@ if __name__ == '__main__':
     print('action: ',a)
     s_new, r, is_terminal = Env.step(a)
     Env.terminate()
+    

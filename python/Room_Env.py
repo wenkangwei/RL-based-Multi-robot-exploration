@@ -193,6 +193,35 @@ class LighBumper():
 class GridWorld(object):
     def __init__(self,file_name=None,real_state=[0.0,0.0,0.0],world_w=50, world_h=50):
         # --------Parameters---------
+        # -------parameters for defining grid world------
+        # State space, define grid world here
+        # each grid is 800mmx800 mm
+        self.grid_size = 800
+        self.observation_space = None
+        # Action space:
+        self.action_space = None
+        # if use Q-learning no need for possibility model
+        self.trans_model = None
+        # reward table: it is to define the updated reward of the explored area
+        self.reward_tb = {'terminal': -1, 'path': 0, 'goal': 1}
+        # a list of obstacles detected
+        self.obs_ls = []
+
+        #------Variables used for recording data----------
+        self.Roomba.ddPin = 23  # Set Roomba dd pin number
+        self.backup_time = 1.0  # Amount of time spent backing up
+        self.corner_time = 1.5  # Amount of time that it takes before the roomba starts turning more sharply (makes sure it turns around corners)
+        self.data_time = time.time()
+
+
+        # Assume distance to obstacle and signal strength are proportional
+        # 10mm return 3000
+        self.LBump_ratio = 3000.0/10.0
+
+        # moving speed 100mm/s, rotate 50mm/s
+        self.sp = 100.0
+        self.rot_sp = 50.0
+
         self.Roomba = RoombaCI_lib.Create_2("/dev/ttyS0", 115200)
 
         # parameters used for Q-learning
@@ -204,33 +233,8 @@ class GridWorld(object):
         # Current actions: [d,theta1]: d distance to move forward, theta1: change of heading angle
         self.action = [0.0,0.0]
 
-        # reward table: it is to define the updated reward of the explored area
-        self.reward_tb= {'terminal':-1, 'path':0,'goal':1}
-        # a list of obstacles detected
-        self.obs_ls = []
-        # State space, define grid world here
-        # each grid is 800mmx800 mm
-        self.grid_size = 800
-        self.observation_space=None
-        # Action space:
-        self.action_space=None
-        # if use Q-learning no need for possibility model
-        self.trans_model = None
-        # moving speed 100mm/s, rotate 50mm/s
-        self.sp = 100.0
-        self.rot_sp = 50.0
-
         # Initialize action space, state space
         self.spaces_init(world_w,world_h)
-
-        # Variables used for recording data
-        self.Roomba.ddPin = 23  # Set Roomba dd pin number
-        self.backup_time = 1.0  # Amount of time spent backing up
-        self.corner_time = 1.5  # Amount of time that it takes before the roomba starts turning more sharply (makes sure it turns around corners)
-        self.data_time = time.time()
-        # Assume distance to obstacle and signal strength are proportional
-        # 10mm return 3000
-        self.LBump_ratio = 3000.0/10.0
 
         # initialize GPIO
         self.GPIO_init()
