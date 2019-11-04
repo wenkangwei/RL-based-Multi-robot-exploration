@@ -479,7 +479,7 @@ class GridWorld(object):
         old_state = self.real_state.copy()
 
         L_cnt, R_cnt, bump,DLightBump, AnalogBump = self.achieve_data()
-
+        print('Sensor data:',L_cnt, R_cnt, bump,DLightBump, AnalogBump)
         # Check if current state is terminal
         terminal,obs = self.check_terminal(bump,DLightBump, AnalogBump)
 
@@ -518,22 +518,30 @@ class GridWorld(object):
         # back up current state s
         s_old = self.grid_state
         s_new = s_old
+        old_real_state, new_real_state, r, is_terminal = 0,0,0,False
+        # track sensor information when moving
+        self.Roomba.StartQueryStream(7, 43, 44, 45, 46, 47, 48, 49, 50, 51)  # Start getting bumper values
 
         # determine if s is terminal before taking action
         # if it is terminal, don't move and return state directly
+        print("Observe Environment...")
         _, _, r, is_terminal = self.observe_Env()
         if is_terminal:
             return s_new, r, is_terminal
 
         # Take action if current state is not terminal
-        # track sensor information when moving
-        self.Roomba.StartQueryStream(7, 43, 44, 45, 46, 47, 48, 49, 50, 51)  # Start getting bumper values
+
         # using time delay method to reach desired position
         # Rotate Roomba to certain degree
         while np.abs(cur_t-init_t)< tol+np.abs(ArcLen/self.rot_sp):
             self.Roomba.Move(0,self.rot_sp* np.sign(d_theta))
+            if np.abs(cur_t-init_t)>= self.backup_time:
+                # keep track of postion and check if at terminal state, like hitting wall or obstacle
+                old_real_state, new_real_state, r, is_terminal= self.observe_Env()
             cur_t = time.time()
 
+        print("dt:", np.abs(cur_t-init_t))
+        print('cur s:', new_real_state)
         # Pause roomba for a while
         self.Roomba.Move(0, 0)
         time.sleep(1)
@@ -559,7 +567,7 @@ class GridWorld(object):
             ##############################
 
             ##############################
-
+        print("dt:", np.abs(cur_t - init_t))
 
 
 
@@ -575,6 +583,6 @@ class GridWorld(object):
         ########################################
 
         self.Roomba.PauseQueryStream()
-        pass
+
         return s_new, r, is_terminal
 
