@@ -161,6 +161,9 @@ class MotorEncoder():
         self.R_cur_cnt = R_enc_cnt
         # Compute distance, angle moved since last update
         theta,del_agl,d = self.cnt2Agl_Dist(L_enc_cnt,R_enc_cnt)
+        # update current counts
+        self.L_past_cnt = self.L_cur_cnt
+        self.R_past_cnt = self.R_cur_cnt
         # Update current position
         self.x = self.x + d*math.cos(theta-0.5*del_agl)
         self.y = self.y + d * math.sin(theta - 0.5 * del_agl)
