@@ -485,7 +485,9 @@ class GridWorld(object):
         L_cnt, R_cnt, bump,DLightBump, AnalogBump = self.achieve_data(mode)
 
         old_state = self.real_state.copy()
-        print('L cnt:{}, R cnt:{}, bump:{0:0>8b}, DLbump:{0:0>8b}'.format(L_cnt, R_cnt, bump,DLightBump))
+        print('L cnt:{}, R cnt:{}'.format(L_cnt, R_cnt, ))
+        print('bump:{0:0>8b}'.format(bump))
+        print( 'DLbump:{0:0>8b}'.format(DLightBump))
         print("AnalogBump: ", AnalogBump)
         if mode != 'e':
 
