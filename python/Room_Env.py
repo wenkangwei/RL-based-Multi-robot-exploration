@@ -489,7 +489,7 @@ class GridWorld(object):
         old continuous state, new continuous state, reward,flag of terminal
         """
         L_cnt, R_cnt, bump,DLightBump, AnalogBump = self.achieve_data(mode)
-
+        old_state = self.real_state.copy()
 
         if mode != 'e':
 
