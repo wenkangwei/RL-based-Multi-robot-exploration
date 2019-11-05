@@ -38,15 +38,23 @@ if __name__ == '__main__':
 
     action_set = Env.action_space
     # a = random.choice(action_set)
-
+    track =[]
     try:
         # test_observation(Env)
         for a in [[200,45],[200,-135],[200,90],[200,-180]]:
             print('action: ', a)
             s_new, r, is_terminal = Env.step(a)
+            track.append(s_new)
         pass
     except KeyboardInterrupt:
         Env.terminate()
+        print('Track:')
+        for i in track:
+            print(i)
 
-    # Env.terminate()
+    Env.terminate()
+    print('Track:')
+    for i in track:
+        print(i)
+
 

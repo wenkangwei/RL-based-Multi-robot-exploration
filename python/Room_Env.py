@@ -561,7 +561,7 @@ class GridWorld(object):
         init_t = time.time()
         cur_t = init_t
         # tolerance of time difference
-        tol = 1e-4
+        tol = 1e-1
         # back up current state s
         s_old = self.grid_state
         s_new = s_old
