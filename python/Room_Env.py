@@ -485,7 +485,8 @@ class GridWorld(object):
         L_cnt, R_cnt, bump,DLightBump, AnalogBump = self.achieve_data(mode)
 
         old_state = self.real_state.copy()
-        print('Sensor data:',L_cnt, R_cnt, bump,DLightBump, AnalogBump)
+        print('L cnt:{}, R cnt:{}, bump:{0:0>8b}, DLbump:{0:0>8b}'.format(L_cnt, R_cnt, bump,DLightBump))
+        print("AnalogBump: ", AnalogBump)
         if mode != 'e':
 
             # Check if current state is terminal
