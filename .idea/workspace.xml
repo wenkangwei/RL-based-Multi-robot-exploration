@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f9b42f44-d5b1-448c-a67e-6d8be2fc0991" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/python/Room_Env.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/Room_Env.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/python/exploration.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/exploration.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -40,11 +39,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Room_Env.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Room_Env.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/python/Room_Env.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="335">
-              <caret line="660" column="20" selection-start-line="660" selection-start-column="20" selection-end-line="660" selection-end-column="20" />
+            <state relative-caret-position="301">
+              <caret line="658" column="9" lean-forward="true" selection-start-line="658" selection-start-column="9" selection-end-line="658" selection-end-column="9" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
@@ -52,11 +51,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="exploration.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="exploration.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/python/exploration.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="365">
-              <caret line="43" column="18" lean-forward="true" selection-start-line="43" selection-start-column="18" selection-end-line="43" selection-end-column="18" />
+              <caret line="43" column="56" selection-start-line="43" selection-start-column="56" selection-end-line="43" selection-end-column="56" />
               <folding>
                 <element signature="e#0#22#0" expanded="true" />
               </folding>
@@ -133,8 +132,8 @@
         <option value="$PROJECT_DIR$/python/MapAndMove.py" />
         <option value="$PROJECT_DIR$/python/__init__.py" />
         <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch_6.py" />
-        <option value="$PROJECT_DIR$/python/exploration.py" />
         <option value="$PROJECT_DIR$/python/Room_Env.py" />
+        <option value="$PROJECT_DIR$/python/exploration.py" />
       </list>
     </option>
   </component>
@@ -482,16 +481,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/python/exploration.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="365">
-          <caret line="43" column="18" lean-forward="true" selection-start-line="43" selection-start-column="18" selection-end-line="43" selection-end-column="18" />
-          <folding>
-            <element signature="e#0#22#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Roomba-Tests/Roomba_DeadReckoning2.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="306">
@@ -501,10 +490,20 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/python/Room_Env.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="335">
-          <caret line="660" column="20" selection-start-line="660" selection-start-column="20" selection-end-line="660" selection-end-column="20" />
+        <state relative-caret-position="301">
+          <caret line="658" column="9" lean-forward="true" selection-start-line="658" selection-start-column="9" selection-end-line="658" selection-end-column="9" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/exploration.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="365">
+          <caret line="43" column="56" selection-start-line="43" selection-start-column="56" selection-end-line="43" selection-end-column="56" />
+          <folding>
+            <element signature="e#0#22#0" expanded="true" />
           </folding>
         </state>
       </provider>

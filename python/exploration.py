@@ -41,7 +41,7 @@ if __name__ == '__main__':
 
     try:
         # test_observation(Env)
-        for a in []:
+        for a in [[200,45],[200,-135],[200,90],[200,-180]]:
             print('action: ', a)
             s_new, r, is_terminal = Env.step(a)
         pass
