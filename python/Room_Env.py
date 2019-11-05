@@ -566,6 +566,7 @@ class GridWorld(object):
         s_old = self.grid_state
         s_new = s_old
         old_real_state, new_real_state, r, is_terminal = 0,0,0,False
+        L_cnt, R_cnt, bump, DLightBump, AnalogBump = None, None,None,None,None
         # track sensor information when moving
         self.Roomba.StartQueryStream(7, 43, 44, 45, 46, 47, 48, 49, 50, 51)  # Start getting bumper values
 
@@ -592,19 +593,25 @@ class GridWorld(object):
                 t= cur_t
                 print('new state: {:10.2f},{:10.2f},{:10.2f}. r:{:10.2f}, terminal:{}'.format(
                     new_real_state[0], new_real_state[1], new_real_state[2], r, is_terminal))
-
             if self.Roomba.Available()>0:
                 # keep track of postion and check if at terminal state, like hitting wall or obstacle
                 old_real_state, new_real_state, r, is_terminal,data= self.observe_Env()
+                L_cnt, R_cnt, bump, DLightBump, AnalogBump = data
             cur_t = time.time()
+
+
         print("Spinning t:", np.abs(cur_t-init_t))
         print('cur s:', new_real_state)
         # Pause roomba for a while
         self.Roomba.Move(0, 0)
         time.sleep(0.5)
         print('-----------------------------------------')
-        if not is_terminal:
+        if is_terminal:
             # if it is not terminal, move forward
+            print("AnalogBump: ", AnalogBump)
+            print('r:{:10.2f}, terminal:{}'.format(r, is_terminal))
+            print('obstacle:', self.obs_ls[0])
+        else:
             # reset time
             init_t = time.time()
             cur_t = init_t
@@ -618,15 +625,18 @@ class GridWorld(object):
                 if self.Roomba.Available()>0:
                     # keep track of postion and check if at terminal state, like hitting wall or obstacle
                     old_real_state, new_real_state, r, is_terminal,data= self.observe_Env()
+                    L_cnt, R_cnt, bump, DLightBump, AnalogBump = data
+
                     if is_terminal:
+                        print("AnalogBump: ", AnalogBump)
+                        print('r:{:10.2f}, terminal:{}'.format(r, is_terminal))
+                        print('obstacle:', self.obs_ls[0])
                         break
                 # check obstacle and terminal state
                 if np.abs(cur_t-t)>= self.print_time:
                     t =cur_t
-                    L_cnt, R_cnt, bump, DLightBump, AnalogBump = data
                     print()
                     print('##############################')
-                    print("AnalogBump: ", AnalogBump)
                     print('new state: {:10.2f},{:10.2f},{:10.2f}. '.format(
                         new_real_state[0], new_real_state[1], new_real_state[2]))
                     print('r:{:10.2f}, terminal:{}'.format(r, is_terminal))
@@ -638,6 +648,7 @@ class GridWorld(object):
             self.Roomba.Move(0, 0)
             print("forward t:", np.abs(cur_t - init_t))
             print('-----------------------------------------')
+
         # record real trajectory here
         ##############################
 
