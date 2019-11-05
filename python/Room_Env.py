@@ -225,7 +225,7 @@ class GridWorld(object):
         # 10mm return 3000
         self.LBump_ratio = 3000.0/10.0
         # maximum light bumper signal strength
-        self.max_strength =3200.0
+        self.max_strength =3000.0
         # moving speed 100mm/s, rotate 50mm/s
         self.sp = 50
         self.rot_sp = 50
@@ -405,13 +405,20 @@ class GridWorld(object):
         # Total reward/penalty
         r_new = (r1+r2)
         # update map reward at this position
-        self.observation_map[self.grid_state[0], self.grid_state[1]] = r_new
-        return r
+        self.observation_map[self.grid_state[0], self.grid_state[1]] = r1
+
+        return r_new
 
 
     def check_terminal(self,bump,DLightBump, AnalogBump):
         """
         Strategy to determine if current state is terminal
+        Since strength of light bumper signal is affected by both the distance to object and the size of object
+        if object is small (height = light bumper height), then at 2cm away: signal 120~300, in 1cm: 400~ 700
+        change around 20 per 0.5cm
+        if object is huge (like a block or wall), 2cm: 1000~2000  1cm: 2000~3200, change of signal around 50 per 0.5cm
+        May apply fuzzy method or simple pattern recognition (like LR or SVM) to determine
+
         :param bump:
         :param DLightBump:
         :param AnalogBump:
@@ -421,7 +428,10 @@ class GridWorld(object):
         """
         terminal = False
         # signal returned from distance to obstacle /terminal 50 mm,5cm
-        d_obs = 700
+        # by measurement, small obstacle (height = height of light bumper) in 2cm: signal 120 ~300
+        # within 1cm >400
+        # if  big obstacle: (like a wall) at 2cm: 1300~1600
+        d_obs = 120
         threshold = d_obs/self.max_strength
         obstacles = []
 
@@ -439,7 +449,7 @@ class GridWorld(object):
 
         cnt = strength.sum()
         # print('bump: {0:0>8b}:'.format(bump))
-        if bump != 0 or cnt >=2:
+        if bump != 0 or cnt >=1:
             # May need reset the position of roomba to previous position using  grid world position (center of last grid)
             # since roomba may drift after hitting obstacle and the data will be incorrect
             terminal=True
@@ -462,11 +472,17 @@ class GridWorld(object):
                 th = self.Motion.theta + 0.5 * lb_avg_agl
                 x = self.Motion.x + d_obs * math.cos(th)
                 y = self.Motion.y + d_obs * math.sin(th)
+                x = round(x, 2)
+                y = round(y, 2)
+                th = round(th, 2)
                 s = self.get_gridState(real_state=[x, y, th])
                 obstacles.append(s[0:1])
                 th = self.Motion.theta + 0.5 * b_avg_angle
                 x = self.Motion.x + d_obs * math.cos(th)
                 y = self.Motion.y + d_obs * math.sin(th)
+                x = round(x, 3)
+                y = round(y, 3)
+                th = round(th,3)
                 # convert real continuous state to discrete grid world state
                 s = self.get_gridState(real_state=[x, y, th])
                 obstacles.append(s[0:1])
@@ -475,6 +491,9 @@ class GridWorld(object):
                 th= self.Motion.theta+0.5 * alg
                 x = self.Motion.x + d_obs * math.cos(th)
                 y = self.Motion.y + d_obs * math.sin(th)
+                x = round(x, 2)
+                y = round(y, 2)
+                th = round(th, 2)
                 s= self.get_gridState(real_state=[x,y,th])
                 obstacles.append(s[0:1])
 
