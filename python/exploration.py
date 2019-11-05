@@ -10,10 +10,9 @@ if __name__ == '__main__':
     a = random.choice(action_set)
     print('action: ',a)
     try:
+        Env.Roomba.StartQueryStream(7, 43, 44, 45, 46, 47, 48, 49, 50, 51)  # Start getting bumper values
         while True:
-
-            if Env.Roomba.Available():
-                Env.Roomba.StartQueryStream(7, 43, 44, 45, 46, 47, 48, 49, 50, 51)  # Start getting bumper values
+            if Env.Roomba.Available()>0:
                 old_real_state, new_real_state, r, is_terminal = Env.observe_Env()
                 print('new state: {:10.2f},{:10.2f},{:10.2f}. r:{:10.2f}, terminal:{}'.format(
                     new_real_state[0], new_real_state[1], new_real_state[2], r, is_terminal))
