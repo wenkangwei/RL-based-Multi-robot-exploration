@@ -15,10 +15,11 @@ def test_observation(Env):
         if Env.Roomba.Available() > 0:
             old_real_state, new_real_state, r, is_terminal,data = Env.observe_Env()
             L_cnt, R_cnt, bump, DLightBump, AnalogBump = data
-        if abs(t - cur_t) >= 1:
+        if abs(t - cur_t) >= 0.5:
+            print()
             print('------------------------------------')
             print('L cnt:{}, R cnt:{}'.format(L_cnt, R_cnt, ))
-            # print('bump:{0:0>8b}'.format(bump))
+            print('bump:{0:0>8b}'.format(bump))
             print('DLbump:{0:0>8b}'.format(DLightBump))
             print("AnalogBump: ", AnalogBump)
 

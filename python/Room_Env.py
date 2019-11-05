@@ -438,7 +438,7 @@ class GridWorld(object):
             strength[i] = 1 if strength[i] >=threshold else 0
 
         cnt = strength.sum()
-        print('bump: {0:0>8b}:'.format(bump))
+        # print('bump: {0:0>8b}:'.format(bump))
         if bump != 0 or cnt >=2:
             # May need reset the position of roomba to previous position using  grid world position (center of last grid)
             # since roomba may drift after hitting obstacle and the data will be incorrect
