@@ -291,8 +291,8 @@ class GridWorld(object):
     def spaces_init(self, world_r=50,world_c=50):
         # Initialize Grid world observation space
         # defaule 50m * 50m. num of grids are 50*1000/grid_size
-        r= int(world_r*1000/self.grid_size)
-        c= int(world_c*1000/self.grid_size)
+        r= int(world_r*1000/self.grid_size)+1
+        c= int(world_c*1000/self.grid_size)+1
         self.observation_map= np.ones([r,c])
 
         # Initialize Action Space
@@ -423,6 +423,8 @@ class GridWorld(object):
         if object is small (height = light bumper height), then at 2cm away: signal 120~300, in 1cm: 400~ 700
         change around 20 per 0.5cm
         if object is huge (like a block or wall), 2cm: 1000~2000  1cm: 2000~3200, change of signal around 50 per 0.5cm
+
+        Improvement:
         May apply fuzzy method or simple pattern recognition (like LR or SVM) to determine
 
         :param bump:
@@ -440,10 +442,6 @@ class GridWorld(object):
         d_obs = 120
         threshold = d_obs/self.max_strength
         obstacles = []
-
-        # using digital light bumper
-        # if DLightBump !=0:
-        #     terminal = True
 
         L, FL, CL, CR, FR, R = AnalogBump
         # using analog light bumper
@@ -573,7 +571,7 @@ class GridWorld(object):
         # determine if s is terminal before taking action
         # if it is terminal, don't move and return state directly
         print("Observe Environment...")
-        _, _, r, is_terminal = self.observe_Env()
+        _, _, r, is_terminal,_ = self.observe_Env()
         if is_terminal:
             return s_new, r, is_terminal
 
@@ -595,7 +593,7 @@ class GridWorld(object):
 
             if self.Roomba.Available()>0:
                 # keep track of postion and check if at terminal state, like hitting wall or obstacle
-                old_real_state, new_real_state, r, is_terminal= self.observe_Env(mode='e')
+                old_real_state, new_real_state, r, is_terminal,data= self.observe_Env(mode='e')
             cur_t = time.time()
         print("Spinning t:", np.abs(cur_t-init_t))
         print('cur s:', new_real_state)
@@ -611,17 +609,29 @@ class GridWorld(object):
         self.Roomba.Move(self.sp, 0)
         t =cur_t
         while np.abs(cur_t-init_t)< tol+ (d/self.sp):
+            if self.Roomba.Available()>0:
+                # keep track of postion and check if at terminal state, like hitting wall or obstacle
+                old_real_state, new_real_state, r, is_terminal,data= self.observe_Env()
+                if is_terminal:
+                    break
             # check obstacle and terminal state
             if np.abs(cur_t-t)>= self.backup_time:
                 t =cur_t
+                L_cnt, R_cnt, bump, DLightBump, AnalogBump = data
+                print()
+                print('------------------------------------')
+                print('L cnt:{}, R cnt:{}'.format(L_cnt, R_cnt, ))
+                print('bump:{0:0>8b}'.format(bump))
+                print('DLbump:{0:0>8b}'.format(DLightBump))
+                print("AnalogBump: ", AnalogBump)
+                print('new state: {:10.2f},{:10.2f},{:10.2f}. '.format(
+                    new_real_state[0], new_real_state[1], new_real_state[2]))
+                print('r:{:10.2f}, terminal:{}'.format(r, is_terminal))
+                print('obstacle:', self.obs_ls[0])
                 print('new state: {:10.2f},{:10.2f},{:10.2f}. r:{:10.2f}, terminal:{}'.format(
                     new_real_state[0],new_real_state[1],new_real_state[2], r, is_terminal))
 
-            if self.Roomba.Available()>0:
-                # keep track of postion and check if at terminal state, like hitting wall or obstacle
-                old_real_state, new_real_state, r, is_terminal= self.observe_Env()
-                if is_terminal:
-                    break
+
             cur_t = time.time()
         # pause roomba after reaching desired position
         self.Roomba.Move(0, 0)

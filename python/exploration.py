@@ -40,8 +40,8 @@ if __name__ == '__main__':
     a = random.choice(action_set)
     print('action: ',a)
     try:
-        test_observation(Env)
-        # s_new, r, is_terminal = Env.step(a)
+        # test_observation(Env)
+        s_new, r, is_terminal = Env.step(a)
         pass
     except KeyboardInterrupt:
         Env.terminate()
