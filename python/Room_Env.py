@@ -210,7 +210,7 @@ class GridWorld(object):
         #------Variables used for recording data----------
         self.Roomba = RoombaCI_lib.Create_2("/dev/ttyS0", 115200)
         self.Roomba.ddPin = 23  # Set Roomba dd pin number
-        self.backup_time = 1.0  # Amount of time spent backing up
+        self.backup_time = 0.5  # Amount of time spent backing up
         self.corner_time = 1.5  # Amount of time that it takes before the roomba starts turning more sharply (makes sure it turns around corners)
         self.data_time = time.time()
 
@@ -218,7 +218,8 @@ class GridWorld(object):
         # Assume distance to obstacle and signal strength are proportional
         # 10mm return 3000
         self.LBump_ratio = 3000.0/10.0
-
+        # maximum light bumper signal strength
+        self.max_strength =3200.0
         # moving speed 100mm/s, rotate 50mm/s
         self.sp = 50
         self.rot_sp = 50
@@ -297,7 +298,7 @@ class GridWorld(object):
             self.action_space.append((d,theta))
         pass
 
-    def achieve_data(self, selection='be'):
+    def achieve_data(self, selection='all'):
         """
         achieve encoder, light bumper data from robot
         7: bump/wheel drop
@@ -384,30 +385,22 @@ class GridWorld(object):
         """
         #
         # Put calculation here
+        r= float(self.observation_map[self.grid_state[0],self.grid_state[1]])
 
+        # map reward:
+        # Will apply Gaussian mixture to approximate , update reward
+        # by using obstacle data here
+        r1 = float(self.observation_map[self.grid_state[0],self.grid_state[1]])
+        # r1= Gaussian Mixture reward on map
 
-        r_old= float(self.observation_map[self.grid_state[0],self.grid_state[1]])
-        if r_old ==self.reward_tb['goal']:
-            r_new = self.reward_tb['goal']
-        else:
-            # map reward
-            r1 = float(self.observation_map[self.grid_state[0],self.grid_state[1]])
-            # immediate reward from sensors
-            L, FL, CL, CR, FR, R = AnalogBump
-            # AnalogBump =np.array([L, FL, CL, CR, FR, R])
-            # r2 = -1.0* np.mean(AnalogBump/ float(np.sum(AnalogBump)))
-            # final reward = weighted sum of two reward/penalty
-            # r_new = (r1+r2)/2.0
-            r_new =0
-        # calculate Gaussian penalty based on obstacles already explored: min: -1
-        # calculate the penalty from sensor: min: -1 max: 0
+        # immediate reward from sensors
+        k=-1    #k: scale of reward/penalty
+        r2 = k*(np.mean(AnalogBump)/self.max_strength)
+        # Total reward/penalty
+        r_new = (r1+r2)
         # update map reward at this position
-        if len(self.obs_ls) <1:
-            self.observation_map[self.grid_state[0], self.grid_state[1]] = 0.0
-        else:
-            self.observation_map[self.grid_state[0], self.grid_state[1]] = 0.0
-            # self.observation_map[self.grid_state[0], self.grid_state[1]] = (1/len(self.obs_ls))*np.exp(self.obs_ls)
-        return r_new
+        self.observation_map[self.grid_state[0], self.grid_state[1]] = r_new
+        return r
 
 
     def check_terminal(self,bump,DLightBump, AnalogBump):
@@ -422,18 +415,19 @@ class GridWorld(object):
         """
         terminal = False
         # signal returned from distance to obstacle /terminal 50 mm,5cm
-        d_obs = 500
-        threshold = d_obs/3000.0
+        d_obs = 700
+        threshold = d_obs/self.max_strength
         obstacles = []
 
         # using digital light bumper
         # if DLightBump !=0:
         #     terminal = True
+
         L, FL, CL, CR, FR, R = AnalogBump
         # using analog light bumper
         prob_obs =np.array([L, FL, CL, CR, FR, R]).astype(float)
         # prob_obs = np.convolve(prob_obs, (0.1,0.8,0.1))[1:-2]
-        strength = prob_obs/3000.0  # maximum signal strength light bumper can receive
+        strength = prob_obs/self.max_strength  # maximum signal strength light bumper can receive
         for i in range(len(strength)):
             strength[i] = 1 if strength[i] >=threshold else 0
 
@@ -452,7 +446,6 @@ class GridWorld(object):
             # Assume Left , right bumpers are at -45 degree, 45 degree
             # Then find the average degree of object
             b_avg_angle = 45*(r_bump -l_bump)
-
             prob_obs /= prob_obs.sum()
             # average angles of obstacle detected by light bumper
             # [-90, -60,-30,30,60,90] are heading angles of 6 analog light bumper
@@ -477,33 +470,38 @@ class GridWorld(object):
                 x = self.Motion.x + d_obs * math.cos(th)
                 y = self.Motion.y + d_obs * math.sin(th)
                 s= self.get_gridState(real_state=[x,y,th])
-
                 obstacles.append(s[0:1])
-            pass
+
         return terminal, obstacles
 
-    def observe_Env(self):
+    def observe_Env(self, mode='all'):
         """
         Update current continous real world state and the reward at the new state after achieving data
+        mode == 'e': return encoder info only
+        otherwise, return all info
         :return:
         old continuous state, new continuous state, reward,flag of terminal
         """
+        L_cnt, R_cnt, bump,DLightBump, AnalogBump = self.achieve_data(mode)
+
         old_state = self.real_state.copy()
-
-        L_cnt, R_cnt, bump,DLightBump, AnalogBump = self.achieve_data()
         print('Sensor data:',L_cnt, R_cnt, bump,DLightBump, AnalogBump)
-        # Check if current state is terminal
-        terminal,obs = self.check_terminal(bump,DLightBump, AnalogBump)
+        if mode != 'e':
 
-        # update list of obstacles
-        if len(obs)>0:
-            self.obs_ls.extend(obs)
+            # Check if current state is terminal
+            terminal,obs = self.check_terminal(bump,DLightBump, AnalogBump)
+            # update list of obstacles
+            if len(obs)>0:
+                self.obs_ls.extend(obs)
+            # The reward is the reward obtained after transition (s,a,s')
+            r = self.cal_reward(bump, DLightBump, AnalogBump)
+        else:
+            # if encoder mode, return encoder info only, without calculate rewards and terminals
+            r= 0
+            terminal =False
 
         # obtain postion and heading angle
         self.real_state[0],self.real_state[1],self.real_state[2] = self.Motion.get_CurPos(L_cnt,R_cnt)
-        # Obtain current reward by converting raw data to computed rewards
-        # The reward is the reward obtained after transition (s,a,s')
-        r = self.cal_reward(bump,DLightBump,AnalogBump)
 
         return old_state, self.real_state,r, terminal
 
@@ -547,21 +545,20 @@ class GridWorld(object):
         # Rotate Roomba to certain degree
         sign = 1 if d_theta >= 0 else -1
         print("Spinning: ")
-
-        while self.Roomba.Available()<0:
-            pass
+        # while self.Roomba.Available()<0:
+        #     pass
         self.Roomba.Move(0, self.rot_sp* sign)
-
         t=cur_t
         while np.abs(cur_t-init_t)< tol+np.abs(ArcLen/self.rot_sp):
-
             if np.abs(cur_t-t)>= self.backup_time:
                 t= cur_t
-                # keep track of postion and check if at terminal state, like hitting wall or obstacle
-                old_real_state, new_real_state, r, is_terminal= self.observe_Env()
-                print(new_real_state, r, is_terminal)
-            cur_t = time.time()
+                print('new state: {:10.2f},{:10.2f},{:10.2f}. r:{:10.2f}, terminal:{}'.format(
+                    new_real_state[0], new_real_state[1], new_real_state[2], r, is_terminal))
 
+            if self.Roomba.Available()>0:
+                # keep track of postion and check if at terminal state, like hitting wall or obstacle
+                old_real_state, new_real_state, r, is_terminal= self.observe_Env(mode='e')
+            cur_t = time.time()
         print("Spinning t:", np.abs(cur_t-init_t))
         print('cur s:', new_real_state)
         # Pause roomba for a while
@@ -571,47 +568,50 @@ class GridWorld(object):
         # reset time
         init_t = time.time()
         cur_t = init_t
-
-        while self.Roomba.Available()<0:
-            pass
         #Roomba moves forward
-        print("Move forward. . .")
+        print("Moving forward. . .")
         self.Roomba.Move(self.sp, 0)
         t =cur_t
-        while np.abs(cur_t-init_t)< tol+d / self.sp:
+        while np.abs(cur_t-init_t)< tol+ (d/self.sp):
             # check obstacle and terminal state
             if np.abs(cur_t-t)>= self.backup_time:
                 t =cur_t
+                print('new state: {:10.2f},{:10.2f},{:10.2f}. r:{:10.2f}, terminal:{}'.format(
+                    new_real_state[0],new_real_state[1],new_real_state[2], r, is_terminal))
+
+            if self.Roomba.Available()>0:
                 # keep track of postion and check if at terminal state, like hitting wall or obstacle
                 old_real_state, new_real_state, r, is_terminal= self.observe_Env()
-                print(new_real_state, r, is_terminal)
                 if is_terminal:
-                    # if terminal, stop immediately
-                    # self.Roomba.Move(0,0)
                     break
-                pass
             cur_t = time.time()
         # pause roomba after reaching desired position
         self.Roomba.Move(0, 0)
+        print("forward t:", np.abs(cur_t - init_t))
+
         # record real trajectory here
         ##############################
 
         ##############################
-        print("forward t:", np.abs(cur_t - init_t))
-
-
-
 
 
         # Compute reward and new state after the motion
+        s_new = self.get_gridState(new_real_state)
         self.grid_state = s_new
-
+        print("grid s:", s_new)
 
         #May use alternative method : using feedback to reach desired position
         ########################################
         ########################################
 
         self.Roomba.PauseQueryStream()
+        if self.Roomba.Available() > 0:
+            z = self.Roomba.DirectRead(self.Roomba.Available())
+            print(z)
 
+
+        # update Gaussian Mixture model for reward approximation
+        ########################################
+        ########################################
         return s_new, r, is_terminal
 
