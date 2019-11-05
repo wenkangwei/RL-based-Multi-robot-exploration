@@ -48,11 +48,15 @@ if __name__ == '__main__':
         pass
     except KeyboardInterrupt:
         Env.terminate()
+        print('obstacles：')
+        print(Env.obs_ls[0])
         print('Track:')
         for i in track:
             print(i)
 
     Env.terminate()
+    print('obstacles：')
+    print(Env.obs_ls[0])
     print('Track:')
     for i in track:
         print(i)
