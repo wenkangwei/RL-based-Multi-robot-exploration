@@ -211,7 +211,9 @@ class GridWorld(object):
         # reward table: it is to define the updated reward of the explored area
         self.reward_tb = {'terminal': -1, 'path': 0, 'goal': 1}
         # a list of obstacles detected
-        self.obs_ls = []
+        # the first list is position of obstacle, the second list is its possibilty it is really a obstacle
+        self.obs_ls = [[],[]]
+
 
         #------Variables used for recording data----------
         self.Roomba = RoombaCI_lib.Create_2("/dev/ttyS0", 115200)
@@ -496,7 +498,6 @@ class GridWorld(object):
                 th = round(th, 2)
                 s= self.get_gridState(real_state=[x,y,th])
                 obstacles.append(s[0:1])
-
         return terminal, obstacles
 
     def observe_Env(self, mode='all'):
@@ -515,8 +516,18 @@ class GridWorld(object):
             # Check if current state is terminal
             terminal,obs = self.check_terminal(bump,DLightBump, AnalogBump)
             # update list of obstacles
-            if len(obs)>0:
-                self.obs_ls.extend(obs)
+            x= np.array()
+            # maximum count for determining if the obstacle 100% exists
+            max_cnt =5.0
+            for o in obs:
+                # if obstacle is not detected before
+                if self.obs_ls[0].count(o)<1:
+                    self.obs_ls[0].append(o)
+                    self.obs_ls[1].append(1/max_cnt)
+                else:
+                    # update probability of this obstacle observed
+                    self.obs_ls[1][self.obs_ls[0].index(o)] += 1.0/max_cnt
+
             # The reward is the reward obtained after transition (s,a,s')
             r = self.cal_reward(bump, DLightBump, AnalogBump)
         else:

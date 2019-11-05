@@ -22,10 +22,10 @@ def test_observation(Env):
             print('bump:{0:0>8b}'.format(bump))
             print('DLbump:{0:0>8b}'.format(DLightBump))
             print("AnalogBump: ", AnalogBump)
-
             print('new state: {:10.2f},{:10.2f},{:10.2f}. '.format(
                 new_real_state[0], new_real_state[1], new_real_state[2]))
             print('r:{:10.2f}, terminal:{}'.format( r, is_terminal))
+            print('obstacle:',Env.obs_ls[0])
             t = cur_t
 
 
