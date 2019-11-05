@@ -37,11 +37,13 @@ if __name__ == '__main__':
     Env =GridWorld()
 
     action_set = Env.action_space
-    a = random.choice(action_set)
-    print('action: ',a)
+    # a = random.choice(action_set)
+    
     try:
         # test_observation(Env)
-        s_new, r, is_terminal = Env.step(a)
+        for a in action_set:
+            print('action: ', a)
+            s_new, r, is_terminal = Env.step(a)
         pass
     except KeyboardInterrupt:
         Env.terminate()
