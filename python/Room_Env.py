@@ -490,11 +490,7 @@ class GridWorld(object):
         """
         L_cnt, R_cnt, bump,DLightBump, AnalogBump = self.achieve_data(mode)
 
-        old_state = self.real_state.copy()
-        print('L cnt:{}, R cnt:{}'.format(L_cnt, R_cnt, ))
-        print('bump:{0:0>8b}'.format(bump))
-        print( 'DLbump:{0:0>8b}'.format(DLightBump))
-        print("AnalogBump: ", AnalogBump)
+
         if mode != 'e':
 
             # Check if current state is terminal
@@ -512,7 +508,7 @@ class GridWorld(object):
         # obtain postion and heading angle
         self.real_state[0],self.real_state[1],self.real_state[2] = self.Motion.get_CurPos(L_cnt,R_cnt)
 
-        return old_state, self.real_state,r, terminal
+        return old_state, self.real_state,r, terminal, (L_cnt, R_cnt, bump,DLightBump, AnalogBump)
 
     def step(self,a):
         """

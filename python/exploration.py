@@ -9,12 +9,22 @@ def test_observation(Env):
     cur_t = time.time()
     t = cur_t
     old_real_state, new_real_state, r, is_terminal = None, None, 0, False
+    L_cnt, R_cnt, bump, DLightBump, AnalogBump = None,None,None,None,None
+
     while True:
-        if abs(t - cur_t) >= 1:
-            if Env.Roomba.Available() > 0:
-                old_real_state, new_real_state, r, is_terminal = Env.observe_Env()
-                print('new state: {:10.2f},{:10.2f},{:10.2f}. r:{:10.2f}, terminal:{}'.format(
-                    new_real_state[0], new_real_state[1], new_real_state[2], r, is_terminal))
+        if Env.Roomba.Available() > 0:
+            old_real_state, new_real_state, r, is_terminal,data = Env.observe_Env()
+            L_cnt, R_cnt, bump, DLightBump, AnalogBump = data
+        if abs(t - cur_t) >= 0.5:
+            print('------------------------------------')
+            print('L cnt:{}, R cnt:{}'.format(L_cnt, R_cnt, ))
+            print('bump:{0:0>8b}'.format(bump))
+            print('DLbump:{0:0>8b}'.format(DLightBump))
+            print("AnalogBump: ", AnalogBump)
+
+            print('new state: {:10.2f},{:10.2f},{:10.2f}. '.format(
+                new_real_state[0], new_real_state[1], new_real_state[2]))
+            print('r:{:10.2f}, terminal:{}'.format( r, is_terminal))
             t = cur_t
 
 
@@ -35,5 +45,5 @@ if __name__ == '__main__':
     except KeyboardInterrupt:
         Env.terminate()
 
-    Env.terminate()
+    # Env.terminate()
 
