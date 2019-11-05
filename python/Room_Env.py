@@ -219,6 +219,7 @@ class GridWorld(object):
         self.Roomba = RoombaCI_lib.Create_2("/dev/ttyS0", 115200)
         self.Roomba.ddPin = 23  # Set Roomba dd pin number
         self.backup_time = 0.5  # Amount of time spent backing up
+        self.print_time = 1
         self.corner_time = 1.5  # Amount of time that it takes before the roomba starts turning more sharply (makes sure it turns around corners)
         self.data_time = time.time()
 
@@ -580,63 +581,63 @@ class GridWorld(object):
         # using time delay method to reach desired position
         # Rotate Roomba to certain degree
         sign = 1 if d_theta >= 0 else -1
-        print("Spinning: ")
+        print("Spinning . . . ")
+        print('-----------------------------------------')
         # while self.Roomba.Available()<0:
         #     pass
         self.Roomba.Move(0, self.rot_sp* sign)
         t=cur_t
         while np.abs(cur_t-init_t)< tol+np.abs(ArcLen/self.rot_sp):
-            if np.abs(cur_t-t)>= self.backup_time:
+            if np.abs(cur_t-t)>= self.print_time:
                 t= cur_t
                 print('new state: {:10.2f},{:10.2f},{:10.2f}. r:{:10.2f}, terminal:{}'.format(
                     new_real_state[0], new_real_state[1], new_real_state[2], r, is_terminal))
 
             if self.Roomba.Available()>0:
                 # keep track of postion and check if at terminal state, like hitting wall or obstacle
-                old_real_state, new_real_state, r, is_terminal,data= self.observe_Env(mode='e')
+                old_real_state, new_real_state, r, is_terminal,data= self.observe_Env()
             cur_t = time.time()
         print("Spinning t:", np.abs(cur_t-init_t))
         print('cur s:', new_real_state)
         # Pause roomba for a while
         self.Roomba.Move(0, 0)
         time.sleep(0.5)
+        print('-----------------------------------------')
+        if not is_terminal:
+            # if it is not terminal, move forward
+            # reset time
+            init_t = time.time()
+            cur_t = init_t
+            #Roomba moves forward
+            print('')
+            print("Moving forward. . . . . .")
+            print('-----------------------------------------')
+            self.Roomba.Move(self.sp, 0)
+            t =cur_t
+            while np.abs(cur_t-init_t)< tol+ (d/self.sp):
+                if self.Roomba.Available()>0:
+                    # keep track of postion and check if at terminal state, like hitting wall or obstacle
+                    old_real_state, new_real_state, r, is_terminal,data= self.observe_Env()
+                    if is_terminal:
+                        break
+                # check obstacle and terminal state
+                if np.abs(cur_t-t)>= self.print_time:
+                    t =cur_t
+                    L_cnt, R_cnt, bump, DLightBump, AnalogBump = data
+                    print()
+                    print('##############################')
+                    print("AnalogBump: ", AnalogBump)
+                    print('new state: {:10.2f},{:10.2f},{:10.2f}. '.format(
+                        new_real_state[0], new_real_state[1], new_real_state[2]))
+                    print('r:{:10.2f}, terminal:{}'.format(r, is_terminal))
+                    print('obstacle:', self.obs_ls[0])
 
-        # reset time
-        init_t = time.time()
-        cur_t = init_t
-        #Roomba moves forward
-        print("Moving forward. . .")
-        self.Roomba.Move(self.sp, 0)
-        t =cur_t
-        while np.abs(cur_t-init_t)< tol+ (d/self.sp):
-            if self.Roomba.Available()>0:
-                # keep track of postion and check if at terminal state, like hitting wall or obstacle
-                old_real_state, new_real_state, r, is_terminal,data= self.observe_Env()
-                if is_terminal:
-                    break
-            # check obstacle and terminal state
-            if np.abs(cur_t-t)>= self.backup_time:
-                t =cur_t
-                L_cnt, R_cnt, bump, DLightBump, AnalogBump = data
-                print()
-                print('------------------------------------')
-                print('L cnt:{}, R cnt:{}'.format(L_cnt, R_cnt, ))
-                print('bump:{0:0>8b}'.format(bump))
-                print('DLbump:{0:0>8b}'.format(DLightBump))
-                print("AnalogBump: ", AnalogBump)
-                print('new state: {:10.2f},{:10.2f},{:10.2f}. '.format(
-                    new_real_state[0], new_real_state[1], new_real_state[2]))
-                print('r:{:10.2f}, terminal:{}'.format(r, is_terminal))
-                print('obstacle:', self.obs_ls[0])
-                print('new state: {:10.2f},{:10.2f},{:10.2f}. r:{:10.2f}, terminal:{}'.format(
-                    new_real_state[0],new_real_state[1],new_real_state[2], r, is_terminal))
 
-
-            cur_t = time.time()
-        # pause roomba after reaching desired position
-        self.Roomba.Move(0, 0)
-        print("forward t:", np.abs(cur_t - init_t))
-
+                cur_t = time.time()
+            # pause roomba after reaching desired position
+            self.Roomba.Move(0, 0)
+            print("forward t:", np.abs(cur_t - init_t))
+            print('-----------------------------------------')
         # record real trajectory here
         ##############################
 
@@ -657,7 +658,7 @@ class GridWorld(object):
             z = self.Roomba.DirectRead(self.Roomba.Available())
             print(z)
 
-
+        time.sleep(1)
         # update Gaussian Mixture model for reward approximation
         ########################################
         ########################################

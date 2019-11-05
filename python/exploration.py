@@ -38,10 +38,10 @@ if __name__ == '__main__':
 
     action_set = Env.action_space
     # a = random.choice(action_set)
-    
+
     try:
         # test_observation(Env)
-        for a in action_set:
+        for a in []:
             print('action: ', a)
             s_new, r, is_terminal = Env.step(a)
         pass
