@@ -398,7 +398,11 @@ class GridWorld(object):
         # map reward:
         # Will apply Gaussian mixture to approximate , update reward
         # by using obstacle data here
-        r1 = float(self.observation_map[self.grid_state[0],self.grid_state[1]])
+        s = self.grid_state[0],self.grid_state[1]
+        if s in self.obs_ls[0]:
+            r1 =-1
+        else:
+            r1 = float(self.observation_map[self.grid_state[0],self.grid_state[1]])
         # r1= Gaussian Mixture reward on map
 
         # immediate reward from sensors
@@ -478,7 +482,7 @@ class GridWorld(object):
                 y = round(y, 2)
                 th = round(th, 2)
                 s = self.get_gridState(real_state=[x, y, th])
-                obstacles.append(s[0:1])
+                obstacles.append((s[0], s[1]))
                 th = self.Motion.theta + 0.5 * b_avg_angle
                 x = self.Motion.x + d_obs * math.cos(th)
                 y = self.Motion.y + d_obs * math.sin(th)
@@ -487,7 +491,7 @@ class GridWorld(object):
                 th = round(th,3)
                 # convert real continuous state to discrete grid world state
                 s = self.get_gridState(real_state=[x, y, th])
-                obstacles.append(s[0:1])
+                obstacles.append((s[0], s[1]))
             else:
                 alg = (b_avg_angle+lb_avg_agl)/2.0
                 th= self.Motion.theta+0.5 * alg
@@ -497,7 +501,7 @@ class GridWorld(object):
                 y = round(y, 2)
                 th = round(th, 2)
                 s= self.get_gridState(real_state=[x,y,th])
-                obstacles.append(s[0:1])
+                obstacles.append((s[0],s[1]))
         return terminal, obstacles
 
     def observe_Env(self, mode='all'):
