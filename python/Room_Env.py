@@ -516,7 +516,6 @@ class GridWorld(object):
             # Check if current state is terminal
             terminal,obs = self.check_terminal(bump,DLightBump, AnalogBump)
             # update list of obstacles
-            x= np.array()
             # maximum count for determining if the obstacle 100% exists
             max_cnt =5.0
             for o in obs:
