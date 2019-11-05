@@ -3,7 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="f9b42f44-d5b1-448c-a67e-6d8be2fc0991" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/Room_Env.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/Room_Env.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -17,7 +16,7 @@
       <file leaf-file-name="RoombaCI_lib.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/python/RoombaCI_lib.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="162">
+            <state relative-caret-position="9707">
               <caret line="575" column="8" selection-start-line="575" selection-start-column="8" selection-end-line="575" selection-end-column="8" />
             </state>
           </provider>
@@ -25,15 +24,13 @@
       </file>
       <file leaf-file-name="MoveTest.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Roomba-Tests/MoveTest.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-672" />
-          </provider>
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
       <file leaf-file-name="MapAndMove.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/python/MapAndMove.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2661">
+            <state relative-caret-position="7361">
               <caret line="439" column="26" selection-start-line="439" selection-start-column="20" selection-end-line="439" selection-end-column="26" />
               <folding>
                 <element signature="e#394#407#0" expanded="true" />
@@ -45,8 +42,8 @@
       <file leaf-file-name="Room_Env.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/python/Room_Env.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="464">
-              <caret line="607" column="34" lean-forward="true" selection-start-line="607" selection-start-column="34" selection-end-line="607" selection-end-column="34" />
+            <state relative-caret-position="96">
+              <caret line="590" lean-forward="true" selection-start-line="590" selection-end-line="590" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
@@ -57,8 +54,8 @@
       <file leaf-file-name="LightBumperTestCode.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Roomba-Tests/LightBumperTestCode.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="99">
-              <caret line="64" column="12" lean-forward="true" selection-start-line="64" selection-start-column="12" selection-end-line="64" selection-end-column="12" />
+            <state relative-caret-position="1037">
+              <caret line="64" column="12" selection-start-line="64" selection-start-column="12" selection-end-line="64" selection-end-column="12" />
             </state>
           </provider>
         </entry>
@@ -66,7 +63,7 @@
       <file leaf-file-name="RoombaCI_lib.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Roomba-Tests/RoombaCI_lib.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="398">
+            <state relative-caret-position="10778">
               <caret line="638" column="37" selection-start-line="638" selection-start-column="29" selection-end-line="638" selection-end-column="37" />
             </state>
           </provider>
@@ -75,8 +72,8 @@
       <file leaf-file-name="exploration.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/python/exploration.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="16" column="70" lean-forward="true" selection-start-line="16" selection-start-column="70" selection-end-line="16" selection-end-column="70" />
+            <state relative-caret-position="221">
+              <caret line="16" column="70" selection-start-line="16" selection-start-column="70" selection-end-line="16" selection-end-column="70" />
               <folding>
                 <element signature="e#0#22#0" expanded="true" />
               </folding>
@@ -87,7 +84,7 @@
       <file leaf-file-name="random.py" pinned="false" current-in-tab="false">
         <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python35/Lib/random.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="172">
+            <state relative-caret-position="4284">
               <caret line="258" column="8" selection-start-line="258" selection-start-column="8" selection-end-line="258" selection-end-column="8" />
             </state>
           </provider>
@@ -96,8 +93,8 @@
       <file leaf-file-name="scratch_6.py" pinned="false" current-in-tab="false">
         <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_6.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="493">
-              <caret line="53" column="31" lean-forward="true" selection-start-line="53" selection-start-column="31" selection-end-line="53" selection-end-column="31" />
+            <state relative-caret-position="901">
+              <caret line="53" column="31" selection-start-line="53" selection-start-column="31" selection-end-line="53" selection-end-column="31" />
             </state>
           </provider>
         </entry>
@@ -139,10 +136,10 @@
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-4" />
-    <option name="y" value="106" />
-    <option name="width" value="1939" />
-    <option name="height" value="984" />
+    <option name="x" value="-5" />
+    <option name="y" value="105" />
+    <option name="width" value="1940" />
+    <option name="height" value="985" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -241,7 +238,7 @@
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Python Console" order="7" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.19632769" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.19632769" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Favorites" order="2" side_tool="true" />
@@ -259,6 +256,74 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/python/RoombaCI_lib.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="9707">
+          <caret line="575" column="8" selection-start-line="575" selection-start-column="8" selection-end-line="575" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Roomba-Tests/MoveTest.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/MapAndMove.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7463">
+          <caret line="439" column="26" selection-start-line="439" selection-start-column="20" selection-end-line="439" selection-end-column="26" />
+          <folding>
+            <element signature="e#394#407#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Roomba-Tests/LightBumperTestCode.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1037">
+          <caret line="64" column="12" lean-forward="true" selection-start-line="64" selection-start-column="12" selection-end-line="64" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Roomba-Tests/RoombaCI_lib.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="10778">
+          <caret line="638" column="37" selection-start-line="638" selection-start-column="29" selection-end-line="638" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/exploration.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="16" column="70" lean-forward="true" selection-start-line="16" selection-start-column="70" selection-end-line="16" selection-end-column="70" />
+          <folding>
+            <element signature="e#0#22#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python35/Lib/random.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="4284">
+          <caret line="258" column="8" selection-start-line="258" selection-start-column="8" selection-end-line="258" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_6.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="901">
+          <caret line="53" column="31" lean-forward="true" selection-start-line="53" selection-start-column="31" selection-end-line="53" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/Room_Env.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="10166">
+          <caret line="598" column="20" selection-start-line="598" selection-start-column="20" selection-end-line="598" selection-end-column="20" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/python/RoombaCI_lib.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="8891">
@@ -363,29 +428,29 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/python/RoombaCI_lib.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
+        <state relative-caret-position="9707">
           <caret line="575" column="8" selection-start-line="575" selection-start-column="8" selection-end-line="575" selection-end-column="8" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Roomba-Tests/LightBumperTestCode.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="99">
-          <caret line="64" column="12" lean-forward="true" selection-start-line="64" selection-start-column="12" selection-end-line="64" selection-end-column="12" />
+        <state relative-caret-position="1037">
+          <caret line="64" column="12" selection-start-line="64" selection-start-column="12" selection-end-line="64" selection-end-column="12" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Roomba-Tests/RoombaCI_lib.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="398">
+        <state relative-caret-position="10778">
           <caret line="638" column="37" selection-start-line="638" selection-start-column="29" selection-end-line="638" selection-end-column="37" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/python/exploration.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="16" column="70" lean-forward="true" selection-start-line="16" selection-start-column="70" selection-end-line="16" selection-end-column="70" />
+        <state relative-caret-position="221">
+          <caret line="16" column="70" selection-start-line="16" selection-start-column="70" selection-end-line="16" selection-end-column="70" />
           <folding>
             <element signature="e#0#22#0" expanded="true" />
           </folding>
@@ -400,13 +465,11 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Roomba-Tests/MoveTest.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-672" />
-      </provider>
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/python/MapAndMove.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2661">
+        <state relative-caret-position="7361">
           <caret line="439" column="26" selection-start-line="439" selection-start-column="20" selection-end-line="439" selection-end-column="26" />
           <folding>
             <element signature="e#394#407#0" expanded="true" />
@@ -416,22 +479,22 @@
     </entry>
     <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python35/Lib/random.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="172">
+        <state relative-caret-position="4284">
           <caret line="258" column="8" selection-start-line="258" selection-start-column="8" selection-end-line="258" selection-end-column="8" />
         </state>
       </provider>
     </entry>
     <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_6.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="493">
-          <caret line="53" column="31" lean-forward="true" selection-start-line="53" selection-start-column="31" selection-end-line="53" selection-end-column="31" />
+        <state relative-caret-position="901">
+          <caret line="53" column="31" selection-start-line="53" selection-start-column="31" selection-end-line="53" selection-end-column="31" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/python/Room_Env.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="464">
-          <caret line="607" column="34" lean-forward="true" selection-start-line="607" selection-start-column="34" selection-end-line="607" selection-end-column="34" />
+        <state relative-caret-position="96">
+          <caret line="590" lean-forward="true" selection-start-line="590" selection-end-line="590" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>
