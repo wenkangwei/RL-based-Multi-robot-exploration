@@ -50,7 +50,7 @@ if __name__ == '__main__':
         set = [random.choice(Env.action_space) for i in range(5)]
         for a in set:
             # Check if messages from  other agent available
-            while xbee.Available():
+            if xbee.Available():
                 is_updated, id, data =  xbee.read()
                 if not is_updated:
                     break
