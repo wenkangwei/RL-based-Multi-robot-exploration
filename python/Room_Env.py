@@ -224,6 +224,7 @@ class Xbee():
         update_flag =False
         if self.ctrl.inWaiting() > 0:  # If there is something in the receive buffer
             message = self.ctrl.read(self.ctrl.inWaiting()).decode()  # Read all data in
+            if message is not None:
             message = json.loads(message)
             id = message['id']
             data = message['D']
