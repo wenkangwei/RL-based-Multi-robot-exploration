@@ -2,6 +2,7 @@ from Room_Env import *
 import numpy as np
 import math
 import  random
+import socket
 
 def test_observation(Env):
     import time
@@ -35,20 +36,43 @@ def test_observation(Env):
 if __name__ == '__main__':
 
     Env =GridWorld()
+    hn = socket.gethostname()
+    # obtain hostname of raspberry pi
+    xbee = Xbee(int(hn[-1]))
 
     action_set = Env.action_space
     # a = random.choice(action_set)
     track =[]
     try:
+
         # test_observation(Env)
+
         set = [random.choice(Env.action_space) for i in range(5)]
         for a in set:
+            # Check if messages from  other agent available
+            while xbee.Available():
+                is_updated, id, data =  xbee.read()
+                if not is_updated:
+                    break
+                print('id:{}, data: {}'.format(id, data))
+
+
+            # Training global Q value/ V state value here
+
+            # do action and sample experience here
             print('action: ', a)
             s_new, r, is_terminal = Env.step(a)
             track.append(s_new)
+
+            if Env.is_map_updated():
+                # update parameters of learning model
+                # share parameter if local map is updated
+                xbee.send(Env.obs_ls)
+                pass
         pass
     except KeyboardInterrupt:
         Env.terminate()
+        xbee.close()
         print('obstacles：')
         print(Env.obs_ls[0])
         print('Track:')
@@ -56,6 +80,7 @@ if __name__ == '__main__':
             print(i)
 
     Env.terminate()
+    xbee.close()
     print('obstacles：')
     print(Env.obs_ls[0])
     print('Track:')

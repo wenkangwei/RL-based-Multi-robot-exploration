@@ -56,11 +56,9 @@ while True:
             # data = json.dumps(data)
             # Xbee.write(data)
             sendtime += sendtime_offset
-
         if Xbee.inWaiting() > 0:  # If there is something in the receive buffer
             message = Xbee.read(Xbee.inWaiting()).decode()  # Read all data in
             print(message)  # Display message to screen
-
         if (time.time() - basetime) > basetime_offset:  # If enough time has passed.
             if GPIO.input(gled) == True:  # If the LED is on...
                 GPIO.output(gled, GPIO.LOW)  # turn it off.

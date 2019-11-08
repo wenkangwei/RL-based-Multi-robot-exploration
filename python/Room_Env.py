@@ -5,6 +5,7 @@ import os.path
 import math
 import numpy as np
 import  json
+import serial
 
 # Notes for Roomba settings:
 # 1. analog Light bumper can detect objects around 0.5 m awary from the robot. The range of strength is abbour from 5~3050
@@ -197,13 +198,42 @@ class LighBumper():
 
 
 class Xbee():
-    def __init__(self):
+    def __init__(self,id=1):
+        self.id =id
+        self.sendtime = time.time()
+        self.sendtime_offset = 1.0
+        self.basetime = time.time()
+        self.basetime_offset = 0.5
+        self.ctrl = serial.Serial('/dev/ttyUSB0', 115200)  # Baud rate should be 115200
         pass
-    def send(self):
+    def send(self, data):
+        message= {'new':True,'id':self.id,'D':data}
+        message = json.dumps(message)
+        self.ctrl.write(message.encode())
+        print("Message sent.")
+        self.sendtime += self.sendtime_offset
         pass
-    def read(self):
-        pass
+    def Available(self):
+        return  True if self.ctrl.inWaiting() >0 else False
 
+
+    def read(self):
+        message = {'new':True, 'id':None,'D':None}
+        id =None
+        data = None
+        update_flag =False
+        if self.ctrl.inWaiting() > 0:  # If there is something in the receive buffer
+            message = self.ctrl.read(self.ctrl.inWaiting()).decode()  # Read all data in
+            message = json.loads(message)
+            id = message['id']
+            data = message['D']
+            print('Mess from: ', id)
+            update_flag = message['new']
+        return update_flag, id, data
+
+    def close(self):
+        self.ctrl.close()
+        pass
 
 class Logger():
     def __init__(self, file_name_input='Trajectory'):
@@ -628,6 +658,17 @@ class GridWorld(object):
         self.real_state[0],self.real_state[1],self.real_state[2] = self.Motion.get_CurPos(L_cnt,R_cnt)
 
         return old_state, self.real_state,r, terminal, (L_cnt, R_cnt, bump,DLightBump, AnalogBump)
+
+    def is_map_updated(self):
+        """
+        Flag to indicate if map is updated/ new obstacles are found
+        :return:
+        """
+        self.old_obs_len =0
+        if len(self.obs_ls[0])!= self.old_obs_len:
+            self.old_obs_len =len(self.obs_ls[0])
+            return True
+        return False
 
     def step(self,a):
         """
