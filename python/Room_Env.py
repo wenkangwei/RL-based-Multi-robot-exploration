@@ -227,8 +227,8 @@ class GridWorld(object):
         # --------Parameters---------
         # -------parameters for defining grid world------
         # State space, define grid world here
-        # each grid is 300mmx300 mm
-        self.grid_size = 300
+        # each grid is 240mmx240 mm based on size of tabular in lab
+        self.grid_size = 240
         self.observation_space = None
         # Action space:
         self.action_space = None
@@ -256,9 +256,10 @@ class GridWorld(object):
         # maximum light bumper signal strength
         self.max_strength =3000.0
         # moving speed 100mm/s, rotate 50mm/s
-        self.sp = 80
+        self.sp = 90
         self.rot_sp = 50
-
+        # forward distance
+        self.fd = self.grid_size
 
 
         # parameters used for Q-learning
@@ -326,11 +327,11 @@ class GridWorld(object):
         # Initialize Action Space
         # d: distance to move
         # Note: d>0: move forward along heading direction. d<0: move backward
-        d = self.grid_size
+
         # Angle set: each num is in degree
         self.action_space=[]
         for theta in self.angle_set:
-            self.action_space.append((d,theta))
+            self.action_space.append((self.fd ,theta))
         pass
 
     def achieve_data(self, selection='all'):
@@ -705,7 +706,7 @@ class GridWorld(object):
             print('-----------------------------------------')
             self.Roomba.Move(self.sp, 0)
             t =cur_t
-            while np.abs(cur_t-init_t)< tol+ (d/self.sp):
+            while np.abs(cur_t-init_t)< tol+ float(d/self.sp):
                 if self.Roomba.Available()>0:
                     # keep track of postion and check if at terminal state, like hitting wall or obstacle
                     old_real_state, new_real_state, r, is_terminal,data= self.observe_Env()
@@ -725,7 +726,6 @@ class GridWorld(object):
                         new_real_state[0], new_real_state[1], new_real_state[2]))
                     print('r:{:10.2f}, terminal:{}'.format(r, is_terminal))
                     print('obstacle:', self.obs_ls[0])
-
 
                 cur_t = time.time()
             # pause roomba after reaching desired position
