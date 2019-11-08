@@ -48,9 +48,10 @@ basetime_offset = 0.5
 while True:
     try:
         if (time.time() - sendtime) > sendtime_offset:
-
-            message ='1'  # Make this the number of the Xbee you want to test
-            print('message: ',message)
+            message = {'new': True, 'id': 5, 'D': [round(np.random.random(),2) for i in range(5)]}
+            message = json.dumps(message)
+            Xbee.write(message.encode())
+            print("Message:",message)
             Xbee.write(message.encode())
             sendtime += sendtime_offset
         if Xbee.inWaiting() > 0:  # If there is something in the receive buffer
