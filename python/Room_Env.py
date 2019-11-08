@@ -256,7 +256,7 @@ class GridWorld(object):
         # maximum light bumper signal strength
         self.max_strength =3000.0
         # moving speed 100mm/s, rotate 50mm/s
-        self.sp = 90
+        self.sp = 80
         self.rot_sp = 50
         # forward distance
         self.fd = self.grid_size
@@ -646,7 +646,7 @@ class GridWorld(object):
         init_t = time.time()
         cur_t = init_t
         # tolerance of time difference
-        tol = 0e-1
+        tol = -1e-1
         # back up current state s
         s_old = self.grid_state
         s_new = s_old
