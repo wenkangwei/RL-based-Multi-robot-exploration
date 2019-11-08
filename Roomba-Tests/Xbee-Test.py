@@ -49,7 +49,7 @@ while True:
     try:
         if (time.time() - sendtime) > sendtime_offset:
 
-            message ='1:\n'+ str(time.time()-basetime)  # Make this the number of the Xbee you want to test
+            message ='1'  # Make this the number of the Xbee you want to test
             print('message: ',message)
             Xbee.write(message.encode())
             # data= [[np.random.random()]*8 for i in range(10)]
