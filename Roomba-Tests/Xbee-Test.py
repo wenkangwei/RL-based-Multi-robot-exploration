@@ -51,6 +51,7 @@ while True:
             message = {'new': True, 'id': 5, 'D': [round(np.random.random(),2) for i in range(5)]}
             message = json.dumps(message)
             Xbee.write(message.encode())
+            Xbee.write(' '.encode())
             print("Message:",message)
             sendtime += sendtime_offset
         if Xbee.inWaiting() > 0:  # If there is something in the receive buffer
