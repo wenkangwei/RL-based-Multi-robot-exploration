@@ -660,7 +660,7 @@ class GridWorld(object):
         # determine if s is terminal before taking action
         # if it is terminal, don't move and return state directly
         print("Observe Environment...")
-        _, _, r, is_terminal,_ = self.observe_Env()
+        old_state, new_real_state, r, is_terminal,_ = self.observe_Env()
         if is_terminal:
             return s_new, r, is_terminal
 
@@ -675,8 +675,7 @@ class GridWorld(object):
         #     pass
         self.Roomba.Move(0, self.rot_sp* sign)
         t=cur_t
-        while (d_theta+ new_real_state[2])< 1e-1:
-            if np.abs(cur_t-init_t)< tol+np.abs(ArcLen/self.rot_sp):
+        while ((d_theta+ old_state[2]) - new_real_state[2])> 1e-1 or np.abs(cur_t-init_t)< tol+np.abs(ArcLen/self.rot_sp):
                 if np.abs(cur_t-t)>= self.print_time:
                     t= cur_t
                     print('new state: {:10.2f},{:10.2f},{:10.2f}. r:{:10.2f}, terminal:{}'.format(
@@ -686,8 +685,6 @@ class GridWorld(object):
                     old_real_state, new_real_state, r, is_terminal,data= self.observe_Env()
                     L_cnt, R_cnt, bump, DLightBump, AnalogBump = data
                 cur_t = time.time()
-            else:
-                break
 
 
 
