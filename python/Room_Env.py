@@ -125,10 +125,10 @@ class MotorEncoder():
         self.old_theta= self.theta
         delta_theta = (L_del_cnt - R_del_cnt) * self.C_theta
         self.theta +=delta_theta
-        if self.theta >= 1 * math.pi:
-            self.theta -= 1 * math.pi
-        elif self.theta < 0:
-            self.theta += 1 * math.pi
+        if self.theta >=  math.pi:
+            self.theta -= 2 * math.pi
+        elif self.theta < - math.pi:
+            self.theta += 2 * math.pi
 
         # update distance
         if L_del_cnt - R_del_cnt <=self.agl_tol:
@@ -161,6 +161,7 @@ class MotorEncoder():
         self.R_cur_cnt = R_enc_cnt
         # Compute distance, angle moved since last update
         theta,del_agl,d = self.cnt2Agl_Dist(L_enc_cnt,R_enc_cnt)
+
         # update current counts
         self.L_past_cnt = self.L_cur_cnt
         self.R_past_cnt = self.R_cur_cnt
