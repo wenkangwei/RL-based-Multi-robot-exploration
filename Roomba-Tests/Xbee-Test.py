@@ -7,7 +7,7 @@ Last Modified: 5/31/2018
 import serial
 import time
 import RPi.GPIO as GPIO
-
+import  json
 ## Variables and Constants ##
 global Xbee  # Specifies connection to Xbee
 Xbee = serial.Serial('/dev/ttyUSB0', 115200)  # Baud rate should be 115200
@@ -47,7 +47,8 @@ basetime_offset = 0.5
 while True:
     try:
         if (time.time() - sendtime) > sendtime_offset:
-            message = '6'  # Make this the number of the Xbee you want to test
+
+            message = str(time.time()-basetime)  # Make this the number of the Xbee you want to test
             Xbee.write(message.encode())
             sendtime += sendtime_offset
 
