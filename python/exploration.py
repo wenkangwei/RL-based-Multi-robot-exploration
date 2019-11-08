@@ -41,7 +41,7 @@ if __name__ == '__main__':
     track =[]
     try:
         # test_observation(Env)
-        set = [random.choice(Env.action_space) for i in range(1)]
+        set = [random.choice(Env.action_space) for i in range(5)]
         for a in set:
             print('action: ', a)
             s_new, r, is_terminal = Env.step(a)
