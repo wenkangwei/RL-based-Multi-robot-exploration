@@ -228,7 +228,7 @@ class GridWorld(object):
         # -------parameters for defining grid world------
         # State space, define grid world here
         # each grid is 240mmx240 mm based on size of tabular in lab
-        self.grid_size = 480
+        self.grid_size = 240
         self.observation_space = None
         # Action space:
         self.action_space = None

@@ -41,7 +41,7 @@ if __name__ == '__main__':
     track =[]
     try:
         # test_observation(Env)
-        for a in [[200,45],[200,-135],[200,90],[200,-180]]:
+        for a in Env.action_space:
             print('action: ', a)
             s_new, r, is_terminal = Env.step(a)
             track.append(s_new)
