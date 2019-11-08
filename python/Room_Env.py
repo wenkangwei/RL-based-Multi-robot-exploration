@@ -327,7 +327,6 @@ class GridWorld(object):
         # Initialize Action Space
         # d: distance to move
         # Note: d>0: move forward along heading direction. d<0: move backward
-
         # Angle set: each num is in degree
         self.action_space=[]
         for theta in self.angle_set:
@@ -434,7 +433,6 @@ class GridWorld(object):
             r_state = real_state
 
         grid_state = [0,0,0]
-
         # assume orignal point is the center of the starting piece
         for i in range(2):
             if real_state[i] < (self.grid_size)/2.0:
@@ -445,13 +443,14 @@ class GridWorld(object):
                 grid_state[i] = int((real_state[i]-(self.grid_size)/2.0)//self.grid_size)
                 remain = 1 if (real_state[i]-(self.grid_size)/2.0)%self.grid_size >=tol else 0
                 grid_state[i] += remain
+
         # convert rad to degree
         real_angle = real_state[2]*(180.0/math.pi)
         a = [abs(real_angle - i) for i in self.angle_set]
         i = np.argmin(a)
         # calculate approximate degree in grid world
         grid_state[2] = self.angle_set[i]
-
+        print("=========grid angle:",grid_state[2],"reaL ag:",real_angle)
         # convert degree to rad for moving
         agl_rad = grid_state[2]*(math.pi/180.0)
         correct_rot = -(real_state[2] - agl_rad)
