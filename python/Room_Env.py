@@ -366,7 +366,6 @@ class GridWorld(object):
             z = self.Roomba.DirectRead(self.Roomba.Available())
             print(z)
         time.sleep(0.1)
-        self.file.close()  # Close data file
         ## -- Ending Code Starts Here -- ##
         self.Roomba.ShutDown()  # Shutdown Roomba serial connection
         GPIO.cleanup()  # Reset GPIO pins for next program

@@ -37,8 +37,8 @@
       <file leaf-file-name="Room_Env.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/python/Room_Env.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="94">
-              <caret line="437" column="31" lean-forward="true" selection-start-line="437" selection-start-column="31" selection-end-line="437" selection-end-column="31" />
+            <state relative-caret-position="247">
+              <caret line="363" column="38" lean-forward="true" selection-start-line="363" selection-start-column="38" selection-end-line="363" selection-end-column="38" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
@@ -138,6 +138,7 @@
       <find>print</find>
       <find>max_count</find>
       <find>write</find>
+      <find>terminate</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -656,8 +657,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/python/Room_Env.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="94">
-          <caret line="437" column="31" lean-forward="true" selection-start-line="437" selection-start-column="31" selection-end-line="437" selection-end-column="31" />
+        <state relative-caret-position="247">
+          <caret line="363" column="38" lean-forward="true" selection-start-line="363" selection-start-column="38" selection-end-line="363" selection-end-column="38" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>
