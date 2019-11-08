@@ -448,8 +448,9 @@ class GridWorld(object):
         real_angle = real_state[2]*(180.0/math.pi)
         a = [abs(real_angle - i) for i in self.angle_set]
         i = np.argmin(a)
+        # calculate approximate degree in grid world
         grid_state[2] = self.angle_set[i]
-        
+
         # convert degree to rad for moving
         agl_rad = grid_state[2]*(math.pi/180.0)
         correct_rot = -(real_state[2] - agl_rad)
@@ -457,7 +458,7 @@ class GridWorld(object):
         t = (correct_rot* (math.pi/180))/sp
         cur_t = time.time()
         past_t = cur_t
-        while abs(past_t-cur_t) <=t:
+        while abs(past_t-cur_t) <=t+0.5:
             self.Roomba.Move(0,sp)
             cur_t = time.time()
         self.Roomba.Move(0,0)
@@ -644,7 +645,7 @@ class GridWorld(object):
         init_t = time.time()
         cur_t = init_t
         # tolerance of time difference
-        tol = 1e-1
+        tol = 0e-1
         # back up current state s
         s_old = self.grid_state
         s_new = s_old
