@@ -260,7 +260,7 @@ class GridWorld(object):
         self.sp = 80
         self.rot_sp = 50
         # forward distance
-        self.fd = self.grid_size*2
+        self.fd = self.grid_size
 
 
         # parameters used for Q-learning
