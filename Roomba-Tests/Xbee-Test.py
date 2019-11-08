@@ -52,9 +52,6 @@ while True:
             message ='1'  # Make this the number of the Xbee you want to test
             print('message: ',message)
             Xbee.write(message.encode())
-            # data= [[np.random.random()]*8 for i in range(10)]
-            # data = json.dumps(data)
-            # Xbee.write(data)
             sendtime += sendtime_offset
         if Xbee.inWaiting() > 0:  # If there is something in the receive buffer
             message = Xbee.read(Xbee.inWaiting()).decode()  # Read all data in
