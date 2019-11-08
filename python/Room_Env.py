@@ -227,8 +227,8 @@ class GridWorld(object):
         # --------Parameters---------
         # -------parameters for defining grid world------
         # State space, define grid world here
-        # each grid is 800mmx800 mm
-        self.grid_size = 200
+        # each grid is 300mmx300 mm
+        self.grid_size = 300
         self.observation_space = None
         # Action space:
         self.action_space = None
@@ -264,7 +264,10 @@ class GridWorld(object):
         # parameters used for Q-learning
         # Notes: Q-learning will be applied with grid world states, not real continuous states
         #Initial position Current real continuous state: (x,y, theta), theta: heading angles
-
+        # Note: angles in real state and grid state are in different units
+        # real state: x, y in mm unit, theta in rad unit (rad easy to comput change of angle)
+        # grid state: x,y in per grid unit, theta in degree unit, not rad !!
+        # action: d in mm unit, theta in degree unit
         if real_state == None:
             real_state= [0.0,0.0,0.0]
         self.real_state = real_state
@@ -436,15 +439,20 @@ class GridWorld(object):
             if real_state[i] < (self.grid_size)/2.0:
                 grid_state[i] =0
             else:
-                tol = round(self.grid_size/10.0, 2) #tolerance of floating point number
+                # tol = round(self.grid_size/10.0, 2) #tolerance of floating point number
+                tol =15.0 #1.5cm as tolerance
                 grid_state[i] = int((real_state[i]-(self.grid_size)/2.0)//self.grid_size)
                 remain = 1 if (real_state[i]-(self.grid_size)/2.0)%self.grid_size >=tol else 0
                 grid_state[i] += remain
-
-        a = [abs(real_state[2] - i) for i in self.angle_set]
+        # convert rad to degree
+        real_angle = real_state[2]*(180.0/math.pi)
+        a = [abs(real_angle - i) for i in self.angle_set]
         i = np.argmin(a)
-        appro_angle = self.angle_set[i]
-        correct_rot = -(real_state[2] - appro_angle)
+        grid_state[2] = self.angle_set[i]
+        
+        # convert degree to rad for moving
+        agl_rad = grid_state[2]*(math.pi/180.0)
+        correct_rot = -(real_state[2] - agl_rad)
         sp = 100
         t = (correct_rot* (math.pi/180))/sp
         cur_t = time.time()
