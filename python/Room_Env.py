@@ -257,10 +257,10 @@ class GridWorld(object):
         # maximum light bumper signal strength
         self.max_strength =3000.0
         # moving speed 100mm/s, rotate 50mm/s
-        self.sp = 80
+        self.sp = 90
         self.rot_sp = 50
         # forward distance
-        self.fd = self.grid_size
+        self.fd = self.grid_size+50
 
 
         # parameters used for Q-learning
