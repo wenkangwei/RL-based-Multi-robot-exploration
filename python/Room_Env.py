@@ -462,7 +462,7 @@ class GridWorld(object):
         cur_t = time.time()
         past_t = cur_t
         while abs(past_t-cur_t) <=t+0.5:
-            self.Roomba.Move(0,sp)
+            # self.Roomba.Move(0,sp)
             cur_t = time.time()
         self.Roomba.Move(0,0)
 
@@ -648,7 +648,7 @@ class GridWorld(object):
         init_t = time.time()
         cur_t = init_t
         # tolerance of time difference
-        tol = -1e-1
+        tol = -0e-1
         # back up current state s
         s_old = self.grid_state
         s_new = s_old
