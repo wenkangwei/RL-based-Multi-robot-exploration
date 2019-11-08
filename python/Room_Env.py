@@ -527,7 +527,7 @@ class GridWorld(object):
         # by measurement, small obstacle (height = height of light bumper) in 2cm: signal 120 ~300
         # within 1cm >400
         # if  big obstacle: (like a wall) at 2cm: 1300~1600
-        d_obs = 120
+        d_obs = 140
         threshold = d_obs/self.max_strength
         obstacles = []
 
@@ -552,7 +552,7 @@ class GridWorld(object):
             l_bump = 1 if bump&2 !=0 else 0
             r_bump = 1 if bump& 1 !=0 else 0
             # Assume Left , right bumpers are at -45 degree, 45 degree
-            # Then find the average degree of object
+            # Then find the average degree of object:0, -45, 45 degree
             b_avg_angle = 45*(r_bump -l_bump)
             prob_obs /= prob_obs.sum()
             # average angles of obstacle detected by light bumper
@@ -561,7 +561,7 @@ class GridWorld(object):
 
             # check if there are 2 obstacles or 1 obstacle
             if np.abs(lb_avg_agl - b_avg_angle)>=60 or (np.sign(lb_avg_agl) !=np.sign(b_avg_angle)):
-                th = self.Motion.theta + 0.5 * lb_avg_agl
+                th = self.Motion.theta +  lb_avg_agl
                 x = self.Motion.x + d_obs * math.cos(th)
                 y = self.Motion.y + d_obs * math.sin(th)
                 x = round(x, 2)
@@ -569,7 +569,7 @@ class GridWorld(object):
                 th = round(th, 2)
                 s = self.get_gridState(real_state=[x, y, th])
                 obstacles.append((s[0], s[1]))
-                th = self.Motion.theta + 0.5 * b_avg_angle
+                th = self.Motion.theta +  b_avg_angle
                 x = self.Motion.x + d_obs * math.cos(th)
                 y = self.Motion.y + d_obs * math.sin(th)
                 x = round(x, 3)
@@ -580,7 +580,7 @@ class GridWorld(object):
                 obstacles.append((s[0], s[1]))
             else:
                 alg = (b_avg_angle+lb_avg_agl)/2.0
-                th= self.Motion.theta+0.5 * alg
+                th= self.Motion.theta+ alg
                 x = self.Motion.x + d_obs * math.cos(th)
                 y = self.Motion.y + d_obs * math.sin(th)
                 x = round(x, 2)
