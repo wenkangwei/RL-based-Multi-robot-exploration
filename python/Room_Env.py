@@ -290,7 +290,9 @@ class GridWorld(object):
         # Start achieving data
         self.start_time = time.time()
         [left_start, right_start] = self.Roomba.Query(43, 44)
+
         self.Motion = MotorEncoder(left_start, right_start)
+        print("========Initial state:",self.Motion.get_CurPos(left_start,right_start))
         # Initialize Bumper
         self.bumper= LighBumper()
         pass
@@ -445,7 +447,7 @@ class GridWorld(object):
                 grid_state[i] += remain
 
         # convert rad to degree
-        real_angle = real_state[2]*(180.0/math.pi)
+        real_angle = 180.0*(real_state[2]/math.pi)
         a = [abs(real_angle - i) for i in self.angle_set]
         i = np.argmin(a)
         # calculate approximate degree in grid world
