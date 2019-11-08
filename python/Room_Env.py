@@ -266,15 +266,17 @@ class GridWorld(object):
         # parameters used for Q-learning
         # Notes: Q-learning will be applied with grid world states, not real continuous states
         #Initial position Current real continuous state: (x,y, theta), theta: heading angles
+
         if real_state == None:
             real_state= [0.0,0.0,0.0]
-
         self.real_state = real_state
+        
+        self.angle_set = [0, 45, 90, 135, 180, -45, -90, -135, -180]
         #Initial position discrete state in grid world
         self.grid_state = self.get_gridState(real_state)
         # Current actions: [d,theta1]: d distance to move forward, theta1: change of heading angle
         self.action = [0.0,0.0]
-        self.angle_set =[0,45,90,135,180,-45,-90,-135,-180]
+
 
         # Initialize action space, state space
         self.spaces_init(world_w,world_h)
