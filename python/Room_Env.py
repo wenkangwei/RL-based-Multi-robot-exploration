@@ -671,8 +671,6 @@ class GridWorld(object):
         sign = 1 if d_theta >= 0 else -1
         print("Spinning . . . ")
         print('-----------------------------------------')
-        # while self.Roomba.Available()<0:
-        #     pass
         self.Roomba.Move(0, self.rot_sp* sign)
         t=cur_t
         while np.abs(cur_t-init_t)< tol+np.abs(ArcLen/self.rot_sp):
@@ -753,7 +751,7 @@ class GridWorld(object):
         self.Roomba.PauseQueryStream()
         if self.Roomba.Available() > 0:
             z = self.Roomba.DirectRead(self.Roomba.Available())
-            print(z)
+            # print(z)
 
         time.sleep(1)
         # update Gaussian Mixture model for reward approximation
