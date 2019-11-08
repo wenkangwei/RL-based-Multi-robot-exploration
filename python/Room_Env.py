@@ -4,7 +4,7 @@ import RPi.GPIO as GPIO
 import os.path
 import math
 import numpy as np
-
+import  json
 
 # Notes for Roomba settings:
 # 1. analog Light bumper can detect objects around 0.5 m awary from the robot. The range of strength is abbour from 5~3050
@@ -195,6 +195,34 @@ class LighBumper():
         self.bump_count = 0  # Keeps track of how many times the bumper has detected a bump
 
 
+class Xbee():
+    def __init__(self):
+        pass
+    def send(self):
+        pass
+    def read(self):
+        pass
+
+
+class Logger():
+    def __init__(self, file_name):
+        self.dir_path = '../Data/'  # Directory path to save file
+        if file_name is None:
+            file_name_input = 'Trajectory'  # input("Name for data file: ")
+            file_name = os.path.join(self.dir_path, file_name_input + ".txt")  # text file extension
+        self.file = open(file_name, "w")  # Open a text file for storing data
+
+        pass
+    def log_cum_reward(self,s,a,s_,r,t):
+        experience = {'s:':s,',a':a,'r':r,'terminal':t}
+        data = json.dumps(experience)
+        self.file.write(data+os.linesep)
+        pass
+    def terminate(self):
+        self.file.close()
+        pass
+
+
 
 class GridWorld(object):
     def __init__(self,file_name=None,real_state=None,world_w=50, world_h=50):
@@ -246,6 +274,7 @@ class GridWorld(object):
         self.grid_state = self.get_gridState(real_state)
         # Current actions: [d,theta1]: d distance to move forward, theta1: change of heading angle
         self.action = [0.0,0.0]
+        self.angle_set =[0,45,90,135,180,-45,-90,-135,-180]
 
         # Initialize action space, state space
         self.spaces_init(world_w,world_h)
@@ -253,12 +282,7 @@ class GridWorld(object):
         # initialize GPIO
         self.GPIO_init()
         # Open a text file for data retrieval
-        if file_name is None:
-            dir_path = '../Data/'  # Directory path to save file
-            file_name_input = 'data' #input("Name for data file: ")
-            file_name = os.path.join(dir_path, file_name_input + ".txt")  # text file extension
-        self.file = open(file_name, "w")  # Open a text file for storing data
-
+        self.logger =Logger()
         # Start achieving data
         self.start_time = time.time()
         [left_start, right_start] = self.Roomba.Query(43, 44)
@@ -301,9 +325,8 @@ class GridWorld(object):
         # Note: d>0: move forward along heading direction. d<0: move backward
         d = self.grid_size
         # Angle set: each num is in degree
-        angle_set =[0,45,90,135,180,-45,-90,-135,-180]
         self.action_space=[]
-        for theta in angle_set:
+        for theta in self.angle_set:
             self.action_space.append((d,theta))
         pass
 
@@ -347,6 +370,7 @@ class GridWorld(object):
         ## -- Ending Code Starts Here -- ##
         self.Roomba.ShutDown()  # Shutdown Roomba serial connection
         GPIO.cleanup()  # Reset GPIO pins for next program
+        self.logger.terminate()
         pass
 
     def reset(self):
@@ -367,6 +391,33 @@ class GridWorld(object):
         self.trans_model = None
         pass
 
+    def Move_d(self, sp, d):
+        """
+
+        :param sp: speed to move  in mm/s
+        :param d: distance to move, either rotation in rad or distance in mm
+        :return:
+        """
+        if len(sp)==len(d):
+            if len(sp)==1:
+                pass
+            else:
+                pass
+        else:
+            print("Error input of speed and distance")
+            return False
+
+
+        t = (d * (math.pi / 180)) / sp
+        cur_t = time.time()
+        past_t = cur_t
+        while abs(past_t - cur_t) <= t:
+            self.Roomba.Move(0, sp)
+            cur_t = time.time()
+        self.Roomba.Move(0, 0)
+
+        return True
+
     def get_gridState(self,real_state=None):
         """
         Convert continuous position, heading angle theta to discrete int position and int theta
@@ -380,7 +431,29 @@ class GridWorld(object):
             r_state = real_state
 
         grid_state = [0,0,0]
-        grid_state[0],grid_state[1],grid_state[2] = int(r_state[0]//self.grid_size), int(r_state[1]//self.grid_size),int(r_state[2])
+
+        # assume orignal point is the center of the starting piece
+        for i in range(2):
+            if real_state[i] < (self.grid_size)/2.0:
+                grid_state[i] =0
+            else:
+                grid_state[i] = (real_state-(self.grid_size)/2.0)//self.grid_size
+                remain = 1 if (real_state-(self.grid_size)/2.0)%self.grid_size !=0 else 0
+                grid_state[i] += remain
+
+        a = [abs(real_state[2] - i) for i in self.angle_set]
+        i = np.argmin(a)
+        appro_angle = self.angle_set[i]
+        correct_rot = -(real_state[2] - appro_angle)
+        sp = 100
+        t = (correct_rot* (math.pi/180))/sp
+        cur_t = time.time()
+        past_t = cur_t
+        while abs(past_t-cur_t) <=t:
+            self.Roomba.Move(0,sp)
+            cur_t = time.time()
+        self.Roomba.Move(0,0)
+
         return grid_state
 
     def cal_reward(self,bump,DLightBump,AnalogBump):
@@ -409,6 +482,8 @@ class GridWorld(object):
         # immediate reward from sensors
         k=-1    #k: scale of reward/penalty
         r2 = k*(np.mean(AnalogBump)/self.max_strength)
+        # r3 is cost from effect of other agents
+        r3= 0
         # Total reward/penalty
         r_new = (r1+r2)
         # update map reward at this position
@@ -673,5 +748,6 @@ class GridWorld(object):
         # update Gaussian Mixture model for reward approximation
         ########################################
         ########################################
+        self.logger.log_cum_reward(s_old,a,s_new,r,is_terminal)
         return s_new, r, is_terminal
 
