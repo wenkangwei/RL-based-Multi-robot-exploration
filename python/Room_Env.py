@@ -437,7 +437,7 @@ class GridWorld(object):
             if real_state[i] < (self.grid_size)/2.0:
                 grid_state[i] =0
             else:
-                grid_state[i] = (real_state[i]-(self.grid_size)/2.0)//self.grid_size
+                grid_state[i] = int((real_state[i]-(self.grid_size)/2.0)//self.grid_size)
                 remain = 1 if (real_state[i]-(self.grid_size)/2.0)%self.grid_size !=0 else 0
                 grid_state[i] += remain
 
