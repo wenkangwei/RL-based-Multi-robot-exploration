@@ -49,8 +49,8 @@
       <file leaf-file-name="Xbee-Test.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Roomba-Tests/Xbee-Test.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="433">
-              <caret line="54" column="63" lean-forward="true" selection-start-line="54" selection-start-column="63" selection-end-line="54" selection-end-column="63" />
+            <state relative-caret-position="280">
+              <caret line="54" column="26" selection-start-line="54" selection-start-column="26" selection-end-line="54" selection-end-column="26" />
               <folding>
                 <element signature="e#190#203#0" expanded="true" />
               </folding>
@@ -683,8 +683,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Roomba-Tests/Xbee-Test.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="433">
-          <caret line="54" column="63" lean-forward="true" selection-start-line="54" selection-start-column="63" selection-end-line="54" selection-end-column="63" />
+        <state relative-caret-position="280">
+          <caret line="54" column="26" selection-start-line="54" selection-start-column="26" selection-end-line="54" selection-end-column="26" />
           <folding>
             <element signature="e#190#203#0" expanded="true" />
           </folding>

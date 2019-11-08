@@ -52,7 +52,7 @@ while True:
             message = str(time.time()-basetime)  # Make this the number of the Xbee you want to test
             print('message: ',message)
             Xbee.write(message.encode())
-            data= [[np.random.random()]*8 for i in range(1000)]
+            data= {'data':[[np.random.random()]*8 for i in range(1000)]}
             data = json.dumps(data)
             Xbee.write(data.encode())
             sendtime += sendtime_offset
