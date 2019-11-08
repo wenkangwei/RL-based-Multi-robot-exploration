@@ -7,6 +7,7 @@ Last Modified: 5/31/2018
 import serial
 import time
 import RPi.GPIO as GPIO
+import numpy as np
 import  json
 ## Variables and Constants ##
 global Xbee  # Specifies connection to Xbee
@@ -51,6 +52,9 @@ while True:
             message = str(time.time()-basetime)  # Make this the number of the Xbee you want to test
             print('message: ',message)
             Xbee.write(message.encode())
+            data= np.array([[np.random.random()]*8 for i in range(1000)])
+            data = json.dumps(data)
+            Xbee.write(data.encode())
             sendtime += sendtime_offset
 
         if Xbee.inWaiting() > 0:  # If there is something in the receive buffer
