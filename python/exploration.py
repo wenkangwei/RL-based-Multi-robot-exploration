@@ -64,7 +64,7 @@ if __name__ == '__main__':
             s_new, r, is_terminal = Env.step(a)
             track.append(s_new)
 
-            if Env.is_map_updated():
+            if Env.is_map_updated() and len(Env.obs_ls)>0:
                 # update parameters of learning model
                 # share parameter if local map is updated
                 xbee.send(Env.obs_ls)
