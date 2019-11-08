@@ -225,6 +225,7 @@ class Xbee():
 
 
         message = self.ctrl.read(self.ctrl.inWaiting()).decode()  # Read all data in
+        print("Message: ",message)
         if message is not None:
             message = json.loads(message)
             id = message['id']

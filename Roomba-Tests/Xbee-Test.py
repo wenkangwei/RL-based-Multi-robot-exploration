@@ -52,7 +52,6 @@ while True:
             message = json.dumps(message)
             Xbee.write(message.encode())
             print("Message:",message)
-            Xbee.write(message.encode())
             sendtime += sendtime_offset
         if Xbee.inWaiting() > 0:  # If there is something in the receive buffer
             message = Xbee.read(Xbee.inWaiting()).decode()  # Read all data in
