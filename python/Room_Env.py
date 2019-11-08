@@ -205,11 +205,9 @@ class Xbee():
 
 
 class Logger():
-    def __init__(self, file_name):
+    def __init__(self, file_name_input='Trajectory'):
         self.dir_path = '../Data/'  # Directory path to save file
-        if file_name is None:
-            file_name_input = 'Trajectory'  # input("Name for data file: ")
-            file_name = os.path.join(self.dir_path, file_name_input + ".txt")  # text file extension
+        file_name = os.path.join(self.dir_path, file_name_input + ".txt")  # text file extension
         self.file = open(file_name, "w")  # Open a text file for storing data
 
         pass
@@ -270,7 +268,7 @@ class GridWorld(object):
         if real_state == None:
             real_state= [0.0,0.0,0.0]
         self.real_state = real_state
-        
+
         self.angle_set = [0, 45, 90, 135, 180, -45, -90, -135, -180]
         #Initial position discrete state in grid world
         self.grid_state = self.get_gridState(real_state)
