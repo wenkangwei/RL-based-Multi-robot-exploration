@@ -437,8 +437,8 @@ class GridWorld(object):
             if real_state[i] < (self.grid_size)/2.0:
                 grid_state[i] =0
             else:
-                grid_state[i] = (real_state-(self.grid_size)/2.0)//self.grid_size
-                remain = 1 if (real_state-(self.grid_size)/2.0)%self.grid_size !=0 else 0
+                grid_state[i] = (real_state[i]-(self.grid_size)/2.0)//self.grid_size
+                remain = 1 if (real_state[i]-(self.grid_size)/2.0)%self.grid_size !=0 else 0
                 grid_state[i] += remain
 
         a = [abs(real_state[2] - i) for i in self.angle_set]
