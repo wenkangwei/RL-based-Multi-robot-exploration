@@ -16,6 +16,7 @@ class Xbee():
     def send(self, data):
         #   '#' as split between different packet
         message = json.dumps(data)+'#'
+        print("Sending message: ", message)
         self.ctrl.write(message.encode())
         print("Message sent.")
         self.sendtime += self.sendtime_offset
@@ -157,6 +158,8 @@ def comm_agents():
         ready = xb.check_state_updated()
         if ready:
             xb.send(pack1)
+            print("Ready to send data:",xb.data)
+            print(xb.data)
         pass
 
         # debug
