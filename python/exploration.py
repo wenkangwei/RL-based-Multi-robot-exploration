@@ -47,11 +47,6 @@ def Xbee_comm():
 
 
 def run_agent(Env):
-    hn = socket.gethostname()
-    # obtain hostname of raspberry pi
-    id = int(hn[-1])
-
-    Env = GridWorld(id)
     action_set = Env.action_space
     # a = random.choice(action_set)
     track = []
@@ -60,7 +55,7 @@ def run_agent(Env):
     try:
 
         # test_observation(Env)
-        set = [random.choice(Env.action_space) for i in range(5)]
+        set = [random.choice(Env.action_space) for i in range(1)]
         for a in set:
             # do action and sample experience here
             print('action: ', a)
@@ -110,9 +105,9 @@ if __name__ == '__main__':
     id = int(hn[-1])
 
     Env = GridWorld(id)
-    # run_agent(Env)
+    run_agent(Env)
 
-    test_json(Env)
-    Env.terminate()
+    # test_json(Env)
+    # Env.terminate()
 
 

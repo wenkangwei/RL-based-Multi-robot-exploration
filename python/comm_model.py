@@ -177,6 +177,6 @@ def comm_agents():
 
 
 if __name__ == '__main__':
-    # comm_agents()
-    test_json()
+    comm_agents()
+    # test_json()
     pass
