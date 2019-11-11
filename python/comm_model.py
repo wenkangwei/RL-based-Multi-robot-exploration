@@ -33,6 +33,7 @@ class Xbee():
     def read_avail_agents(self):
         message = self.ctrl.read(self.ctrl.inWaiting()).decode()  # Read all data in
         d_ls = message.split('#')
+        id_ls = []
         # number of agents with higher priority than this agent
         cnt_before =0
         # number of agents with lower priority than this agent
@@ -47,8 +48,9 @@ class Xbee():
                         cnt_before +=1
                     if int(d["0"]) > self.id:
                         cnt_after +=1
+                    id_ls.append(int(d["0"]))
 
-        return cnt_before,cnt_after
+        return cnt_before,cnt_after, id_ls
 
     def close(self):
         self.ctrl.close()
@@ -180,8 +182,8 @@ def comm_agents():
             # check priority of sending data
             # cnt_before: counts of agents that will send before this agent
             # cnt_bebind: counts of agents that will send after this agent
-            cnt_before, cnt_after = xb.read_avail_agents()
-            print("Count:",cnt_before,cnt_after)
+            cnt_before, cnt_after, id_ls = xb.read_avail_agents()
+            print("Count:",cnt_before,cnt_after,"id:",id_ls)
             # receive data from other agents with higher priority
             for i in range(cnt_before):
                 data = ''
@@ -193,6 +195,9 @@ def comm_agents():
             # term of this agent to send data
             if ready:
                 xb.send(xb.data)
+                while xb.Available():
+                    xb.read()
+                time.sleep(0.5)
 
             # receive data from other agents with lower priority
             for i in range(cnt_after):
