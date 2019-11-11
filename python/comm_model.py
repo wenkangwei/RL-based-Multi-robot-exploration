@@ -125,8 +125,8 @@ def test_json():
     id = int(hn[-1])
     pack1 = {'id': id, 'c': 1}
     xb = Xbee(id)
-    xb.check_state_updated()
-
+    f = xb.check_state_updated()
+    print('Update:',f)
     xb.write_data([xb.data])
 
 def comm_agents():
