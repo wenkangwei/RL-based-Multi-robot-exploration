@@ -151,12 +151,20 @@ def comm_agents():
     pack1 = {'0': id, 'c': 1}
     xb = Xbee(id)
     data_ls = []
+    init_t = time.time()
+    cur_t =init_t
+    ready =True
     while True:
         # check if data in w_buf write buffer is updated by the agent
         # if updated, load data and return flag, then send indicator to other agents
         # so that other agents know who are ready to send data
-        ready = xb.check_state_updated()
-        ready = True
+        # ready = xb.check_state_updated()
+
+        if abs(cur_t-init_t)>3:
+            ready = True if ready == False else True
+            init_t=cur_t
+            cur_t =time.time()
+
         if ready:
             xb.send(pack1)
             print("Ready to send data:",xb.data)
@@ -174,28 +182,28 @@ def comm_agents():
             # cnt_bebind: counts of agents that will send after this agent
             cnt_before, cnt_after = xb.read_avail_agents()
             print("Count:",cnt_before,cnt_after)
-            # receive data from other agents with higher priority
-            # for i in range(cnt_before):
-            #     data = ''
-            #     while xb.Available():
-            #         data += xb.read()
-            #         print("Data: ", data)
-            #     data_ls.extend(xb.decode_data(data))
-            #     time.sleep(0.5)
-            # # term of this agent to send data
-            # if ready:
-            #     xb.send(xb.data)
-            #
-            # # receive data from other agents with lower priority
-            # for i in range(cnt_after):
-            #     data = ''
-            #     while xb.Available():
-            #         data += xb.read()
-            #         print("Data: ",data)
-            #     data_ls.extend(xb.decode_data(data))
-            #     time.sleep(0.5)
-            #
-            # print("Received data: ",data_ls)
+            receive data from other agents with higher priority
+            for i in range(cnt_before):
+                data = ''
+                while xb.Available():
+                    data += xb.read()
+                    print("Data: ", data)
+                data_ls.extend(xb.decode_data(data))
+                time.sleep(0.5)
+            # term of this agent to send data
+            if ready:
+                xb.send(xb.data)
+
+            # receive data from other agents with lower priority
+            for i in range(cnt_after):
+                data = ''
+                while xb.Available():
+                    data += xb.read()
+                    print("Data: ",data)
+                data_ls.extend(xb.decode_data(data))
+                time.sleep(0.5)
+
+            print("Received data: ",data_ls)
 
         # write data back to r_buffer
         if len(data_ls) > 0:
