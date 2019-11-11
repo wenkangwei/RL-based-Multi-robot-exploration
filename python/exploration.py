@@ -38,6 +38,7 @@ def test_observation(Env):
 
 def test_json(Env):
     action_set = Env.action_space
+    Env.send_states()
     id, global_s, global_d, global_p = Env.read_global_s(timestep=0, param=None)
     print('id:{},global_s:{},d:{}, p:{}'.format(id, global_s, global_d, global_p))
 
