@@ -112,5 +112,6 @@ if __name__ == '__main__':
     # run_agent(Env)
 
     test_json(Env)
+    Env.terminate()
 
 
