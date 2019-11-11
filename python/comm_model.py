@@ -132,6 +132,19 @@ def test_json():
     xb.write_data([xb.data])
 
 def comm_agents():
+    """
+    Packet 1 {'0':id,'c':1} 'c': type of packet
+    packet 2: data from current agent : {"0":0,"1":0,"2":1,"3":[0,0,0],"4":null,"5":0} data from write buffer
+    Data write to r_buffer:
+            {
+          "1":{"t":0,"s":[1,2,3],"p":[0,0,0,0],"d":0},
+          "2":{"t":0,"s":[1,2,3],"p":[0,0,0,0],"d":0},
+          "3":{"t":0,"s":[1,2,3],"p":[0,0,0,0],"d":0}
+        }
+        indicating states of different agents
+
+    :return:
+    """
     hn = socket.gethostname()
     id = int(hn[-1])
     pack1 = {'0': id, 'c': 1}
@@ -148,6 +161,7 @@ def comm_agents():
 
         # debug
         ready =True
+
         # check if other agents want to send data
         if xb.Available():
             # check priority of sending data
@@ -173,6 +187,8 @@ def comm_agents():
                     data += xb.read()
                 data_ls.extend(xb.decode_data(data))
                 time.sleep(0.5)
+                
+            print("Received data: ",data_ls)
 
         # write data back to r_buffer
         if len(data_ls) > 0:
