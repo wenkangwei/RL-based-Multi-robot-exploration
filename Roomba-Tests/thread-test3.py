@@ -125,7 +125,7 @@ if __name__ == '__main__':
     while True:
         import time
         import os
-        time.sleep(0)
+        time.sleep(0.1)
         pid= os.getpid()
         print("I'm your Child2 : ",pid)
         t +=1
