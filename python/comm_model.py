@@ -5,7 +5,7 @@ import socket
 class Xbee():
     def __init__(self,id=1):
         self.id =id
-        self.data = None
+        self.data = {"0":id,"1":0,"2":1,"3":[0,0,0],"4":None,"5":0}
         self.sendtime = time.time()
         self.sendtime_offset = 1.0
         self.basetime = time.time()
