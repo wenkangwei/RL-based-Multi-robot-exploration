@@ -61,20 +61,11 @@
       <file leaf-file-name="comm_model.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/python/comm_model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="338">
-              <caret line="212" column="12" selection-start-line="212" selection-start-column="12" selection-end-line="212" selection-end-column="12" />
+            <state relative-caret-position="100">
+              <caret line="213" column="28" selection-start-line="213" selection-start-column="28" selection-end-line="213" selection-end-column="28" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="RoombaCI_lib.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Roomba-Tests/RoombaCI_lib.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
-              <caret line="614" column="33" selection-start-line="614" selection-start-column="32" selection-end-line="614" selection-end-column="33" />
             </state>
           </provider>
         </entry>
@@ -93,6 +84,18 @@
           <provider selected="true" editor-type-id="text-editor">
             <state>
               <caret selection-end-line="21" selection-end-column="17" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="scratch_6.py" pinned="false" current-in-tab="false">
+        <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_6.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="385">
+              <caret line="95" column="17" lean-forward="true" selection-start-line="95" selection-start-column="17" selection-end-line="95" selection-end-column="17" />
+              <folding>
+                <element signature="e#0#18#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -161,7 +164,6 @@
         <option value="$PROJECT_DIR$/python/__init__.py" />
         <option value="$PROJECT_DIR$/python/GMM-test.py" />
         <option value="$PROJECT_DIR$/Roomba-Tests/Xbee-Test.py" />
-        <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch_6.py" />
         <option value="$PROJECT_DIR$/Roomba-Tests/thread-test2.py" />
         <option value="$PROJECT_DIR$/Roomba-Tests/thread-test.py" />
         <option value="$PROJECT_DIR$/Roomba-Tests/thread-test3.py" />
@@ -170,6 +172,7 @@
         <option value="$PROJECT_DIR$/python/r_buf.json" />
         <option value="$PROJECT_DIR$/python/Room_Env.py" />
         <option value="$PROJECT_DIR$/python/exploration.py" />
+        <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch_6.py" />
         <option value="$PROJECT_DIR$/python/comm_model.py" />
       </list>
     </option>
@@ -235,7 +238,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.thread-test">
+  <component name="RunManager" selected="Python.scratch_6">
     <configuration name="GMM-test" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="RL-based-multi-robot-exploration" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -335,9 +338,9 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.scratch_6" />
         <item itemvalue="Python.thread-test" />
         <item itemvalue="Python.thread-test2" />
-        <item itemvalue="Python.scratch_6" />
         <item itemvalue="Python.comm_model" />
         <item itemvalue="Python.GMM-test" />
       </list>
@@ -360,12 +363,12 @@
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49912128" visible="true" weight="0.14474554" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49912128" visible="true" weight="0.14474554" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Python Console" order="7" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.32485875" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32485875" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Favorites" order="2" sideWeight="0.50087875" side_tool="true" weight="0.14474554" />
@@ -660,16 +663,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_6.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1564">
-          <caret line="93" column="12" selection-start-line="93" selection-start-column="12" selection-end-line="93" selection-end-column="12" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python35/Lib/subprocess.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="12920">
@@ -702,13 +695,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="306">
           <caret line="18" column="17" lean-forward="true" selection-start-line="18" selection-start-column="17" selection-end-line="18" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Roomba-Tests/thread-test.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="436">
-          <caret line="45" column="20" selection-start-line="45" selection-start-column="20" selection-end-line="45" selection-end-column="20" />
         </state>
       </provider>
     </entry>
@@ -753,10 +739,27 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/scratch_6.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="385">
+          <caret line="95" column="17" lean-forward="true" selection-start-line="95" selection-start-column="17" selection-end-line="95" selection-end-column="17" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Roomba-Tests/thread-test.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="436">
+          <caret line="45" column="20" selection-start-line="45" selection-start-column="20" selection-end-line="45" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/python/comm_model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="338">
-          <caret line="212" column="12" selection-start-line="212" selection-start-column="12" selection-end-line="212" selection-end-column="12" />
+        <state relative-caret-position="100">
+          <caret line="213" column="28" selection-start-line="213" selection-start-column="28" selection-end-line="213" selection-end-column="28" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
           </folding>
