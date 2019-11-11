@@ -86,6 +86,7 @@ class Xbee():
         fp = open('w_buf.json','r')
         if fp.readable():
             data = fp.read()
+            print('Check States: ',data)
             data = json.loads(data)
             if data[1] >self.t_step:
                 self.t_step =data[1]
@@ -119,7 +120,14 @@ class Xbee():
         fp.close()
         pass
 
+def test_json():
+    hn = socket.gehostname()
+    id = int(hn[-1])
+    pack1 = {'id': id, 'c': 1}
+    xb = Xbee(id)
+    xb.check_state_updated()
 
+    xb.write_data([xb.data])
 
 def comm_agents():
     hn = socket.gehostname()
@@ -169,5 +177,6 @@ def comm_agents():
 
 
 if __name__ == '__main__':
-    comm_agents()
+    # comm_agents()
+    test_json()
     pass
