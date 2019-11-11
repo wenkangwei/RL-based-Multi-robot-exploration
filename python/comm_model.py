@@ -40,10 +40,12 @@ class Xbee():
             # check if it is valid packets
             if len(s)>3 and ("{" in s) and ( "}" in s):
                 d= json.loads(s)
-                if int(d["0"]) < self.id:
-                    cnt_before +=1
-                if int(d["0"]) > self.id:
-                    cnt_after +=1
+                if d["0"] is not None and d['c'] is not None:
+                    print("Received data: ",d)
+                    if int(d["0"]) < self.id:
+                        cnt_before +=1
+                    if int(d["0"]) > self.id:
+                        cnt_after +=1
 
         return cnt_before,cnt_after
 
@@ -123,7 +125,7 @@ class Xbee():
 def test_json():
     hn = socket.gethostname()
     id = int(hn[-1])
-    pack1 = {'id': id, 'c': 1}
+    pack1 = {'0': id, 'c': 1}
     xb = Xbee(id)
     f = xb.check_state_updated()
     print('Update:',f)
@@ -132,7 +134,7 @@ def test_json():
 def comm_agents():
     hn = socket.gethostname()
     id = int(hn[-1])
-    pack1 = {'id': id, 'c': 1}
+    pack1 = {'0': id, 'c': 1}
     xb = Xbee(id)
     data_ls = []
     while True:
