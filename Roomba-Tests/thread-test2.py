@@ -1,25 +1,25 @@
 import subprocess
 
 if __name__ =='__main__':
-    # child = subprocess.Popen(['python','thread-test.py'])
-    # child1 = subprocess.Popen(['python', 'thread-test3.py'])
-    # t =0
-    #
-    # while True:
-    #     try:
-    #         # print("==============I'm parent==========")
-    #         import time
-    #         # time.sleep(5)
-    #         pass
-    #         t +=1
-    #         # print("##############################################Parent t: ",t)
-    #         # import  random
-    #         # data = {1:'parent',2:[round(random.random(),1) for i in range(3)]}
-    #         # child.communicate(data)
-    #     except KeyboardInterrupt:
-    #         child.kill()
-    #         child1.kill()
-    #         break
+    child = subprocess.Popen(['python','thread-test.py'])
+    child1 = subprocess.Popen(['python', 'thread-test3.py'])
+    t =0
+
+    while True:
+        try:
+            # print("==============I'm parent==========")
+            import time
+            # time.sleep(5)
+            pass
+            t +=1
+            # print("##############################################Parent t: ",t)
+            # import  random
+            # data = {1:'parent',2:[round(random.random(),1) for i in range(3)]}
+            # child.communicate(data)
+        except KeyboardInterrupt:
+            child.kill()
+            child1.kill()
+            break
     # import os
     # import  subprocess
     # import random

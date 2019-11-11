@@ -40,13 +40,17 @@ if __name__ == '__main__':
 
     import multiprocessing as mp
     from multiprocessing import Queue
+    import time
+    while True:
+        print('P1')
+        time.sleep(3)
     # from queue import Queue
     # mp.set_start_method('spawn')
-    q = Queue()
-    p = Queue()
-    # par1, child = mp.Pipe()
-    p1 = mp.Process(target=f, args=(q,p,))
-
-    p2 = mp.Process(target=f2, args=(q,p,))
-    p1.start()
-    p2.start()
+    # q = Queue()
+    # p = Queue()
+    # # par1, child = mp.Pipe()
+    # p1 = mp.Process(target=f, args=(q,p,))
+    #
+    # p2 = mp.Process(target=f2, args=(q,p,))
+    # p1.start()
+    # p2.start()
