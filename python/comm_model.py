@@ -88,8 +88,8 @@ class Xbee():
             data = fp.read()
             print('Check States: ',data)
             data = json.loads(data)
-            if data[1] >self.t_step:
-                self.t_step =data[1]
+            if data["1"] >self.t_step:
+                self.t_step =data["1"]
                 self.data = data
                 return True
         return False
