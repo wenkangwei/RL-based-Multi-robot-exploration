@@ -155,14 +155,14 @@ def comm_agents():
     data_ls = []
     init_t = time.time()
     cur_t =init_t
-    ready =True
+    ready =False
     while True:
         # check if data in w_buf write buffer is updated by the agent
         # if updated, load data and return flag, then send indicator to other agents
         # so that other agents know who are ready to send data
         # ready = xb.check_state_updated()
 
-        if abs(cur_t-init_t)>3:
+        if abs(cur_t-init_t)>2:
             ready = True if ready == False else True
             init_t=cur_t
             cur_t =time.time()
