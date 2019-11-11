@@ -37,11 +37,6 @@ def test_observation(Env):
 
 
 def test_json(Env):
-    hn = socket.gethostname()
-    # obtain hostname of raspberry pi
-    id = int(hn[-1])
-
-    Env = GridWorld(id)
     action_set = Env.action_space
     id, global_s, global_d, global_p = Env.read_global_s(timestep=t, param=w)
     print('id:{},global_s:{},d:{}, p:{}'.format(id, global_s, global_d, global_p))
@@ -109,13 +104,13 @@ def run_agent(Env):
 
 if __name__ == '__main__':
     # import multiprocessing as mp
-    # hn = socket.gethostname()
-    # # obtain hostname of raspberry pi
-    # id = int(hn[-1])
-    #
-    # Env = GridWorld(id)
+    hn = socket.gethostname()
+    # obtain hostname of raspberry pi
+    id = int(hn[-1])
+
+    Env = GridWorld(id)
     # run_agent(Env)
 
-    test_json()
+    test_json(Env)
 
 
