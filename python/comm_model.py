@@ -144,6 +144,8 @@ def comm_agents():
             xb.send(pack1)
         pass
 
+        # debug
+        ready =True
         # check if other agents want to send data
         if xb.Available():
             # check priority of sending data
