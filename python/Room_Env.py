@@ -653,7 +653,7 @@ class GridWorld(object):
         1: time step
         2: type of data. if it is 0: it is an indicate, meaning ready to send data
                 if it is 1:  it includes info of state and learning model parameters
-        3: current state
+        3: current grid state
         4: learning model parameters
         5: degree
         packet format in json:
@@ -822,9 +822,9 @@ class GridWorld(object):
                     L_cnt, R_cnt, bump, DLightBump, AnalogBump = data
 
                     if is_terminal:
-                        print("AnalogBump: ", AnalogBump)
-                        print('r:{:10.2f}, terminal:{}'.format(r, is_terminal))
-                        print('obstacle:', self.obs_ls[0])
+                        # print("AnalogBump: ", AnalogBump)
+                        # print('r:{:10.2f}, terminal:{}'.format(r, is_terminal))
+                        # print('obstacle:', self.obs_ls[0])
                         break
                 # check obstacle and terminal state
                 if np.abs(cur_t-t)>= self.print_time:

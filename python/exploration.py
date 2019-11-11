@@ -34,11 +34,23 @@ def test_observation(Env):
         cur_t = time.time()
     pass
 
+
+
+def test_json(Env):
+    hn = socket.gethostname()
+    # obtain hostname of raspberry pi
+    id = int(hn[-1])
+
+    Env = GridWorld(id)
+    action_set = Env.action_space
+    id, global_s, global_d, global_p = Env.read_global_s(timestep=t, param=w)
+    print('id:{},global_s:{},d:{}, p:{}'.format(id, global_s, global_d, global_p))
+
 def Xbee_comm():
     comm_agents()
 
 
-def run_agent():
+def run_agent(Env):
     hn = socket.gethostname()
     # obtain hostname of raspberry pi
     id = int(hn[-1])
@@ -69,6 +81,7 @@ def run_agent():
             w = []
             id, global_s, global_d, global_p = Env.read_global_s(timestep=t, param=w)
 
+
             # update global learning model
 
             # show msp here
@@ -96,6 +109,13 @@ def run_agent():
 
 if __name__ == '__main__':
     # import multiprocessing as mp
-    run_agent()
+    # hn = socket.gethostname()
+    # # obtain hostname of raspberry pi
+    # id = int(hn[-1])
+    #
+    # Env = GridWorld(id)
+    # run_agent(Env)
+
+    test_json()
 
 
