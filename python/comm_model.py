@@ -121,7 +121,7 @@ class Xbee():
         pass
 
 def test_json():
-    hn = socket.gehostname()
+    hn = socket.gethostname()
     id = int(hn[-1])
     pack1 = {'id': id, 'c': 1}
     xb = Xbee(id)
@@ -130,7 +130,7 @@ def test_json():
     xb.write_data([xb.data])
 
 def comm_agents():
-    hn = socket.gehostname()
+    hn = socket.gethostname()
     id = int(hn[-1])
     pack1 = {'id': id, 'c': 1}
     xb = Xbee(id)
