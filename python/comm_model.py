@@ -40,9 +40,9 @@ class Xbee():
             # check if it is valid packets
             if len(s)>3 and ("{" in s) and ( "}" in s):
                 d= json.loads(s)
-                if int(d[0]) < self.id:
+                if int(d["0"]) < self.id:
                     cnt_before +=1
-                if int(d[0]) > self.id:
+                if int(d["0"]) > self.id:
                     cnt_after +=1
 
         return cnt_before,cnt_after
@@ -86,11 +86,11 @@ class Xbee():
         fp = open('w_buf.json','r')
         if fp.readable():
             data = fp.read()
-            print('Check States: ',data)
             data = json.loads(data)
             if data["1"] >self.t_step:
                 self.t_step =data["1"]
                 self.data = data
+                # print('Check States: ',data)
                 return True
         return False
 
