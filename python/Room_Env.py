@@ -197,72 +197,55 @@ class LighBumper():
         self.bump_count = 0  # Keeps track of how many times the bumper has detected a bump
 
 
-class Xbee():
-    def __init__(self,id=1):
-        self.id =id
-        self.sendtime = time.time()
-        self.sendtime_offset = 1.0
-        self.basetime = time.time()
-        self.basetime_offset = 0.5
-        self.ctrl = serial.Serial('/dev/ttyUSB0', 115200)  # Baud rate should be 115200
-        pass
-    def send(self, data):
-        message= {'new':True,'id':self.id,'D':data}
-        message = json.dumps(message)
-        self.ctrl.write(message.encode())
-        print("Message sent.")
-        self.sendtime += self.sendtime_offset
-        pass
-    def Available(self):
-        return  True if self.ctrl.inWaiting() >0 else False
-
-
-    def read(self):
-        message = {'new':True, 'id':None,'D':None}
-        id =None
-        data = None
-        update_flag =False
-
-
-        message = self.ctrl.read(self.ctrl.inWaiting()).decode()  # Read all data in
-        print("Message: ",message)
-        if message is not None:
-            message = json.loads(message)
-            id = message['id']
-            data = message['D']
-            print('Mess from: ', id)
-            update_flag = message['new']
-
-        return update_flag, id, data
-
-    def close(self):
-        self.ctrl.close()
-        pass
-
 class Logger():
     def __init__(self, file_name_input='Trajectory'):
+        self.r =0.0
         self.dir_path = '../Data/'  # Directory path to save file
-        file_name = os.path.join(self.dir_path, file_name_input + ".txt")  # text file extension
-        self.file = open(file_name, "w")  # Open a text file for storing data
+        file_name = os.path.join(self.dir_path, 'Trajectory' + ".txt")  # text file extension
+        self.trajectory = open(file_name, "w")  # Open a text file for storing data
+
+        file_name = os.path.join(self.dir_path, 'obstacles' + ".txt")  # text file extension
+        self.obstacles = open(file_name, "w")  # Open a text file for storing data
+
+        file_name = os.path.join(self.dir_path, 'cum_reward' + ".txt")  # text file extension
+        self.cum_reward = open(file_name, "w")  # Open a text file for storing data
+        self.cum_reward.write('{}'.format(self.r))
 
         pass
-    def log_cum_reward(self,s,a,s_,r,t):
+    def log_trajecctory(self,s,a,s_,r,t):
         experience = {'s:':s,',a':a,'r':r,'terminal':t}
         data = json.dumps(experience)
-        self.file.write(data+os.linesep)
+        self.trajectory.write(data+os.linesep)
         pass
+    def log_obstacles(self,obstacle=None):
+        self.obstacles.write('{}'.format(obstacle) + os.linesep)
+        pass
+    def log_cum_reward(self,r):
+        self.r +=r
+        self.cum_reward.write('{}'.format(self.r))
+        pass
+    def log(self, s,a,s_,r,t,obs):
+        self.log_trajecctory(s,a,s_,r,t)
+        self.log_cum_reward(r)
+        self.log_obstacles(obs)
+
     def terminate(self):
-        self.file.close()
+        self.trajectory.close()
+        self.cum_reward.close()
+        self.obstacles.close()
         pass
 
 
 
 class GridWorld(object):
-    def __init__(self,file_name=None,real_state=None,world_w=50, world_h=50):
+    def __init__(self,id,file_name=None,real_state=None,world_w=50, world_h=50):
         # --------Parameters---------
         # -------parameters for defining grid world------
         # State space, define grid world here
         # each grid is 240mmx240 mm based on size of tabular in lab
+        self.id =id
+        # node degree in network
+        self.degree = 0
         self.grid_size = 240*2
         self.observation_space = None
         # Action space:
@@ -663,6 +646,87 @@ class GridWorld(object):
 
         return old_state, self.real_state,r, terminal, (L_cnt, R_cnt, bump,DLightBump, AnalogBump)
 
+    def send_states(self,t=0):
+        """
+        data in json packet
+        0: id
+        1: time step
+        2: type of data. if it is 0: it is an indicate, meaning ready to send data
+                if it is 1:  it includes info of state and learning model parameters
+        3: current state
+        4: learning model parameters
+        5: degree
+        packet format in json:
+        {0:1,1:timestep,2: type, 3:state,4: params, 5: degree}
+        :param t: current time step
+        :return:
+        """
+        id = self.id
+        data = {0:id,1:t,2:1,3:self.grid_state,4:None,5:0}
+        txt = json.dumps(data)
+        fp = open('w_buf.json','w')
+        if fp.writable():
+            fp.write(txt)
+        else:
+            print("Error: Fail to write Agent data")
+            fp.close()
+            return False
+        fp.close()
+        return True
+
+    def read_global_s(self,timestep=0,param=None):
+        """
+        packet format in json:
+        {1: {'t':timestep, 's': state, 'p':parameters of learning model},
+        2: {'t':timestep, 's': state, 'p':parameters of learning model}
+        3: {'t':timestep, 's': state, 'p':parameters of learning model}
+        }
+        if 'p' and 's' are None, drop that packet
+        where 1, 2, 3 are the id of agents
+        :return:
+        """
+        global_s= [self.grid_state]
+        global_p = [param]
+        global_d = [0]
+        id = [self.id]
+        fp = open('r_buf.json','r')
+        if fp.readable():
+            data= json.loads(fp.read())
+            steps = [data[k]['t'] for k in data.keys()]
+            # check if all agents are synchronous at the same time step
+            # else wait 2s for sychronization
+            if timestep >= np.max(steps):
+                cur_t = time.time()
+                init_t = cur_t
+                timeout = 2
+                while steps.count(timestep) <len(steps):
+                    # check update each 0.5
+                    time.sleep(0.5)
+                    # read data again
+                    data= json.loads(fp.read())
+                    steps = [data[k]['t'] for k in data.keys()]
+                    cur_t =time.time()
+
+                    if abs(cur_t - init_t) > timeout:
+                        break
+
+            for i in data.keys():
+                if data[i]['p'] is not None and data[i]['s'] is not None:
+                    # state of agents
+                    global_s.append(data[i]['s'])
+                    # parameters of model
+                    global_p.append(data[i]['p'])
+                    # degree of node
+                    global_d.append(data[i]['d'])
+                    id.append(i)
+                    global_d[0] += 1
+            # update degree
+            self.degree= global_d[0]
+
+        return id, global_s,global_d,global_p
+
+
+
     def is_map_updated(self):
         """
         Flag to indicate if map is updated/ new obstacles are found
@@ -802,7 +866,7 @@ class GridWorld(object):
         # update Gaussian Mixture model for reward approximation
         ########################################
         ########################################
-        self.logger.log_cum_reward(s_old,a,s_new,r,is_terminal)
+        self.logger.log(s_old,a,s_new,r,is_terminal,self.obs_ls)
         time.sleep(0.5)
         return s_new, r, is_terminal
 

@@ -1,8 +1,9 @@
 from Room_Env import *
-import numpy as np
-import math
+# import numpy as np
+# import math
 import  random
 import socket
+from  comm_model import *
 
 def test_observation(Env):
     import time
@@ -33,46 +34,52 @@ def test_observation(Env):
         cur_t = time.time()
     pass
 
-if __name__ == '__main__':
+def Xbee_comm():
+    comm_agents()
 
-    Env =GridWorld()
+
+def run_agent():
     hn = socket.gethostname()
     # obtain hostname of raspberry pi
-    xbee = Xbee(int(hn[-1]))
+    id = int(hn[-1])
 
+    Env = GridWorld(id)
     action_set = Env.action_space
     # a = random.choice(action_set)
-    track =[]
+    track = []
+    # time step t, used to track update of learning model
+    t = 0
     try:
 
         # test_observation(Env)
-
         set = [random.choice(Env.action_space) for i in range(5)]
         for a in set:
-            # Check if messages from  other agent available
-            if xbee.Available():
-                is_updated, id, data =  xbee.read()
-                if not is_updated:
-                    break
-                print('id:{}, data: {}'.format(id, data))
-
-
-            # Training global Q value/ V state value here
-
             # do action and sample experience here
             print('action: ', a)
             s_new, r, is_terminal = Env.step(a)
+            t += 1
             track.append(s_new)
 
-            if Env.is_map_updated() and len(Env.obs_ls)>0:
+            # Training local Q value/ V state value here
+
+            # Send local information to other agents
+            Env.send_states(t=t)
+            # receive info from other agents
+            # Learning model parameters
+            w = []
+            id, global_s, global_d, global_p = Env.read_global_s(timestep=t, param=w)
+
+            # update global learning model
+
+            # show msp here
+            if Env.is_map_updated() and len(Env.obs_ls) > 0:
                 # update parameters of learning model
                 # share parameter if local map is updated
-                xbee.send(Env.obs_ls)
                 pass
         pass
+
     except KeyboardInterrupt:
         Env.terminate()
-        xbee.close()
         print('obstacles：')
         print(Env.obs_ls[0])
         print('Track:')
@@ -80,11 +87,15 @@ if __name__ == '__main__':
             print(i)
 
     Env.terminate()
-    xbee.close()
     print('obstacles：')
     print(Env.obs_ls[0])
     print('Track:')
     for i in track:
         print(i)
+
+
+if __name__ == '__main__':
+    # import multiprocessing as mp
+    run_agent()
 
 
