@@ -646,7 +646,7 @@ class GridWorld(object):
 
         return old_state, self.real_state,r, terminal, (L_cnt, R_cnt, bump,DLightBump, AnalogBump)
 
-    def send_states(self,t=0):
+    def send_states(self,t=0,state=None,degree=None,p=None):
         """
         data in json packet
         0: id
@@ -661,8 +661,13 @@ class GridWorld(object):
         :param t: current time step
         :return:
         """
+        if state == None:
+            state = self.grid_state
+        if degree == None:
+            degree =self.degree
+
         id = self.id
-        data = {0:id,1:t,2:1,3:self.grid_state,4:None,5:0}
+        data = {0:id,1:t,2:1,3:state,4:p,5:degree}
         txt = json.dumps(data)
         fp = open('w_buf.json','w')
         if fp.writable():
@@ -673,6 +678,24 @@ class GridWorld(object):
             return False
         fp.close()
         return True
+
+    def decode_data(self, data=''):
+        # Template of format in r_buffer
+        # {
+        #     "1": {"t": 0, "s": [1, 2, 3], "p": [0, 0, 0, 0], "d": 0},
+        #     "2": {"t": 0, "s": [1, 2, 3], "p": [0, 0, 0, 0], "d": 0},
+        #     "3": {"t": 0, "s": [1, 2, 3], "p": [0, 0, 0, 0], "d": 0}
+        #
+        # }
+        d_ls = data.split('#')
+        data_ls = []
+        for d in d_ls:
+            if len(d) > 3 and ('{' in d) and ('}' in d):
+                data = json.loads(d)
+                id, t_step, s, p, d = data[0], data[1], data[3], data[4], data[5]
+                data_ls.append((id, t_step, s, p, d))
+
+        return data_ls
 
     def read_global_s(self,timestep=0,param=None):
         """
@@ -691,7 +714,10 @@ class GridWorld(object):
         id = [self.id]
         fp = open('r_buf.json','r')
         if fp.readable():
-            data= json.loads(fp.read())
+            data = fp.read()
+            print("Global states: ",data)
+            data = json.loads(data)
+            # d_ls = self.decode_data(data)
             steps = [data[k]['t'] for k in data.keys()]
             # check if all agents are synchronous at the same time step
             # else wait 2s for sychronization

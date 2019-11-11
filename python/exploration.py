@@ -59,17 +59,22 @@ def run_agent(Env):
         for a in set:
             # do action and sample experience here
             print('action: ', a)
-            s_new, r, is_terminal = Env.step(a)
+            # s_new, r, is_terminal = Env.step(a)
+
+            # debug
+            s_new, r, is_terminal = [round(random.random(),2) for i in range(3)],round(random.random(),2),False
             t += 1
             track.append(s_new)
 
             # Training local Q value/ V state value here
 
             # Send local information to other agents
-            Env.send_states(t=t)
+            w = []
+            Env.send_states(t=t,state= s_new,p=w,d = 0)
+
             # receive info from other agents
             # Learning model parameters
-            w = []
+
             id, global_s, global_d, global_p = Env.read_global_s(timestep=t, param=w)
 
 
