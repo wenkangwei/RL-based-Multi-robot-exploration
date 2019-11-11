@@ -156,6 +156,7 @@ def comm_agents():
         # if updated, load data and return flag, then send indicator to other agents
         # so that other agents know who are ready to send data
         ready = xb.check_state_updated()
+        ready = True
         if ready:
             xb.send(pack1)
             print("Ready to send data:",xb.data)
@@ -163,7 +164,7 @@ def comm_agents():
         pass
 
         # debug
-        ready =True
+
 
         # check if other agents want to send data
         if xb.Available():
