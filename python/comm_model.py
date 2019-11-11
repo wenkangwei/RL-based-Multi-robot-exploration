@@ -178,6 +178,7 @@ def comm_agents():
                 data = ''
                 while xb.Available():
                     data += xb.read()
+                    print("Data: ", data)
                 data_ls.extend(xb.decode_data(data))
                 time.sleep(0.5)
             # term of this agent to send data
