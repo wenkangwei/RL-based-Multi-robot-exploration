@@ -70,7 +70,7 @@ def run_agent(Env):
 
             # Send local information to other agents
             w = []
-            Env.send_states(t=t,state= s_new,p=w,d = 0)
+            Env.send_states(t=t,state= s_new,p=w)
 
             # receive info from other agents
             # Learning model parameters
