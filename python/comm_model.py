@@ -40,7 +40,7 @@ class Xbee():
             # check if it is valid packets
             if len(s)>3 and ("{" in s) and ( "}" in s):
                 d= json.loads(s)
-                if d["0"] is not None and d['c'] is not None:
+                if d["0"] is not None and ('c' in d.keys()):
                     print("Received data: ",d)
                     if int(d["0"]) < self.id:
                         cnt_before +=1
