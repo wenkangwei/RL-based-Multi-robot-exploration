@@ -169,8 +169,8 @@ def comm_agents():
 
         if ready:
             xb.send(pack1)
-            print("Ready to send data:",xb.data)
-            print(xb.data)
+            print("Indicator sent.")
+            # print(xb.data)
         pass
 
         # debug
