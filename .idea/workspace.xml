@@ -2,8 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f9b42f44-d5b1-448c-a67e-6d8be2fc0991" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/Roomba-Tests/thread-test.py" beforeDir="false" afterPath="$PROJECT_DIR$/Roomba-Tests/thread-test.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Roomba-Tests/thread-test2.py" beforeDir="false" afterPath="$PROJECT_DIR$/Roomba-Tests/thread-test2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Roomba-Tests/thread-test3.py" beforeDir="false" afterPath="$PROJECT_DIR$/Roomba-Tests/thread-test3.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -83,8 +82,8 @@
       <file leaf-file-name="thread-test3.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Roomba-Tests/thread-test3.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="385">
-              <caret line="128" column="13" lean-forward="true" selection-start-line="128" selection-start-column="13" selection-end-line="128" selection-end-column="13" />
+            <state relative-caret-position="368">
+              <caret line="127" column="20" selection-start-line="127" selection-start-column="20" selection-end-line="127" selection-end-column="20" />
             </state>
           </provider>
         </entry>
@@ -155,12 +154,12 @@
         <option value="$PROJECT_DIR$/python/GMM-test.py" />
         <option value="$PROJECT_DIR$/Roomba-Tests/Xbee-Test.py" />
         <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch_6.py" />
-        <option value="$PROJECT_DIR$/Roomba-Tests/thread-test3.py" />
         <option value="$PROJECT_DIR$/python/Room_Env.py" />
         <option value="$PROJECT_DIR$/python/exploration.py" />
         <option value="$PROJECT_DIR$/python/comm_model.py" />
         <option value="$PROJECT_DIR$/Roomba-Tests/thread-test2.py" />
         <option value="$PROJECT_DIR$/Roomba-Tests/thread-test.py" />
+        <option value="$PROJECT_DIR$/Roomba-Tests/thread-test3.py" />
       </list>
     </option>
   </component>
@@ -734,8 +733,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/Roomba-Tests/thread-test3.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="385">
-          <caret line="128" column="13" lean-forward="true" selection-start-line="128" selection-start-column="13" selection-end-line="128" selection-end-column="13" />
+        <state relative-caret-position="368">
+          <caret line="127" column="20" selection-start-line="127" selection-start-column="20" selection-end-line="127" selection-end-column="20" />
         </state>
       </provider>
     </entry>
