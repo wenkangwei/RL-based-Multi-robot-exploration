@@ -73,6 +73,7 @@ class Xbee():
             if len(d) > 3 and ('{' in d) and ('}' in d):
                 data = json.loads(d)
                 print("Data:",data)
+
                 id, t_step,s,p,d = data["0"],data["1"],data["3"],data["4"],data["5"]
                 data_ls.append((id, t_step,s,p,d))
 
@@ -184,7 +185,7 @@ def comm_agents():
             # check priority of sending data
             # cnt_before: counts of agents that will send before this agent
             # cnt_bebind: counts of agents that will send after this agent
-            cnt_before, cnt_after, id_ls = xb.read_avail_agents()
+            # cnt_before, cnt_after, id_ls = xb.read_avail_agents()
             time.sleep(1)
             print("Count:",cnt_before,cnt_after,"id:",id_ls)
             # receive data from other agents with higher priority
