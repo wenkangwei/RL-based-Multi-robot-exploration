@@ -175,7 +175,7 @@ def comm_agents():
         pass
 
         # debug
-
+        time.sleep(1)
 
         # check if other agents want to send data
         if xb.Available():
