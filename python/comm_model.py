@@ -188,6 +188,7 @@ def comm_agents():
             # receive data from other agents with higher priority
             i = 0
             while i <cnt_before:
+                print("Receiving Agent:",i)
                 i += 1
                 data = ''
                 while xb.Available():
@@ -205,6 +206,7 @@ def comm_agents():
             # receive data from other agents with lower priority
             i = 0
             while i <cnt_after:
+                print("Receiving Agent:", i)
                 i += 1
                 data = ''
                 while xb.Available():
