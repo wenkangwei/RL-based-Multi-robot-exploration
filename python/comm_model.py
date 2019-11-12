@@ -184,6 +184,7 @@ def comm_agents():
             # cnt_before: counts of agents that will send before this agent
             # cnt_bebind: counts of agents that will send after this agent
             cnt_before, cnt_after, id_ls = xb.read_avail_agents()
+            time.sleep(1.5)
             print("Count:",cnt_before,cnt_after,"id:",id_ls)
             # receive data from other agents with higher priority
             i = 0
@@ -204,9 +205,6 @@ def comm_agents():
             # term of this agent to send data
             if ready:
                 xb.send(xb.data)
-                # while xb.Available():
-                #     xb.read()
-                # time.sleep(1)
 
             # receive data from other agents with lower priority
             data = ''
