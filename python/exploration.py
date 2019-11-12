@@ -59,10 +59,10 @@ def run_agent(Env):
         for a in set:
             # do action and sample experience here
             print('action: ', a)
-            # s_new, r, is_terminal = Env.step(a)
+            s_new, r, is_terminal = Env.step(a)
 
             # debug
-            s_new, r, is_terminal = [round(random.random(),2) for i in range(3)],round(random.random(),2),False
+            # s_new, r, is_terminal = [round(random.random(),2) for i in range(3)],round(random.random(),2),False
             t += 1
             track.append(s_new)
 
@@ -77,7 +77,7 @@ def run_agent(Env):
 
             id, global_s, global_d, global_p = Env.read_global_s(timestep=t, param=w)
 
-
+            print("States: ",id, global_s, global_d, global_p)
             # update global learning model
 
             # show msp here

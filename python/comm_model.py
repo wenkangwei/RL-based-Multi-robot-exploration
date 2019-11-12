@@ -148,12 +148,12 @@ def comm_agents1():
         # check if data in w_buf write buffer is updated by the agent
         # if updated, load data and return flag, then send indicator to other agents
         # so that other agents know who are ready to send data
-        # ready = xb.check_state_updated()
+        ready = xb.check_state_updated()
 
-        if abs(cur_t-init_t)>2:
-            ready = True if ready == False else True
-            init_t=cur_t
-        cur_t =time.time()
+        # if abs(cur_t-init_t)>2:
+        #     ready = True if ready == False else True
+        #     init_t=cur_t
+        # cur_t =time.time()
         # receive data from other agents with lower priority
         data = ''
         while xb.Available():
@@ -168,7 +168,7 @@ def comm_agents1():
         time.sleep(1*id)
         if ready:
             import  random
-            xb.data["3"] = [random.randint(3,20) for i in range(20)]
+            # xb.data["3"] = [random.randint(3,20) for i in range(20)]
             xb.send(xb.data)
 
         ready =False
