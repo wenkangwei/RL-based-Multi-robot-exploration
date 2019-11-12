@@ -115,7 +115,7 @@ class Xbee():
                             data_ls.append((id, t_step,s,p,d))
                     else:
                         return  None, None
-        print("data_ls,",data_ls, "syn_t:",syn_t)
+        # print("data_ls,",data_ls, "syn_t:",syn_t)
         return  data_ls, syn_t
 
     def check_state_updated(self,version =2):
@@ -218,7 +218,7 @@ def comm_agents1():
                 # xb.data["2"] =xb.syn_t
 
                 xb.data = {"0": [xb.id, 0, xb.degree,round(random.random(),2) , round(random.random(),2), round(random.random(),2)],
-                           "1": [round(random.random(),2) for i in range(20)], "2": xb.syn_t}
+                           "1": [round(random.random(),2) for i in range(80)], "2": xb.syn_t}
                 xb.send(xb.data)
         else:
             # if it is not the term to send
@@ -255,6 +255,7 @@ def comm_agents1():
                         # wait
                         # print()
                 pass
+
             # if any one of agents fail to send data in limited time,
             # skip this agent, let the next one sent data
             if len(data)<=1 and abs(cur_t - init_t) >= timeout:
