@@ -70,7 +70,7 @@ class Xbee():
         d_ls = data.split('#')
         data_ls = []
         for d in d_ls:
-            if len(d) > 3 and ('{' in d) and ('}' in d):
+            if len(d) > 3 and (d[0] == '{' ) and (d[-1]== '}'):
                 data = json.loads(d)
                 print("Data:",data)
                 id, t_step,s,p,d = data["0"],data["1"],data["3"],data["4"],data["5"]
@@ -162,6 +162,7 @@ def comm_agents1():
         if data is not None:
             data_ls.extend(xb.decode_data(data))
             print("Received data: ",data_ls)
+
 
             # debug
         time.sleep(1*id)
