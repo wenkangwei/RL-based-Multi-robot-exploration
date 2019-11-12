@@ -109,13 +109,18 @@ class Xbee():
                 else:
                     if ("0" in data.keys()) and ("1" in data.keys()) and ("2" in data.keys()):
                         ls = list(data["0"])
-                        id, t_step, d,s, p,syn_t = ls[0],ls[1], ls[2],ls[3:-1], data["1"], data["2"]
+                        print("data[0]:", ls)
+                        id = ls[0]
+                        t_step = ls[1]
+                        d = ls[2]
+                        s = ls[3:-1]
+                        p,syn_t = data["1"], data["2"]
 
                         if data_ls.count((id, t_step,s,p,d)) <1:
                             data_ls.append((id, t_step,s,p,d))
                     else:
                         return  None, None
-        print("s:", s)
+        # print("s:", s)
         # print("data_ls,",data_ls, "syn_t:",syn_t)
         return  data_ls, syn_t
 
