@@ -13,10 +13,11 @@ class Xbee():
         self.t_step =int(0)
         self.syn_t = 0
         # obtain all ids from other agents to check how many agents are in network
-        data = {"0":self.id}
+        data = {"id":self.id}
+        # wait for other agents to setup
+        time.sleep(3)
         self.send(data)
         # delay 2s to make sure receive ids from all other agents
-        time.sleep(1)
         self.degree, self.id_ls = self.read_avail_agents()
         self.id_ls.append(self.id)
         # sort ids in increasing order. smaller id given more priority to send data
@@ -54,16 +55,21 @@ class Xbee():
     def read_avail_agents(self):
         id_ls = []
         degree = 0
-        while self.Available():
-            message = self.ctrl.read(self.ctrl.inWaiting()).decode()  # Read all data in
-            d_ls = message.split('#')
-            for d in d_ls:
-                if len(d) > 3 and ("{" in d) and ("}" in d):
-                    d = json.loads(d)
-                    # 0:id of agent
-                    if "0" in d.keys():
-                        id_ls.append(d["0"])
-                        degree += 1
+        cur_t = time.time()
+        init_t = cur_t
+        timeout = 4
+        while abs(cur_t- init_t) <timeout:
+            cur_t = time.time()
+            while self.Available():
+                message = self.ctrl.read(self.ctrl.inWaiting()).decode()  # Read all data in
+                d_ls = message.split('#')
+                for d in d_ls:
+                    if len(d) > 3 and ("{" in d) and ("}" in d):
+                        d = json.loads(d)
+                        # 0:id of agent
+                        if "id" in d.keys():
+                            id_ls.append(d["id"])
+                            degree += 1
 
         return  degree, id_ls
     # def read_avail_agents(self):
@@ -120,9 +126,12 @@ class Xbee():
                     id, t_step,s,p,d = data["0"],data["1"],data["3"],data["4"],data["5"]
                     # decode of new version of format in packet
                 else:
-                    ls = list(data["0"])
-                    id, t_step, d,s, p,syn_t = ls[0],ls[1], ls[2],ls[3:5], data["1"], data["2"]
-                data_ls.append((id, t_step,s,p,d))
+                    if ("0" in data.keys()) and ("1" in data.keys()) and ("2" in data.keys()):
+                        ls = list(data["0"])
+                        id, t_step, d,s, p,syn_t = ls[0],ls[1], ls[2],ls[3:5], data["1"], data["2"]
+                        data_ls.append((id, t_step,s,p,d))
+                    else:
+                        return  None, None
 
         return  data_ls, syn_t
 
@@ -228,7 +237,7 @@ def comm_agents1():
             data = ''
             init_t = time.time()
             cur_t = init_t
-            timeout = 3
+            timeout = 6
             while abs(cur_t - init_t) < timeout:
                 cur_t = time.time()
                 while xb.Available():
@@ -237,11 +246,13 @@ def comm_agents1():
                 if len(data)>1:
                     # read data and synchronous time
                     d, xb.syn_t= xb.decode_data(data)
-                    data_ls.extend(d)
-                    print("Agent:",xb.id," Got data: ",data_ls)
-                    print("Syn time:", xb.syn_t)
-                    print("Next agent to send:", xb.id_ls[xb.syn_t])
-                    break
+                    # check if the packet is what we want
+                    if d != None and xb.syn_t != None:
+                        data_ls.extend(d)
+                        print("Agent:",xb.id," Got data: ",data_ls)
+                        print("Syn time:", xb.syn_t)
+                        print("Next agent to send:", xb.id_ls[xb.syn_t])
+                        break
                 else:
                     # wait
                     # print()
