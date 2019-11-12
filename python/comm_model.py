@@ -215,10 +215,10 @@ def comm_agents1():
     xb.syn_t = 0
     c_t = time.time()
     i_t = c_t
+    ready = False
     while True:
         # check if states of agent in buffer updated  and
         # if it is the term for this agent to send based on the id list
-        ready = False
         if abs(c_t-i_t) >= 0.5:
             ready = True
             i_t =c_t
@@ -233,14 +233,15 @@ def comm_agents1():
                 import random
                 print("Agent:", xb.id_ls[xb.syn_t]," Sending data")
                 # update synchronous time to allow next agent to send data
-                if xb.syn_t < len(xb.id_ls)-1:
-                    xb.data["2"] = xb.syn_t+1
-                else:
-                    # reset synchronous time if it overflows
+                xb.data["2"] = xb.syn_t+1
+                # reset synchronous time if it overflows
+                if xb.syn_t >= len(xb.id_ls):
                     xb.data["2"] = 0
+
                 xb.send(xb.data)
             else:
-                print("Agent ",xb.id," Waiting for W_buf update")
+                if abs(c_t-i_t) >= 0.3:
+                    print("Agent ",xb.id," Waiting for W_buf update")
         else:
             # if it is not the term to send
             # print("Waiting for My term to send")
@@ -257,20 +258,20 @@ def comm_agents1():
                     data += xb.read()
 
                 # if received data
-                if len(data)>1:
-                    # read data and synchronous time
-                    d, xb.syn_t= xb.decode_data(data)
-                    # check if the packet is what we want
-                    if d != None and xb.syn_t != None:
-                        data_ls.extend(d)
-                        print("Agent:",xb.id," Got data: ",data_ls)
-                        print("Syn time:", xb.syn_t)
-                        print("Next agent to send:", xb.id_ls[xb.syn_t])
-                        break
-                else:
+            if len(data)>1:
+                # read data and synchronous time
+                d, xb.syn_t= xb.decode_data(data)
+                # check if the packet is what we want
+                if d != None and xb.syn_t != None:
+                    data_ls.extend(d)
+                    print("Agent:",xb.id," Got data: ",data_ls)
+                    print("Syn time:", xb.syn_t)
+                    print("Next agent to send:", xb.id_ls[xb.syn_t])
+                    break
+            else:
                     # wait
                     # print()
-                    pass
+                pass
             # if any one of agents fail to send data in limited time,
             # skip this agent, let the next one sent data
             if len(data)<=1 and abs(cur_t - init_t) >= timeout:
@@ -285,7 +286,7 @@ def comm_agents1():
             if len(data_ls) > 0:
                 xb.write_data(data_ls)
                 data_ls.clear()
-
+        ready = False
 
 def comm_agents():
     """
