@@ -244,8 +244,7 @@ class GridWorld(object):
         # State space, define grid world here
         # each grid is 240mmx240 mm based on size of tabular in lab
         self.id =id
-        # node degree in network
-        self.degree = 0
+
         self.grid_size = 240*2
         self.observation_space = None
         # Action space:
@@ -313,6 +312,14 @@ class GridWorld(object):
         print("========Initial state:",self.Motion.get_CurPos(left_start,right_start))
         # Initialize Bumper
         self.bumper= LighBumper()
+
+        self.degree = 0
+        time.sleep(2)
+        # update degree at initial position
+        self.read_global_s()
+
+
+
         pass
 
     def GPIO_init(self):
@@ -470,7 +477,7 @@ class GridWorld(object):
         i = np.argmin(a)
         # calculate approximate degree in grid world
         grid_state[2] = self.angle_set[i]
-        print("=========grid angle:",grid_state[2],"reaL ag:",real_angle)
+        print("=========grid angle:",grid_state[2],"real ag:",real_angle)
         # convert degree to rad for moving
         agl_rad = grid_state[2]*(math.pi/180.0)
         correct_rot = -(real_state[2] - agl_rad)

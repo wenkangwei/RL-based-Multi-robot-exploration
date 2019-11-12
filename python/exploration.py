@@ -74,7 +74,9 @@ def run_agent(Env):
 
             # receive info from other agents
             # Learning model parameters
-
+            # delay few seconds to update data of agents
+            import time
+            time.sleep(2)
             id, global_s, global_d, global_p = Env.read_global_s(timestep=t, param=w)
 
             print("States: ",id, global_s, global_d, global_p)
