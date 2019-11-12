@@ -138,7 +138,6 @@ def test_json():
 def comm_agents1():
     hn = socket.gethostname()
     id = int(hn[-1])
-    pack1 = {'0': id, 'c': 1}
     xb = Xbee(id)
     data_ls = []
     init_t = time.time()
@@ -167,6 +166,8 @@ def comm_agents1():
             # debug
         time.sleep(1*id)
         if ready:
+            import  random
+            xb.data["3"] = [i for i in range(random.randint(3,20))]
             xb.send(xb.data)
 
         ready =False
