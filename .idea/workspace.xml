@@ -61,8 +61,8 @@
       <file leaf-file-name="comm_model.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/python/comm_model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="183">
-              <caret line="188" column="25" lean-forward="true" selection-start-line="188" selection-start-column="25" selection-end-line="188" selection-end-column="25" />
+            <state relative-caret-position="-572">
+              <caret line="190" column="42" lean-forward="true" selection-start-line="190" selection-start-column="42" selection-end-line="190" selection-end-column="42" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -758,8 +758,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/python/comm_model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="183">
-          <caret line="188" column="25" lean-forward="true" selection-start-line="188" selection-start-column="25" selection-end-line="188" selection-end-column="25" />
+        <state relative-caret-position="-572">
+          <caret line="190" column="42" lean-forward="true" selection-start-line="190" selection-start-column="42" selection-end-line="190" selection-end-column="42" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
           </folding>
