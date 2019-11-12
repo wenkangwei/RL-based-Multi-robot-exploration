@@ -3,7 +3,7 @@ import json
 import time
 import socket
 class Xbee():
-    def __init__(self,id=1):
+    def __init__(self,id=1,num_agents =2 ):
         self.id =id
         self.sendtime = time.time()
         self.sendtime_offset = 1.0
@@ -17,7 +17,7 @@ class Xbee():
 
 
         # wait for other agents to setup
-        time.sleep(4)
+        time.sleep(2*num_agents)
         self.send(data)
         # delay 2s to make sure receive ids from all other agents
         self.degree, self.id_ls = self.read_avail_agents()
@@ -236,8 +236,10 @@ def comm_agents1():
                 if xb.syn_t >= len(xb.id_ls):
                     xb.syn_t= 0
 
-                xb.data["2"] =xb.syn_t
-                # xb.data = {"0": [self.id, 0, self.degree, 0, 0, 0], "1": [], "2": 0}
+                # xb.data["2"] =xb.syn_t
+
+                xb.data = {"0": [xb.id, 0, xb.degree,round(random.random(),2) , round(random.random(),2), round(random.random(),2)],
+                           "1": [round(random.random(),2) for i in range(100)], "2": xb.syn_t}
                 xb.send(xb.data)
         else:
             # if it is not the term to send
@@ -248,7 +250,7 @@ def comm_agents1():
             init_t = time.time()
             cur_t = init_t
             # time out 8 s
-            timeout = 8
+            timeout = 10
 
             # if it is term to send data, but not ready,  check if other agents already timeout and send request
             # if it is not the term to send, keep read data from other agents
