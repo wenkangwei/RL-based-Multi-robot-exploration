@@ -224,7 +224,7 @@ def comm_agents1():
                 # xb.data["2"] =xb.syn_t
 
                 xb.data = {"0": [xb.id, 0, xb.degree,round(random.random(),2) , round(random.random(),2), round(random.random(),2)],
-                           "1": [round(random.random(),2) for i in range(120)], "2": xb.syn_t}
+                           "1": [round(random.random(),2) for i in range(90)], "2": xb.syn_t}
                 xb.send(xb.data)
         else:
             # if it is not the term to send
