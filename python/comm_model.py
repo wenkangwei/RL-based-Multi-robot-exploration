@@ -13,7 +13,7 @@ class Xbee():
         self.t_step =int(0)
         self.syn_t = 0
         # obtain all ids from other agents to check how many agents are in network
-        data = {'id':self.id}
+        data = {"0":self.id}
         self.send(data)
         # delay 2s to make sure receive ids from all other agents
         time.sleep(1)
@@ -60,8 +60,9 @@ class Xbee():
             for d in d_ls:
                 if len(d) > 3 and ("{" in d) and ("}" in d):
                     d = json.loads(d)
-                    if "id" in d.keys():
-                        id_ls.append(d["id"])
+                    # 0:id of agent
+                    if "0" in d.keys():
+                        id_ls.append(d["0"])
                         degree += 1
 
         return  degree, id_ls
@@ -199,10 +200,18 @@ def comm_agents1():
     data_ls = []
 
     xb.syn_t = 0
+    c_t = time.time()
+    i_t = c_t
+    ready = False
     while True:
         # check if states of agent in buffer updated  and
         # if it is the term for this agent to send based on the id list
-        ready = xb.check_state_updated()
+        if abs(c_t-i_t) >= 3:
+            ready = True
+        # ready = xb.check_state_updated()
+
+
+
         if ready and (xb.id_ls[xb.syn_t] ==xb.id):
             import random
             print("Agent:", xb.id_ls[xb.syn_t]," Sending data")
@@ -251,7 +260,7 @@ def comm_agents1():
             if len(data_ls) > 0:
                 xb.write_data(data_ls)
                 data_ls.clear()
-
+        ready= False
 
 def comm_agents():
     """
