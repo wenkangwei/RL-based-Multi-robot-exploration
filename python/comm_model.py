@@ -230,7 +230,7 @@ def comm_agents1():
             import random
             print("Agent:", xb.id_ls[xb.syn_t]," Sending data")
             # update synchronous time to allow next agent to send data
-            if xb.syn_t < len(xb.id_ls):
+            if xb.syn_t < len(xb.id_ls)-1:
                 xb.data["2"] = xb.syn_t+1
             else:
                 # reset synchronous time if it overflows
