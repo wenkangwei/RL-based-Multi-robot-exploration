@@ -72,7 +72,7 @@ class Xbee():
         for d in d_ls:
             if len(d) > 3 and ('{' in d) and ('}' in d):
                 data = json.loads(d)
-                id, t_step,s,p,d = data[0],data[1],data[3],data[4],data[5]
+                id, t_step,s,p,d = data["0"],data["1"],data["3"],data["4"],data["5"]
                 data_ls.append((id, t_step,s,p,d))
 
         return  data_ls
