@@ -135,6 +135,48 @@ def test_json():
     print('Update:',f)
     xb.write_data([xb.data])
 
+def comm_agents1():
+    hn = socket.gethostname()
+    id = int(hn[-1])
+    pack1 = {'0': id, 'c': 1}
+    xb = Xbee(id)
+    data_ls = []
+    init_t = time.time()
+    cur_t = init_t
+    ready = False
+
+    while True:
+        # check if data in w_buf write buffer is updated by the agent
+        # if updated, load data and return flag, then send indicator to other agents
+        # so that other agents know who are ready to send data
+        # ready = xb.check_state_updated()
+
+        if abs(cur_t-init_t)>2:
+            ready = True if ready == False else True
+            init_t=cur_t
+        cur_t =time.time()
+        # debug
+        time.sleep(1)
+
+        if ready:
+            xb.send(xb.data)
+
+            # receive data from other agents with lower priority
+        data = ''
+        while xb.Available():
+            data += xb.read()
+            print("Data: ", data)
+        if data is not None:
+            data_ls.extend(xb.decode_data(data))
+            print("Received data: ",data_ls)
+
+        ready =False
+        # write data back to r_buffer
+        if len(data_ls) > 0:
+            xb.write_data(data_ls)
+            data_ls.clear()
+
+
 def comm_agents():
     """
     Packet 1 {'0':id,'c':1} 'c': type of packet
@@ -236,6 +278,6 @@ def comm_agents():
 
 
 if __name__ == '__main__':
-    comm_agents()
+    comm_agents1()
     # test_json()
     pass
