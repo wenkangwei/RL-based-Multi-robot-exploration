@@ -74,28 +74,6 @@ class Xbee():
                             degree += 1
 
         return  degree, id_ls
-    # def read_avail_agents(self):
-    #     message = self.ctrl.read(self.ctrl.inWaiting()).decode()  # Read all data in
-    #     d_ls = message.split('#')
-    #     id_ls = []
-    #     # number of agents with higher priority than this agent
-    #     cnt_before =0
-    #     # number of agents with lower priority than this agent
-    #     cnt_after =0
-    #     for s in d_ls:
-    #         # check if it is valid packets
-    #         if len(s)>3 and ("{" in s) and ( "}" in s):
-    #             d= json.loads(s)
-    #             if d["0"] is not None and ('c' in d.keys()):
-    #                 print("Received data: ",d)
-    #                 if int(d["0"]) < self.id:
-    #                     cnt_before +=1
-    #                 if int(d["0"]) > self.id:
-    #                     cnt_after +=1
-    #                 id_ls.append(int(d["0"]))
-    #
-    #     return cnt_before,cnt_after, id_ls
-    #
 
     def close(self):
         self.ctrl.close()
@@ -117,11 +95,12 @@ class Xbee():
         # New format of packet:
         # {"0":[id, time_step,degree, state0,state1，state2],"1":[parameters], "2": synchronos time among agents}
         d_ls = data.split('#')
+        print("d_ls: ",d_ls)
         data_ls = []
         syn_t = 0
         for d in d_ls:
             if len(d) > 3 and (d[0] == '{' ) and (d[-1]== '}'):
-                print("Data:",d)
+
                 data = json.loads(d)
                 # decode of old version of format in packet
                 if version == 1:
@@ -239,7 +218,7 @@ def comm_agents1():
                 # xb.data["2"] =xb.syn_t
 
                 xb.data = {"0": [xb.id, 0, xb.degree,round(random.random(),2) , round(random.random(),2), round(random.random(),2)],
-                           "1": [round(random.random(),2) for i in range(100)], "2": xb.syn_t}
+                           "1": [round(random.random(),2) for i in range(20)], "2": xb.syn_t}
                 xb.send(xb.data)
         else:
             # if it is not the term to send
@@ -258,7 +237,7 @@ def comm_agents1():
                 cur_t = time.time()
                 while xb.Available():
                     data += xb.read()
-
+                print('data: ',data)
                 # if received data
                 if len(data)>1:
                     # read data and synchronous time
