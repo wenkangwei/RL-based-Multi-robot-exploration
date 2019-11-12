@@ -180,7 +180,8 @@ def comm_agents():
         time.sleep(1)
 
         # check if other agents want to send data
-        if xb.Available():
+        if True:
+        # if xb.Available():
             print("Ready to receive data")
             # check priority of sending data
             # cnt_before: counts of agents that will send before this agent
