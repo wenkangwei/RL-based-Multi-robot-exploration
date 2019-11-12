@@ -168,7 +168,7 @@ def comm_agents1():
         time.sleep(1*id)
         if ready:
             import  random
-            xb.data["3"] = [random.randint(3,20) for i in range(100)]
+            xb.data["3"] = [random.randint(3,20) for i in range(20)]
             xb.send(xb.data)
 
         ready =False
