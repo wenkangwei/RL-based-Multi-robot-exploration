@@ -117,7 +117,7 @@ class Xbee():
         """
         buf = {}
         for d in data_ls:
-            buf[str(d["0"])] ={'t':d["1"], 's':d["2"],'p':d["3"],'d':d["4"]}
+            buf[d["0"]] ={'t':d["1"], 's':d["2"],'p':d["3"],'d':d["4"]}
 
         s = json.dumps(buf)
         fp = open('r_buf.json','w')
