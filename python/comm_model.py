@@ -98,6 +98,7 @@ class Xbee():
         print("d_ls: ",d_ls)
         data_ls = []
         syn_t = 0
+        buf = []
         for d in d_ls:
             if len(d) > 3 and (d[0] == '{' ) and (d[-1]== '}'):
 
@@ -109,14 +110,15 @@ class Xbee():
                 else:
                     if ("0" in data.keys()) and ("1" in data.keys()) and ("2" in data.keys()):
                         ls = list(data["0"])
-                        print("data[0]:", ls)
+                        # print("data[0]:", ls)
                         id = ls[0]
                         t_step = ls[1]
                         d = ls[2]
                         s = ls[3:-1]
                         p,syn_t = data["1"], data["2"]
-
-                        if data_ls.count((id, t_step,s,p,d)) <1:
+                        print("S:", s)
+                        if buf.count((id,t_step)) <1:
+                            buf.append((id,t_step))
                             data_ls.append((id, t_step,s,p,d))
                     else:
                         return  None, None
