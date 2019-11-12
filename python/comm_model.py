@@ -204,8 +204,8 @@ def comm_agents():
             # term of this agent to send data
             if ready:
                 xb.send(xb.data)
-                while xb.Available():
-                    xb.read()
+                # while xb.Available():
+                #     xb.read()
                 # time.sleep(1)
 
             # receive data from other agents with lower priority
