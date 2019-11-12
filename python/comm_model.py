@@ -72,6 +72,7 @@ class Xbee():
         for d in d_ls:
             if len(d) > 3 and ('{' in d) and ('}' in d):
                 data = json.loads(d)
+                print("Data:",data)
                 id, t_step,s,p,d = data["0"],data["1"],data["3"],data["4"],data["5"]
                 data_ls.append((id, t_step,s,p,d))
 
@@ -184,7 +185,7 @@ def comm_agents():
             # cnt_before: counts of agents that will send before this agent
             # cnt_bebind: counts of agents that will send after this agent
             cnt_before, cnt_after, id_ls = xb.read_avail_agents()
-            time.sleep(1.5)
+            time.sleep(1)
             print("Count:",cnt_before,cnt_after,"id:",id_ls)
             # receive data from other agents with higher priority
             i = 0
@@ -198,10 +199,10 @@ def comm_agents():
             #     data_ls.extend(xb.decode_data(data))
             #     time.sleep(1)
             data = ''
-            while xb.Available():
-                data += xb.read()
-                print("Data: ", data)
-            data_ls.extend(xb.decode_data(data))
+            # while xb.Available():
+            #     data += xb.read()
+            #     # print("Data: ", data)
+            # data_ls.extend(xb.decode_data(data))
             # term of this agent to send data
             if ready:
                 xb.send(xb.data)
@@ -211,7 +212,8 @@ def comm_agents():
             while xb.Available():
                 data += xb.read()
                 print("Data: ", data)
-            data_ls.extend(xb.decode_data(data))
+            if data is not None:
+                data_ls.extend(xb.decode_data(data))
             # i = 0
             # while i <cnt_after:
             #     print("Receiving Agent:", i)
