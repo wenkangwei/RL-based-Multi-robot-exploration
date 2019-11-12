@@ -217,7 +217,7 @@ def comm_agents1():
     while True:
         # check if states of agent in buffer updated  and
         # if it is the term for this agent to send based on the id list
-        if abs(c_t-i_t) >= 1:
+        if abs(c_t-i_t) >= 0.5:
             ready = True
             i_t =c_t
 
@@ -242,6 +242,7 @@ def comm_agents1():
             data = ''
             init_t = time.time()
             cur_t = init_t
+            # time out 8 s
             timeout = 8
             while abs(cur_t - init_t) < timeout:
                 cur_t = time.time()
