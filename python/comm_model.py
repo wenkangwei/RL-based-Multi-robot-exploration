@@ -235,7 +235,6 @@ def comm_agents1():
                 # reset synchronous time if it overflows
                 if xb.syn_t >= len(xb.id_ls):
                     xb.data["2"] = 0
-
                 xb.send(xb.data)
         else:
             # if it is not the term to send
@@ -260,7 +259,7 @@ def comm_agents1():
                     # read data and synchronous time
                     d, xb.syn_t= xb.decode_data(data)
                     # check if the packet is what we want
-                    if d != None and xb.syn_t != None:
+                    if len(d)>0  and xb.syn_t != None:
                         data_ls.extend(d)
                         print("Agent:",xb.id," Got data: ",data_ls)
                         print("Syn time:", xb.syn_t)
@@ -364,7 +363,7 @@ def comm_agents():
             while xb.Available():
                 data += xb.read()
                 print("Data: ", data)
-            if data is not None:
+            if len(data)>1:
                 data_ls.extend(xb.decode_data(data))
             # i = 0
             # while i <cnt_after:
