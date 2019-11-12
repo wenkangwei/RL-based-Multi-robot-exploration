@@ -109,8 +109,8 @@ class Xbee():
                     # decode of new version of format in packet
                 else:
                     if ("0" in data.keys()) and ("1" in data.keys()) and ("2" in data.keys()):
-                        ls = list(data["0"])
-                        # print("data[0]:", ls)
+                        ls = list(data["0"]).copy()
+                        print("data[0]:", ls)
                         id = ls[0]
                         t_step = ls[1]
                         d = ls[2]
