@@ -237,9 +237,9 @@ def comm_agents1():
                 cur_t = time.time()
                 while xb.Available():
                     data += xb.read()
-                print('data: ',data)
                 # if received data
-                if len(data)>1:
+                if len(data)>3:
+                    print('data: ',data)
                     # read data and synchronous time
                     d, xb.syn_t= xb.decode_data(data)
                     # check if the packet is what we want
