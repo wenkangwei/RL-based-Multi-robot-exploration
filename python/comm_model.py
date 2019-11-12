@@ -14,8 +14,10 @@ class Xbee():
         self.syn_t = 0
         # obtain all ids from other agents to check how many agents are in network
         data = {"id":self.id}
+
+
         # wait for other agents to setup
-        time.sleep(3)
+        time.sleep(4)
         self.send(data)
         # delay 2s to make sure receive ids from all other agents
         self.degree, self.id_ls = self.read_avail_agents()
@@ -57,7 +59,7 @@ class Xbee():
         degree = 0
         cur_t = time.time()
         init_t = cur_t
-        timeout = 4
+        timeout = 2
         while abs(cur_t- init_t) <timeout:
             cur_t = time.time()
             while self.Available():
@@ -215,8 +217,11 @@ def comm_agents1():
     while True:
         # check if states of agent in buffer updated  and
         # if it is the term for this agent to send based on the id list
-        if abs(c_t-i_t) >= 3:
+        if abs(c_t-i_t) >= 1:
             ready = True
+            i_t =c_t
+
+        c_t =time.time()
         # ready = xb.check_state_updated()
 
 
@@ -237,7 +242,7 @@ def comm_agents1():
             data = ''
             init_t = time.time()
             cur_t = init_t
-            timeout = 6
+            timeout = 8
             while abs(cur_t - init_t) < timeout:
                 cur_t = time.time()
                 while xb.Available():
@@ -251,6 +256,7 @@ def comm_agents1():
                         data_ls.extend(d)
                         print("Agent:",xb.id," Got data: ",data_ls)
                         print("Syn time:", xb.syn_t)
+
                         print("Next agent to send:", xb.id_ls[xb.syn_t])
                         break
                 else:
@@ -265,7 +271,7 @@ def comm_agents1():
                 # reset synchronous time
                 if xb.syn_t >=len(xb.id_ls):
                     xb.syn_t = 0
-                print("Next Agent to send:", xb.id_ls[xb.syn_t])
+
 
             # write data back to r_buffer
             if len(data_ls) > 0:
