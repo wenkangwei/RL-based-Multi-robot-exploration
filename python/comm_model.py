@@ -73,9 +73,9 @@ class Xbee():
             if len(d) > 3 and ('{' in d) and ('}' in d):
                 data = json.loads(d)
                 print("Data:",data)
-
-                id, t_step,s,p,d = data["0"],data["1"],data["3"],data["4"],data["5"]
-                data_ls.append((id, t_step,s,p,d))
+                if "1" in d.keys():
+                    id, t_step,s,p,d = data["0"],data["1"],data["3"],data["4"],data["5"]
+                    data_ls.append((id, t_step,s,p,d))
 
         return  data_ls
 
@@ -171,7 +171,7 @@ def comm_agents():
         cur_t =time.time()
 
         if ready:
-            xb.send(pack1)
+            # xb.send(pack1)
             print("Indicator sent.")
             # print(xb.data)
         pass
