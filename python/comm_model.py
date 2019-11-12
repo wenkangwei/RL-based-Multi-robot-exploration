@@ -262,9 +262,8 @@ def comm_agents1():
                     # read data and synchronous time
                     d, xb.syn_t= xb.decode_data(data)
                     # check if the packet is what we want
-                    if len(d)>0  and xb.syn_t != None:
+                    if d is not None  and xb.syn_t != None:
                         data_ls.extend(d)
-
                         print("")
                         print("Agent:",xb.id," Got data: ",data_ls)
                         print("Syn time:", xb.syn_t)
