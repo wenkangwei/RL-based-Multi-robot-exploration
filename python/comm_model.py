@@ -225,7 +225,6 @@ def comm_agents1():
             # print("Waiting for My term to send")
 
             # receive data from other agents with lower priority
-            data = ''
             init_t = time.time()
             cur_t = init_t
             # time out 8 s
@@ -233,27 +232,29 @@ def comm_agents1():
 
             # if it is term to send data, but not ready,  check if other agents already timeout and send request
             # if it is not the term to send, keep read data from other agents
+            data  = ''
             while abs(cur_t - init_t) < timeout:
                 cur_t = time.time()
                 while xb.Available():
                     data += xb.read()
-                # if received data
-                if len(data)>3:
-                    print('data: ',data)
-                    # read data and synchronous time
-                    d, xb.syn_t= xb.decode_data(data)
-                    # check if the packet is what we want
-                    if d is not None  and xb.syn_t != None:
-                        data_ls.extend(d)
-                        print("")
-                        print("Agent:",xb.id," Got data: ",data_ls)
-                        print("Syn time:", xb.syn_t)
-                        print("Next agent to send:", xb.id_ls[xb.syn_t])
-                        break
-                else:
+
+            # if received data
+            if len(data)>3:
+                print('data: ',data)
+                # read data and synchronous time
+                d, xb.syn_t= xb.decode_data(data)
+                # check if the packet is what we want
+                if d is not None  and xb.syn_t != None:
+                    data_ls.extend(d)
+                    print("")
+                    print("Agent:",xb.id," Got data: ",data_ls)
+                    print("Syn time:", xb.syn_t)
+                    print("Next agent to send:", xb.id_ls[xb.syn_t])
+                    # break
+            else:
                         # wait
                         # print()
-                    pass
+                pass
             # if any one of agents fail to send data in limited time,
             # skip this agent, let the next one sent data
             if len(data)<=1 and abs(cur_t - init_t) >= timeout:
