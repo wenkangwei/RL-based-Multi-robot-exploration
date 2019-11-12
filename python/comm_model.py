@@ -155,13 +155,7 @@ def comm_agents1():
             ready = True if ready == False else True
             init_t=cur_t
         cur_t =time.time()
-        # debug
-        time.sleep(1)
-
-        if ready:
-            xb.send(xb.data)
-
-            # receive data from other agents with lower priority
+        # receive data from other agents with lower priority
         data = ''
         while xb.Available():
             data += xb.read()
@@ -169,6 +163,11 @@ def comm_agents1():
         if data is not None:
             data_ls.extend(xb.decode_data(data))
             print("Received data: ",data_ls)
+
+            # debug
+        time.sleep(1*id)
+        if ready:
+            xb.send(xb.data)
 
         ready =False
         # write data back to r_buffer
