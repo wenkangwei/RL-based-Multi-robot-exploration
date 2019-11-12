@@ -101,7 +101,6 @@ class Xbee():
         buf = []
         for d in d_ls:
             if len(d) > 3 and (d[0] == '{' ) and (d[-1]== '}'):
-
                 data = json.loads(d)
                 # decode of old version of format in packet
                 if version == 1:
@@ -109,14 +108,13 @@ class Xbee():
                     # decode of new version of format in packet
                 else:
                     if ("0" in data.keys()) and ("1" in data.keys()) and ("2" in data.keys()):
-                        ls = list(data["0"]).copy()
+                        ls = list(data["0"])
                         print("data[0]:", ls)
                         id = ls[0]
                         t_step = ls[1]
                         d = ls[2]
                         s = ls[3:]
                         p,syn_t = data["1"], data["2"]
-                        print("S:", s)
                         if buf.count((id,t_step)) <1:
                             buf.append((id,t_step))
                             data_ls.append((id, t_step,s,p,d))
@@ -226,7 +224,7 @@ def comm_agents1():
                 # xb.data["2"] =xb.syn_t
 
                 xb.data = {"0": [xb.id, 0, xb.degree,round(random.random(),2) , round(random.random(),2), round(random.random(),2)],
-                           "1": [round(random.random(),2) for i in range(80)], "2": xb.syn_t}
+                           "1": [round(random.random(),2) for i in range(120)], "2": xb.syn_t}
                 xb.send(xb.data)
         else:
             # if it is not the term to send
