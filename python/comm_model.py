@@ -136,7 +136,7 @@ class Xbee():
                             data_ls.append((id, t_step,s,p,d))
                     else:
                         return  None, None
-
+        print("data_ls,",data_ls, "syn_t:",syn_t)
         return  data_ls, syn_t
 
     def check_state_updated(self,version =2):
@@ -235,6 +235,7 @@ def comm_agents1():
                 # reset synchronous time if it overflows
                 if xb.syn_t >= len(xb.id_ls):
                     xb.data["2"] = 0
+                    
                 xb.send(xb.data)
         else:
             # if it is not the term to send
@@ -261,6 +262,7 @@ def comm_agents1():
                     # check if the packet is what we want
                     if len(d)>0  and xb.syn_t != None:
                         data_ls.extend(d)
+
                         print("")
                         print("Agent:",xb.id," Got data: ",data_ls)
                         print("Syn time:", xb.syn_t)
