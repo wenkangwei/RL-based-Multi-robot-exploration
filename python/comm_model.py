@@ -114,7 +114,7 @@ class Xbee():
                         id = ls[0]
                         t_step = ls[1]
                         d = ls[2]
-                        s = ls[3:-1]
+                        s = ls[3:]
                         p,syn_t = data["1"], data["2"]
                         print("S:", s)
                         if buf.count((id,t_step)) <1:
