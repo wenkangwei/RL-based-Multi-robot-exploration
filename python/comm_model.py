@@ -35,7 +35,7 @@ class Xbee():
         time.sleep(1)
 
         # data format to send via Xbee
-        self.data = {"0": [self.id, 0, self.degree, 0,0,0], "1": [],"2":self.syn_t}
+        self.data = {"0": [self.id, 0, self.degree, 0,0,0], "1": [],"2":0}
         pass
 
     def send(self, data):
@@ -231,11 +231,13 @@ def comm_agents1():
                 import random
                 print("Agent:", xb.id_ls[xb.syn_t]," Sending data")
                 # update synchronous time to allow next agent to send data
-                xb.data["2"] = xb.syn_t+1
+                xb.syn_t = xb.syn_t+1
                 # reset synchronous time if it overflows
                 if xb.syn_t >= len(xb.id_ls):
-                    xb.data["2"] = 0
-                    
+                    xb.syn_t= 0
+
+                xb.data["2"] =xb.syn_t
+                # xb.data = {"0": [self.id, 0, self.degree, 0, 0, 0], "1": [], "2": 0}
                 xb.send(xb.data)
         else:
             # if it is not the term to send
