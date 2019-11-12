@@ -121,7 +121,7 @@ class Xbee():
         syn_t = 0
         for d in d_ls:
             if len(d) > 3 and (d[0] == '{' ) and (d[-1]== '}'):
-                # print("Data:",d)
+                print("Data:",d)
                 data = json.loads(d)
                 # decode of old version of format in packet
                 if version == 1:
@@ -261,6 +261,7 @@ def comm_agents1():
                     # check if the packet is what we want
                     if len(d)>0  and xb.syn_t != None:
                         data_ls.extend(d)
+                        print("")
                         print("Agent:",xb.id," Got data: ",data_ls)
                         print("Syn time:", xb.syn_t)
                         print("Next agent to send:", xb.id_ls[xb.syn_t])
