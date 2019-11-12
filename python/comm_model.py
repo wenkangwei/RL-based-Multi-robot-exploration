@@ -120,8 +120,8 @@ class Xbee():
                     id, t_step,s,p,d = data["0"],data["1"],data["3"],data["4"],data["5"]
                     # decode of new version of format in packet
                 else:
-                    id, t_step, d,s, p,syn_t = data["0"][0],data["0"][1], data["0"][2],data["0"][3:5], data["1"], data["2"]
-
+                    ls = list(data["0"])
+                    id, t_step, d,s, p,syn_t = ls[0],ls[1], ls[2],ls[3:5], data["1"], data["2"]
                 data_ls.append((id, t_step,s,p,d))
 
         return  data_ls, syn_t
