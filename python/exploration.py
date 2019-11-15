@@ -83,10 +83,10 @@ def run_agent(Env):
             # Learning model parameters
             # delay few seconds to update data of agents
             time.sleep(2)
-            id, global_s, global_d, global_p = Env.read_global_s(timestep=t, param=w)
+            id, global_s, global_a, global_d, global_p = Env.read_global_s(timestep=t, param=w)
 
             print("States: ")
-            print(id, global_s, global_d, global_p)
+            print(id, global_s,global_a,global_d,global_p)
             # update global learning model
 
 
