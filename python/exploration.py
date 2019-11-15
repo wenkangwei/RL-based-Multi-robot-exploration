@@ -71,7 +71,7 @@ def run_agent(Env):
             # debug
             # s_new, r, is_terminal = [round(random.random(),2) for i in range(3)],round(random.random(),2),False
             t += 1
-            track.append(s_new)
+            track.append(grid_s_new)
 
             # Training local Q value/ V state value here
 

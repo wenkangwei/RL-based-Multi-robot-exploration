@@ -750,7 +750,7 @@ class GridWorld(object):
             if timestep >= np.max(steps):
                 cur_t = time.time()
                 init_t = cur_t
-                timeout = 5
+                timeout = 8
                 while steps.count(timestep) <len(steps):
                     # check update each 0.5
                     time.sleep(0.5)
