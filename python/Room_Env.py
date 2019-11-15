@@ -213,8 +213,8 @@ class Logger():
         self.cum_reward.write('{}'.format(self.r))
 
         pass
-    def log_trajecctory(self,s,a,s_,r,t):
-        experience = {'s:':s,',a':a,'r':r,'terminal':t}
+    def log_trajecctory(self,s,a,sn,r,t):
+        experience = {'s:':s,',a':a,'sn':sn,'r':r,'terminal':t}
         data = json.dumps(experience)
         self.trajectory.write(data+os.linesep)
         pass
