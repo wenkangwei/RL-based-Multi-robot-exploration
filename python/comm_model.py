@@ -218,7 +218,7 @@ def comm_agents2():
 
         # # if it is the term to send
         if (xb.id_ls[xb.syn_t] ==xb.id):
-                time.sleep(2)
+                time.sleep(1)
                 print("Agent:", xb.id_ls[xb.syn_t]," Sending data")
                 # update synchronous time to allow next agent to send data
                 xb.syn_t = xb.syn_t+1
@@ -238,7 +238,7 @@ def comm_agents2():
             init_t = time.time()
             cur_t = init_t
             # time out 8 s
-            timeout = 20
+            timeout = 10
 
             # if it is term to send data, but not ready,  check if other agents already timeout and send request
             # if it is not the term to send, keep read data from other agents
@@ -248,6 +248,8 @@ def comm_agents2():
                 cur_t = time.time()
                 while xb.Available():
                     data += xb.read()
+                if len(data)>10:
+                    break
 
             # if received data
             if len(data)>3:
