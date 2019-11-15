@@ -218,7 +218,10 @@ def comm_agents2():
 
         # # if it is the term to send
         if (xb.id_ls[xb.syn_t] ==xb.id):
-                time.sleep(1)
+                if xb.degree >1:
+                    time.sleep(1)
+                else:
+                    time.sleep(5)
                 print("Agent:", xb.id_ls[xb.syn_t]," Sending data")
                 # update synchronous time to allow next agent to send data
                 xb.syn_t = xb.syn_t+1
