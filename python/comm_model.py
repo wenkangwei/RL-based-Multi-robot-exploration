@@ -245,7 +245,7 @@ def comm_agents2():
                 xb.data = {"0": [xb.id, 0,random.randint(0,10),xb.degree,round(random.random(),2) , round(random.random(),2), round(random.random(),2)],
                            "1": [round(random.random(),2) for i in range(90)], "2": xb.syn_t}
                 xb.send(xb.data)
-        if xb.degree ==1 or(xb.id_ls[xb.syn_t] !=xb.id) :
+        if xb.degree ==0 or(xb.id_ls[xb.syn_t] !=xb.id) :
             # receive data from other agents with lower priority
             init_t = time.time()
             cur_t = init_t
