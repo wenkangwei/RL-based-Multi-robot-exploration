@@ -96,7 +96,7 @@ class Xbee():
         # New format of packet:
         # {"0":[id, time_step,degree, state0,state1，state2],"1":[parameters], "2": synchronos time among agents}
         d_ls = data.split('#')
-        print("d_ls: ",d_ls)
+        # print("d_ls: ",d_ls)
         data_ls = []
         syn_t = 0
         buf = []
@@ -120,7 +120,7 @@ class Xbee():
                         # if packet is data packet, read data
                         packet_type=1
                         ls = list(data["0"])
-                        print("data[0]:", ls)
+                        # print("data[0]:", ls)
                         id = ls[0]
                         # time step
                         t_step = ls[1]

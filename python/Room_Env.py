@@ -767,6 +767,10 @@ class GridWorld(object):
                     else:
                         print("Waiting for other agents update data. . .")
 
+            if steps.count(timestep) < len(steps):
+                print("Fail to track other agents")
+                return id, global_s, global_a, global_d, global_p
+
             for i in data.keys():
                 if data[i]['p'] is not None and data[i]['s'] is not None:
                     # state of agents

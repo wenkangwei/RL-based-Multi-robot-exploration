@@ -62,7 +62,7 @@ def run_agent(Env):
     try:
 
         # test_observation(Env)
-        set = [random.choice(Env.action_space) for i in range(3)]
+        set = [random.choice(Env.action_space) for i in range(2)]
         for a in set:
             # do action and sample experience here
             print('action: ', a)
@@ -86,9 +86,19 @@ def run_agent(Env):
             # delay few seconds to update data of agents
             time.sleep(2)
             id, global_s, global_a, global_d, global_p = Env.read_global_s(timestep=t, param=w)
-
-            print("States: ")
-            print(id, global_s,global_a,global_d,global_p)
+            print()
+            print()
+            print("Global States: ")
+            for i in range(len(id)):
+                print('==========================')
+                print("id's:",id[i])
+                print("state: ",global_a[i])
+                print("action:", global_a[i])
+                print("degree: ",global_d[i])
+                print("Params: ", global_p[i])
+                print('==========================')
+                print()
+            # print(id, global_s,global_a,global_d,global_p)
             # update global learning model
 
 
