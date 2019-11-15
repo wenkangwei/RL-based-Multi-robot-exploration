@@ -815,39 +815,41 @@ class GridWorld(object):
         Move robot to expected position and track the current position and reward
         :param a: action of Roomba. It is expected to contain rotation angles and moving distance
         :return:
-        s_new: s' new grid world state
-        r: reward of new state or R(s,a,s')
-        is_terminal: flag to check s is terminal. s is state before taking action
+        new_grid_s, new_real_state, r, is_terminal
         """
         # update current action
         self.action = a
 
         # change of distance in mm
         d= a[0]
-        # convert change of heading angle d_theta from degree to rad, from angle to Arc Length
+        # degree to rad, from angle to Arc Length
         d_theta = a[1]*(math.pi/180.0)
         ArcLen = self.Motion.Agl2ArcLen(d_theta)
-        # Compute period of motion
+        # tolerance of time difference
+        tol = -0e-1
 
         init_t = time.time()
         cur_t = init_t
-        # tolerance of time difference
-        tol = -0e-1
-        # back up current state s
-        s_old = self.grid_state
-        s_new = s_old
-        old_real_state, new_real_state, r, is_terminal = 0,0,0,False
 
+        # back up current real and grid state s
+        grid_s_old = self.grid_state.copy()
+        real_s_old = self.real_state.copy()
+
+        old_real_state, new_real_state, r, is_terminal = 0,0,0,False
         L_cnt, R_cnt, bump, DLightBump, AnalogBump = None, None,None,None,None
+
+
         # track sensor information when moving
         self.Roomba.StartQueryStream(7, 43, 44, 45, 46, 47, 48, 49, 50, 51)  # Start getting bumper values
 
         # determine if s is terminal before taking action
         # if it is terminal, don't move and return state directly
         print("Observe Environment...")
-        old_state, new_real_state, r, is_terminal,_ = self.observe_Env()
+        old_real_state, new_real_state, r, is_terminal,_ = self.observe_Env()
+        new_grid_s = self.get_gridState(new_real_state)
         if is_terminal:
-            return s_new, r, is_terminal
+            return new_grid_s, new_real_state, r, is_terminal
+
 
         # Take action if current state is not terminal
 
@@ -867,9 +869,10 @@ class GridWorld(object):
                     # keep track of postion and check if at terminal state, like hitting wall or obstacle
                     old_real_state, new_real_state, r, is_terminal,data= self.observe_Env()
                     L_cnt, R_cnt, bump, DLightBump, AnalogBump = data
-                if ((d_theta+ old_state[2]) - new_real_state[2])> 1e-1 :
+                if ((d_theta+ old_real_state[2]) - new_real_state[2])> 1e-1 :
                     break
                 cur_t = time.time()
+
         # Pause roomba for a while
         self.Roomba.Move(0, 0)
         print("Spinning t:", np.abs(cur_t-init_t))
@@ -924,17 +927,13 @@ class GridWorld(object):
             print("forward t:", np.abs(cur_t - init_t))
             print('-----------------------------------------')
 
-        # record real trajectory here
-        ##############################
-        self.logger.log(s_old, a, s_new, r, is_terminal, self.obs_ls)
-        ##############################
 
 
         # Compute reward and new state after the motion
-        s_new = new_real_state
-        grid_s_new = self.get_gridState(new_real_state)
-        self.grid_state = grid_s_new
-        print("grid s:", grid_s_new)
+
+            new_grid_s = self.get_gridState(new_real_state)
+        self.grid_state = new_grid_s
+        print("grid s:", new_grid_s)
 
 
         # Clean the useless data
@@ -949,6 +948,14 @@ class GridWorld(object):
         ########################################
         ########################################
 
+        # record real trajectory here
+        ##############################
+        # record real continuous state
+        # self.logger.log(real_s_old, a, new_real_state, r, is_terminal, self.obs_ls)
+        # record grid state
+        self.logger.log(grid_s_old, a, new_grid_s, r, is_terminal, self.obs_ls)
+        ##############################
+
         time.sleep(0.5)
-        return grid_s_new,s_new, r, is_terminal
+        return new_grid_s, new_real_state, r, is_terminal
 
