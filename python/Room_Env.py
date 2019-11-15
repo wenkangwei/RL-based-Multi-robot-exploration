@@ -743,14 +743,15 @@ class GridWorld(object):
             print("Global states: ",data)
             data = json.loads(data)
             # d_ls = self.decode_data(data)
-            steps = [data[k]['t'] for k in data.keys()]
+
+            steps = [data[k]['t'] for k in data.keys() if int(k)!= self.id]
             # check if all agents are synchronous at the same time step
             # else wait 5s for data update
             fp.close()
             if timestep >= np.max(steps):
                 cur_t = time.time()
                 init_t = cur_t
-                timeout = 8
+                timeout = 10
                 while steps.count(timestep) <len(steps):
                     # check update each 0.5
                     time.sleep(0.5)
@@ -760,7 +761,7 @@ class GridWorld(object):
                     fp.close()
 
                     data= json.loads(data)
-                    steps = [data[k]['t'] for k in data.keys()]
+                    steps = [data[k]['t'] for k in data.keys() if int(k) != self.id]
                     cur_t =time.time()
                     if abs(cur_t - init_t) > timeout:
                         break
