@@ -257,6 +257,8 @@ def comm_agents1():
                 if abs(c_t - i_t) >= 1.5:
                     ready = True
                     i_t = c_t
+                c_t = time.time()
+
                 if ready and (xb.id_ls[xb.syn_t] == xb.id):
                     xb.data = {"0": [xb.id, 0, random.randint(0, 10), xb.degree, round(random.random(), 2),
                                      round(random.random(), 2), round(random.random(), 2)],
