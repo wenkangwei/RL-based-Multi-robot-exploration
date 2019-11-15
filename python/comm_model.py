@@ -224,7 +224,6 @@ def comm_agents1():
 
         # # if it is the term to send
         if ready and (xb.id_ls[xb.syn_t] ==xb.id):
-                import random
                 print("Agent:", xb.id_ls[xb.syn_t]," Sending data")
                 # update synchronous time to allow next agent to send data
                 xb.syn_t = xb.syn_t+1
