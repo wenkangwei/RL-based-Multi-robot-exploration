@@ -78,26 +78,26 @@ def run_agent(Env):
             # Training local Q value/ V state value here
 
             # Send local information to other agents
-            w = [round(random.random(),2) for i in range(10)]
-            Env.send_states(t=t,state= s_new,p=w)
-
-            # receive info from other agents
-            # Learning model parameters
-            # delay few seconds to update data of agents
-            time.sleep(2)
-            id, global_s, global_a, global_d, global_p = Env.read_global_s(timestep=t, param=w)
-            print()
-            print()
-            print("Global States: ")
-            for i in range(len(id)):
-                print('==========================')
-                print("id's:",id[i])
-                print("state: ",global_a[i])
-                print("action:", global_a[i])
-                print("degree: ",global_d[i])
-                print("Params: ", global_p[i])
-                print('==========================')
-                print()
+            # w = [round(random.random(),2) for i in range(10)]
+            # Env.send_states(t=t,state= s_new,p=w)
+            #
+            # # receive info from other agents
+            # # Learning model parameters
+            # # delay few seconds to update data of agents
+            # time.sleep(2)
+            # id, global_s, global_a, global_d, global_p = Env.read_global_s(timestep=t, param=w)
+            # print()
+            # print()
+            # print("Global States: ")
+            # for i in range(len(id)):
+            #     print('==========================')
+            #     print("id's:",id[i])
+            #     print("state: ",global_a[i])
+            #     print("action:", global_a[i])
+            #     print("degree: ",global_d[i])
+            #     print("Params: ", global_p[i])
+            #     print('==========================')
+            #     print()
             # print(id, global_s,global_a,global_d,global_p)
             # update global learning model
 
