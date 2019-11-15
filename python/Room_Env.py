@@ -663,7 +663,7 @@ class GridWorld(object):
 
         return old_state, self.real_state,r, terminal, (L_cnt, R_cnt, bump,DLightBump, AnalogBump)
 
-    def send_states(self,t=0,state=None, a=None, degree=None,p=None, state_type='c'):
+    def send_states(self,t=0,state=None, a=None,p=None, state_type='c'):
         """
         data in json packet
         0: id
@@ -683,13 +683,13 @@ class GridWorld(object):
                 state = self.grid_state
             else:
                 state = self.real_state
-        if degree == None:
-            degree =self.degree
+
+
         if a == None:
             a = self.action
         # find index of the action in action set
         a_ind = list(self.action_space).index(a)
-
+        degree = self.degree
         id = self.id
         data = {0:id,1:t,2:a_ind,3:state,4:p,5:degree}
         txt = json.dumps(data)
@@ -772,19 +772,24 @@ class GridWorld(object):
                 return id, global_s, global_a, global_d, global_p
 
             for i in data.keys():
-                if data[i]['p'] is not None and data[i]['s'] is not None:
-                    # state of agents
+                if int(i)== self.id:
+                    # update degree
+                    self.degree = data[i]['d']
+                    global_d[0] = self.degree
+                else:
+                    if data[i]['p'] is not None and data[i]['s'] is not None:
+                        # state of agents
 
-                    global_s.append(np.round(data[i]['s'],3))
-                    # global actions
-                    a= self.action_space[data[i]['a']]
-                    global_a.append(a)
-                    # parameters of model
-                    global_p.append(data[i]['p'])
-                    # degree of node
-                    global_d.append(data[i]['d'])
-                    id.append(i)
-                    global_d[0] += 1
+                        global_s.append(np.round(data[i]['s'],3))
+                        # global actions
+                        a= self.action_space[data[i]['a']]
+                        global_a.append(a)
+                        # parameters of model
+                        global_p.append(data[i]['p'])
+                        # degree of node
+                        global_d.append(data[i]['d'])
+                        id.append(i)
+
 
             # update degree
             self.degree= global_d[0]

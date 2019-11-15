@@ -31,7 +31,7 @@ class Xbee():
         init_data = []
         for i in self.id_ls:
             # #(id,  )
-            init_data.append((i,0,0,[0,0,0],None,0))
+            init_data.append((i,0,0,[0,0,0],None,self.degree))
         self.write_data(init_data)
         time.sleep(1)
 
@@ -308,6 +308,7 @@ def comm_agents2():
 
             # write data back to r_buffer
             if len(data_ls) > 0:
+                data_ls.append((xb.id, None,None,None,None,xb.degree))
                 xb.write_data(data_ls)
                 data_ls.clear()
 
