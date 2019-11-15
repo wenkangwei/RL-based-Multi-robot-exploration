@@ -1,6 +1,7 @@
 import serial
 import json
 import time
+import random
 import socket
 class Xbee():
     def __init__(self,id=1,num_agents =2 ):
@@ -252,7 +253,18 @@ def comm_agents1():
             # if it is not the term to send, keep read data from other agents
             data  = ''
             while abs(cur_t - init_t) < timeout:
+                # check update of data, if updated send data
+                if abs(c_t - i_t) >= 1.5:
+                    ready = True
+                    i_t = c_t
+                if ready and (xb.id_ls[xb.syn_t] == xb.id):
+                    xb.data = {"0": [xb.id, 0, random.randint(0, 10), xb.degree, round(random.random(), 2),
+                                     round(random.random(), 2), round(random.random(), 2)],
+                               "1": [round(random.random(), 2) for i in range(90)], "2": xb.syn_t}
+                    xb.send(xb.data)
+
                 cur_t = time.time()
+
                 while xb.Available():
                     data += xb.read()
 
