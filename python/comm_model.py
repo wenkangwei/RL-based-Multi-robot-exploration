@@ -245,12 +245,12 @@ def comm_agents2():
                 xb.data = {"0": [xb.id, 0,random.randint(0,10),xb.degree,round(random.random(),2) , round(random.random(),2), round(random.random(),2)],
                            "1": [round(random.random(),2) for i in range(90)], "2": xb.syn_t}
                 xb.send(xb.data)
-        else:
+        if xb.degree ==1 or(xb.id_ls[xb.syn_t] !=xb.id) :
             # receive data from other agents with lower priority
             init_t = time.time()
             cur_t = init_t
             # time out 8 s
-            timeout = 8
+            timeout = 6
             # if it is term to send data, but not ready,  check if other agents already timeout and send request
             # if it is not the term to send, keep read data from other agents
             data  = ''
