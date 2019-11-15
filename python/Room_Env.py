@@ -746,6 +746,7 @@ class GridWorld(object):
             steps = [data[k]['t'] for k in data.keys()]
             # check if all agents are synchronous at the same time step
             # else wait 5s for data update
+            fp.close()
             if timestep >= np.max(steps):
                 cur_t = time.time()
                 init_t = cur_t
@@ -754,7 +755,11 @@ class GridWorld(object):
                     # check update each 0.5
                     time.sleep(0.5)
                     # read data again
-                    data= json.loads(fp.read())
+                    fp = open('r_buf.json', 'r')
+                    data= fp.read()
+                    fp.close()
+
+                    data= json.loads(data)
                     steps = [data[k]['t'] for k in data.keys()]
                     cur_t =time.time()
                     if abs(cur_t - init_t) > timeout:
