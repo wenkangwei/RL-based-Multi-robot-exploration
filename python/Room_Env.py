@@ -248,7 +248,7 @@ class GridWorld(object):
 
         # Default unit of x,y : mm
         # divider to convert unit from mm to cm
-        self.unit_div =10.0
+        self.unit_div =1.0
 
         self.grid_size = 240*2
         self.observation_space = None
@@ -721,7 +721,7 @@ class GridWorld(object):
 
         return data_ls
 
-    def read_global_s(self,timestep=0,param=None,):
+    def read_global_s(self,timestep=0,param=None):
         """
         packet format in json:
         {1: {'t':timestep, 's': state, 'p':parameters of learning model},
@@ -765,7 +765,8 @@ class GridWorld(object):
             for i in data.keys():
                 if data[i]['p'] is not None and data[i]['s'] is not None:
                     # state of agents
-                    global_s.append(data[i]['s'])
+
+                    global_s.append(np.round(data[i]['s'],3))
                     # global actions
                     global_a.append(data[i]['a'])
                     # parameters of model
