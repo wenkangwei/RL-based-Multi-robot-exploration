@@ -321,7 +321,7 @@ class GridWorld(object):
         self.degree = 0
         time.sleep(2)
         # update degree at initial position
-        self.read_global_s()
+        # self.read_global_s()
 
 
 
