@@ -30,7 +30,7 @@ class Xbee():
         init_data = []
         for i in self.id_ls:
             # #(id,  )
-            init_data.append((i,0,[0,0,0],None,0))
+            init_data.append((i,0,0,[0,0,0],None,0))
         self.write_data(init_data)
         time.sleep(1)
 
