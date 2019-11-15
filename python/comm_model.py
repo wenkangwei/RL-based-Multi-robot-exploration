@@ -43,7 +43,7 @@ class Xbee():
         #   '#' as split between different packet
         message = json.dumps(data)+'#'
         self.ctrl.write(message.encode())
-        # print("Message sent.")
+        print("Message sent.")
         self.sendtime += self.sendtime_offset
         pass
 
@@ -245,6 +245,7 @@ def comm_agents2():
             data  = ''
             while abs(cur_t - init_t) < timeout:
                 # check update of data, if updated send data
+                cur_t = time.time()
                 while xb.Available():
                     data += xb.read()
 
