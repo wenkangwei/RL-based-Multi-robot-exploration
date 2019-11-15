@@ -246,7 +246,7 @@ def comm_agents1():
             init_t = time.time()
             cur_t = init_t
             # time out 8 s
-            timeout = 10
+            timeout = 30
 
             # if it is term to send data, but not ready,  check if other agents already timeout and send request
             # if it is not the term to send, keep read data from other agents
