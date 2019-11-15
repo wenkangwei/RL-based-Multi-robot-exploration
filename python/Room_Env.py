@@ -674,7 +674,7 @@ class GridWorld(object):
         4: learning model parameters
         5: degree
         packet format in json:
-        {0:1,1:timestep,2: type, 3:state,4: params, 5: degree}
+        #{0:1,1:timestep,2: action_ind, 3:state,4: params, 5: degree}
         :param t: current time step
         :return:
         """

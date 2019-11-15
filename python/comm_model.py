@@ -142,7 +142,7 @@ class Xbee():
         # print("data_ls,",data_ls, "syn_t:",syn_t)
         return  data_ls, syn_t, packet_type
 
-    def check_state_updated(self,version =2):
+    def check_state_updated(self):
         #  Old format:
         #        data in json packet
         #        0: id
@@ -163,18 +163,29 @@ class Xbee():
 
             if data["1"] >self.t_step:
                 self.t_step =data["1"]
-
-                if version == 1:
-                    self.data = data
-                else:
-                    # new format of packet
-                    ls = [data["0"],data["1"],data["2"],data["5"]]
-                    ls.extend(data["3"])
-                    # data sent to other agents via Xbee
-                    self.data = {"0":ls,"1":data["4"],"2":self.syn_t}
+                ls = [data["0"],data["1"],data["2"],data["5"]]
+                ls.extend(data["3"])
+                # data sent to other agents via Xbee
+                self.data = {"0":ls,"1":data["4"],"2":self.syn_t}
                 return True
+
         return False
 
+    def read_localstate(self):
+        # {0:1,1:timestep,2: action_ind, 3:state,4: params, 5: degree}
+        data = None
+        fp = open('w_buf.json', 'r')
+        if fp.readable():
+            data = fp.read()
+            data = json.loads(data)
+            self.t_step = data["1"]
+            ls = [data["0"], data["1"], data["2"], data["5"]]
+            ls.extend(data["3"])
+            # data sent to other agents via Xbee
+            data = {"0": ls, "1": data["4"], "2": self.syn_t}
+        fp.close()
+
+        return data
 
     def write_data(self,data_ls):
         """
@@ -243,8 +254,10 @@ def comm_agents2():
                 # Note: "0":[id, timestep, action_ind, degree, state0,state1,state2]
                 #       "1": [parameters]
                 #       "2": synchronous time
-                xb.data = {"0": [xb.id, 0,random.randint(0,10),xb.degree,round(random.random(),2) , round(random.random(),2), round(random.random(),2)],
-                           "1": [round(random.random(),2) for i in range(90)], "2": xb.syn_t}
+                # Test data
+                # xb.data = {"0": [xb.id, 0,random.randint(0,10),xb.degree,round(random.random(),2) , round(random.random(),2), round(random.random(),2)],
+                #            "1": [round(random.random(),2) for i in range(90)], "2": xb.syn_t}
+                xb.data = xb.read_localstate()
                 xb.send(xb.data)
 
         if xb.degree ==0 or(xb.id_ls[xb.syn_t] !=xb.id) :
