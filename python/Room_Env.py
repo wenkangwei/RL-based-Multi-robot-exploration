@@ -653,7 +653,7 @@ class GridWorld(object):
 
         return old_state, self.real_state,r, terminal, (L_cnt, R_cnt, bump,DLightBump, AnalogBump)
 
-    def send_states(self,t=0,state=None,degree=None,p=None):
+    def send_states(self,t=0,state=None, a=None, degree=None,p=None):
         """
         data in json packet
         0: id
@@ -672,9 +672,13 @@ class GridWorld(object):
             state = self.grid_state
         if degree == None:
             degree =self.degree
+        if a == None:
+            a = self.action
+        # find index of the action in action set
+        a_ind = list(self.action_space).index(a)
 
         id = self.id
-        data = {0:id,1:t,2:1,3:state,4:p,5:degree}
+        data = {0:id,1:t,2:a_ind,3:state,4:p,5:degree}
         txt = json.dumps(data)
         fp = open('w_buf.json','w')
         if fp.writable():
@@ -717,6 +721,7 @@ class GridWorld(object):
         """
         global_s= [self.grid_state]
         global_p = [param]
+        global_a = [self.action]
         global_d = [0]
         id = [self.id]
         fp = open('r_buf.json','r')
@@ -727,11 +732,11 @@ class GridWorld(object):
             # d_ls = self.decode_data(data)
             steps = [data[k]['t'] for k in data.keys()]
             # check if all agents are synchronous at the same time step
-            # else wait 2s for sychronization
+            # else wait 5s for sychronization
             if timestep >= np.max(steps):
                 cur_t = time.time()
                 init_t = cur_t
-                timeout = 2
+                timeout = 5
                 while steps.count(timestep) <len(steps):
                     # check update each 0.5
                     time.sleep(0.5)
@@ -739,7 +744,6 @@ class GridWorld(object):
                     data= json.loads(fp.read())
                     steps = [data[k]['t'] for k in data.keys()]
                     cur_t =time.time()
-
                     if abs(cur_t - init_t) > timeout:
                         break
 
@@ -747,16 +751,19 @@ class GridWorld(object):
                 if data[i]['p'] is not None and data[i]['s'] is not None:
                     # state of agents
                     global_s.append(data[i]['s'])
+                    # global actions
+                    global_a.append(data[i]['a'])
                     # parameters of model
                     global_p.append(data[i]['p'])
                     # degree of node
                     global_d.append(data[i]['d'])
                     id.append(i)
                     global_d[0] += 1
+
             # update degree
             self.degree= global_d[0]
 
-        return id, global_s,global_d,global_p
+        return id, global_s,global_a,global_d,global_p
 
 
 
@@ -780,6 +787,9 @@ class GridWorld(object):
         r: reward of new state or R(s,a,s')
         is_terminal: flag to check s is terminal. s is state before taking action
         """
+        # update current action
+        self.action = a
+
         # change of distance in mm
         d= a[0]
         # convert change of heading angle d_theta from degree to rad, from angle to Arc Length

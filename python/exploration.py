@@ -42,8 +42,12 @@ def test_json(Env):
     id, global_s, global_d, global_p = Env.read_global_s(timestep=0, param=None)
     print('id:{},global_s:{},d:{}, p:{}'.format(id, global_s, global_d, global_p))
 
-def Xbee_comm():
-    comm_agents()
+# def Xbee_comm():
+#     comm_agents()
+
+
+
+
 
 
 def run_agent(Env):

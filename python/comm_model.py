@@ -111,13 +111,20 @@ class Xbee():
                         ls = list(data["0"])
                         print("data[0]:", ls)
                         id = ls[0]
+                        # time step
                         t_step = ls[1]
-                        d = ls[2]
-                        s = ls[3:]
+                        # action
+                        a = ls[2]
+                        # degree
+                        d = ls[3]
+                        # states
+                        s = ls[4:]
+                        # synchronus time
                         p,syn_t = data["1"], data["2"]
+                        # check if data repeated
                         if buf.count((id,t_step)) <1:
                             buf.append((id,t_step))
-                            data_ls.append((id, t_step,s,p,d))
+                            data_ls.append((id, t_step,a,s,p,d))
                     else:
                         return  None, None
         # print("s:", s)
@@ -129,13 +136,14 @@ class Xbee():
         #        data in json packet
         #        0: id
         #        1: time step
+        #        2: action index
         #        3: current state
         #        4: learning model parameters
         #        5: degree
         #        packet format in json:
-        #        {0:1,1:timestep,2: type, 3:state,4: params, 5: degree}
+        #        {0:1,1:timestep,2: action index, 3:state,4: params, 5: degree}
         #New format to reduce bytes in packet:
-        # {0:[id, time step, degree,state0, state1,state2], 1: [parameters]}
+        # {0:[id, time step, action ,degree,state0, state1,state2], 1: [parameters]}
 
         fp = open('w_buf.json','r')
         if fp.readable():
@@ -149,8 +157,9 @@ class Xbee():
                     self.data = data
                 else:
                     # new format of packet
-                    ls = [data["0"],data["1"],data["5"]]
+                    ls = [data["0"],data["1"],data["2"],data["5"]]
                     ls.extend(data["3"])
+                    # data sent to other agents via Xbee
                     self.data = {"0":ls,"1":data["4"],"2":self.syn_t}
                 return True
         return False
@@ -175,7 +184,8 @@ class Xbee():
         """
         buf = {}
         for d in data_ls:
-            buf[d[0]] ={'t':d[1], 's':d[2],'p':d[3],'d':d[4]}
+            # d : tuple of decoded data
+            buf[d[0]] ={'t':d[1],'a':d[2],'s':d[3],'p':d[4],'d':d[5]}
         s = json.dumps(buf)
         fp = open('r_buf.json','w')
         fp.write(s)
@@ -222,8 +232,10 @@ def comm_agents1():
                     xb.syn_t= 0
 
                 # xb.data["2"] =xb.syn_t
-
-                xb.data = {"0": [xb.id, 0, xb.degree,round(random.random(),2) , round(random.random(),2), round(random.random(),2)],
+                # Note: "0":[id, timestep, action_ind, degree, state0,state1,state2]
+                #       "1": [parameters]
+                #       "2": synchronous time
+                xb.data = {"0": [xb.id, 0,random.randint(0,10),xb.degree,round(random.random(),2) , round(random.random(),2), round(random.random(),2)],
                            "1": [round(random.random(),2) for i in range(90)], "2": xb.syn_t}
                 xb.send(xb.data)
         else:
@@ -277,105 +289,6 @@ def comm_agents1():
                 xb.write_data(data_ls)
                 data_ls.clear()
         ready = False
-
-def comm_agents():
-    """
-    Packet 1 {'0':id,'c':1} 'c': type of packet
-    packet 2: data from current agent : {"0":0,"1":0,"2":1,"3":[0,0,0],"4":null,"5":0} data from write buffer
-    Data write to r_buffer:
-            {
-          "1":{"t":0,"s":[1,2,3],"p":[0,0,0,0],"d":0},
-          "2":{"t":0,"s":[1,2,3],"p":[0,0,0,0],"d":0},
-          "3":{"t":0,"s":[1,2,3],"p":[0,0,0,0],"d":0}
-        }
-        indicating states of different agents
-
-    :return:
-    """
-    hn = socket.gethostname()
-    id = int(hn[-1])
-    pack1 = {'0': id, 'c': 1}
-    xb = Xbee(id)
-    data_ls = []
-    init_t = time.time()
-    cur_t =init_t
-    ready =False
-
-    while True:
-        # check if data in w_buf write buffer is updated by the agent
-        # if updated, load data and return flag, then send indicator to other agents
-        # so that other agents know who are ready to send data
-        # ready = xb.check_state_updated()
-
-        if abs(cur_t-init_t)>2:
-            ready = True if ready == False else True
-            init_t=cur_t
-        cur_t =time.time()
-
-        if ready:
-            # xb.send(pack1)
-            print("Indicator sent.")
-            # print(xb.data)
-        pass
-
-        # debug
-        time.sleep(1)
-
-        # check if other agents want to send data
-        if True:
-        # if xb.Available():
-            print("Ready to receive data")
-            # check priority of sending data
-            # cnt_before: counts of agents that will send before this agent
-            # cnt_bebind: counts of agents that will send after this agent
-            # cnt_before, cnt_after, id_ls = xb.read_avail_agents()
-            time.sleep(1)
-            # print("Count:",cnt_before,cnt_after,"id:",id_ls)
-            # receive data from other agents with higher priority
-            i = 0
-            # while i <cnt_before:
-            #     print("Receiving Agent:",i)
-            #     i += 1
-            #     data = ''
-            #     while xb.Available():
-            #         data += xb.read()
-            #         print("Data: ", data)
-            #     data_ls.extend(xb.decode_data(data))
-            #     time.sleep(1)
-            data = ''
-            # while xb.Available():
-            #     data += xb.read()
-            #     # print("Data: ", data)
-            # data_ls.extend(xb.decode_data(data))
-            # term of this agent to send data
-            if ready:
-                xb.send(xb.data)
-
-            # receive data from other agents with lower priority
-            data = ''
-            while xb.Available():
-                data += xb.read()
-                print("Data: ", data)
-            if len(data)>1:
-                data_ls.extend(xb.decode_data(data))
-            # i = 0
-            # while i <cnt_after:
-            #     print("Receiving Agent:", i)
-            #     i += 1
-            #     data = ''
-            #     while xb.Available():
-            #         data += xb.read()
-            #         print("Data: ",data)
-            #     data_ls.extend(xb.decode_data(data))
-            #     time.sleep(1)
-
-            print("Received data: ",data_ls)
-
-        ready =False
-        # write data back to r_buffer
-        if len(data_ls) > 0:
-            xb.write_data(data_ls)
-            data_ls.clear()
 
 
 if __name__ == '__main__':
