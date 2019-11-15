@@ -100,6 +100,7 @@ class Xbee():
         data_ls = []
         syn_t = 0
         buf = []
+        packet_type= 0
         for d in d_ls:
             if len(d) > 3 and (d[0] == '{' ) and (d[-1]== '}'):
                 data = json.loads(d)
@@ -108,7 +109,15 @@ class Xbee():
                     id, t_step,s,p,d = data["0"],data["1"],data["3"],data["4"],data["5"]
                     # decode of new version of format in packet
                 else:
-                    if ("0" in data.keys()) and ("1" in data.keys()) and ("2" in data.keys()):
+                    if 'id' in data.keys:
+                        # if packet is indicator, just add id and degree
+                        packet_type =0
+                        self.id_ls.append(data['id'])
+                        self.degree +=1
+                        syn_t = self.syn_t
+                    elif ("0" in data.keys()) and ("1" in data.keys()) and ("2" in data.keys()):
+                        # if packet is data packet, read data
+                        packet_type=1
                         ls = list(data["0"])
                         print("data[0]:", ls)
                         id = ls[0]
@@ -130,7 +139,7 @@ class Xbee():
                         return  None, None
         # print("s:", s)
         # print("data_ls,",data_ls, "syn_t:",syn_t)
-        return  data_ls, syn_t
+        return  data_ls, syn_t, packet_type
 
     def check_state_updated(self,version =2):
         #  Old format:
@@ -256,9 +265,9 @@ def comm_agents2():
             if len(data)>3:
                 print('data: ',data)
                 # read data and synchronous time
-                d, xb.syn_t= xb.decode_data(data)
+                d, xb.syn_t, p_type= xb.decode_data(data)
                 # check if the packet is what we want
-                if d is not None  and xb.syn_t != None:
+                if p_type==1 and d is not None  and xb.syn_t != None:
                     print('d:',d)
                     data_ls.extend(d)
                     print("")
