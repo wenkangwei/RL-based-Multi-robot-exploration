@@ -1,9 +1,11 @@
 from Room_Env import *
-# import numpy as np
-# import math
+import numpy as np
+import math
 import  random
 import socket
 from  comm_model import *
+import rl_model as ac
+import time
 
 def test_observation(Env):
     import time
@@ -52,6 +54,7 @@ def test_json(Env):
 
 def run_agent(Env):
     action_set = Env.action_space
+
     # a = random.choice(action_set)
     track = []
     # time step t, used to track update of learning model
@@ -79,12 +82,13 @@ def run_agent(Env):
             # receive info from other agents
             # Learning model parameters
             # delay few seconds to update data of agents
-            import time
             time.sleep(2)
             id, global_s, global_d, global_p = Env.read_global_s(timestep=t, param=w)
 
-            print("States: ",id, global_s, global_d, global_p)
+            print("States: ")
+            print(id, global_s, global_d, global_p)
             # update global learning model
+
 
             # show msp here
             if Env.is_map_updated() and len(Env.obs_ls) > 0:

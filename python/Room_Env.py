@@ -41,7 +41,7 @@ class MotorEncoder():
     Class used to store and calcuate information of movement
     based on Left Right encoders of motors
     """
-    def __init__(self, L_init_cnt=0,R_init_cnt=0):
+    def __init__(self, L_init_cnt=0,R_init_cnt=0,unit_div=10.0):
         # ------Parameters-----------------
         # Notes:
         # all angles are in rad unit, not degree unless convert it to degree
@@ -50,19 +50,20 @@ class MotorEncoder():
         self.L_past_cnt = L_init_cnt
         self.R_cur_cnt = R_init_cnt
         self.R_past_cnt = R_init_cnt
-
+        # convert mm to cm
+        self.unit_div = unit_div
         # delta distance after each movement
-        self.delta_d= 0
+        self.delta_d= 0.0
         # change of angle afer a movement
-        self.delta_agl = 0
+        self.delta_agl = 0.0
         # angle difference tolerance
-        self.agl_tol = 0
+        self.agl_tol = 0.0
         # current position obtained by dead reckoning
-        self.x= 0
-        self.y = 0
+        self.x= 0.0
+        self.y = 0.0
         # Robot Heading angles
-        self.theta = 0
-        self.old_theta = 0
+        self.theta = 0.0
+        self.old_theta = 0.0
 
         # -----------Constant settings of Robot----------
         self.wheel_diameter = 72
@@ -169,8 +170,8 @@ class MotorEncoder():
         # Update current position
         self.x = self.x + d*math.cos(theta-0.5*del_agl)
         self.y = self.y + d * math.sin(theta - 0.5 * del_agl)
-        self.x = round(self.x, 3)
-        self.y = round(self.y, 3)
+        self.x = round(self.x, 3)/self.unit_div
+        self.y = round(self.y, 3)/self.unit_div
         self.theta =round(self.theta,3)
         return self.x, self.y, self.theta
 
@@ -245,6 +246,10 @@ class GridWorld(object):
         # each grid is 240mmx240 mm based on size of tabular in lab
         self.id =id
 
+        # Default unit of x,y : mm
+        # divider to convert unit from mm to cm
+        self.unit_div =10.0
+
         self.grid_size = 240*2
         self.observation_space = None
         # Action space:
@@ -308,7 +313,7 @@ class GridWorld(object):
         self.start_time = time.time()
         [left_start, right_start] = self.Roomba.Query(43, 44)
 
-        self.Motion = MotorEncoder(left_start, right_start)
+        self.Motion = MotorEncoder(left_start, right_start,self.unit_div)
         print("========Initial state:",self.Motion.get_CurPos(left_start,right_start))
         # Initialize Bumper
         self.bumper= LighBumper()
@@ -386,6 +391,8 @@ class GridWorld(object):
 
         return  L_cnt,R_cnt, bump, DLightBump,AnalogBump
 
+
+
     def terminate(self):
         """
         Stop roomba and clean data after exploration is finished
@@ -450,12 +457,13 @@ class GridWorld(object):
     def get_gridState(self,real_state=None):
         """
         Convert continuous position, heading angle theta to discrete int position and int theta
-        :param real_state:
+        :param real_state:  x,y in cm, theta in degree
         :return:
         discrete int state values:x,y, theta
         """
         if real_state is None:
-            r_state =self.real_state
+            # convert unit back to mm
+            r_state =[self.real_state[0]*self.unit_div,self.real_state[1]*self.unit_div,self.real_state[2]]
         else:
             r_state = real_state
 
@@ -477,8 +485,9 @@ class GridWorld(object):
         i = np.argmin(a)
         # calculate approximate degree in grid world
         grid_state[2] = self.angle_set[i]
-        print("=========grid angle:",grid_state[2],"real ag:",real_angle)
-        # convert degree to rad for moving
+        print("grid angle:",grid_state[2],"real ag:",real_angle)
+
+        # correct the degree in rad for moving
         agl_rad = grid_state[2]*(math.pi/180.0)
         correct_rot = -(real_state[2] - agl_rad)
         sp = 100
@@ -591,17 +600,17 @@ class GridWorld(object):
                 x = round(x, 2)
                 y = round(y, 2)
                 th = round(th, 2)
-                s = self.get_gridState(real_state=[x, y, th])
-                obstacles.append((s[0], s[1]))
+                # s = self.get_gridState(real_state=[x, y, th])
+                obstacles.append((x, y, th))
                 th = self.Motion.theta +  b_avg_angle
                 x = self.Motion.x + d_obs * math.cos(th)
                 y = self.Motion.y + d_obs * math.sin(th)
-                x = round(x, 3)
-                y = round(y, 3)
-                th = round(th,3)
+                x = round(x, 2)
+                y = round(y, 2)
+                th = round(th,2)
                 # convert real continuous state to discrete grid world state
-                s = self.get_gridState(real_state=[x, y, th])
-                obstacles.append((s[0], s[1]))
+                # s = self.get_gridState(real_state=[x, y, th])
+                obstacles.append((x,y,th))
             else:
                 alg = (b_avg_angle+lb_avg_agl)/2.0
                 th= self.Motion.theta+ alg
@@ -610,8 +619,9 @@ class GridWorld(object):
                 x = round(x, 2)
                 y = round(y, 2)
                 th = round(th, 2)
-                s= self.get_gridState(real_state=[x,y,th])
-                obstacles.append((s[0],s[1]))
+                # s= self.get_gridState(real_state=[x,y,th])
+                # obstacles.append((s[0],s[1]))
+                obstacles.append((x, y, th))
         return terminal, obstacles
 
     def observe_Env(self, mode='all'):
@@ -653,7 +663,7 @@ class GridWorld(object):
 
         return old_state, self.real_state,r, terminal, (L_cnt, R_cnt, bump,DLightBump, AnalogBump)
 
-    def send_states(self,t=0,state=None, a=None, degree=None,p=None):
+    def send_states(self,t=0,state=None, a=None, degree=None,p=None, state_type='c'):
         """
         data in json packet
         0: id
@@ -669,7 +679,10 @@ class GridWorld(object):
         :return:
         """
         if state == None:
-            state = self.grid_state
+            if state_type == 'd':
+                state = self.grid_state
+            else:
+                state = self.real_state
         if degree == None:
             degree =self.degree
         if a == None:
@@ -708,7 +721,7 @@ class GridWorld(object):
 
         return data_ls
 
-    def read_global_s(self,timestep=0,param=None):
+    def read_global_s(self,timestep=0,param=None,):
         """
         packet format in json:
         {1: {'t':timestep, 's': state, 'p':parameters of learning model},
@@ -719,7 +732,7 @@ class GridWorld(object):
         where 1, 2, 3 are the id of agents
         :return:
         """
-        global_s= [self.grid_state]
+        global_s= [self.real_state]
         global_p = [param]
         global_a = [self.action]
         global_d = [0]
@@ -732,7 +745,7 @@ class GridWorld(object):
             # d_ls = self.decode_data(data)
             steps = [data[k]['t'] for k in data.keys()]
             # check if all agents are synchronous at the same time step
-            # else wait 5s for sychronization
+            # else wait 5s for data update
             if timestep >= np.max(steps):
                 cur_t = time.time()
                 init_t = cur_t
@@ -746,6 +759,8 @@ class GridWorld(object):
                     cur_t =time.time()
                     if abs(cur_t - init_t) > timeout:
                         break
+                    else:
+                        print("Waiting for other agents update data. . .")
 
             for i in data.keys():
                 if data[i]['p'] is not None and data[i]['s'] is not None:
@@ -843,11 +858,15 @@ class GridWorld(object):
         print('cur s:', new_real_state)
         time.sleep(0.5)
         print('-----------------------------------------')
+
         if is_terminal:
             # if it is not terminal, move forward
-            print("AnalogBump: ", AnalogBump)
+            # print("AnalogBump: ", AnalogBump)
+            print("===============Reach Terminal =============")
             print('r:{:10.2f}, terminal:{}'.format(r, is_terminal))
             print('obstacle:', self.obs_ls[0])
+            print("===========================================")
+            print()
         else:
             # reset time
             init_t = time.time()
@@ -866,18 +885,20 @@ class GridWorld(object):
 
                     if is_terminal:
                         # print("AnalogBump: ", AnalogBump)
-                        # print('r:{:10.2f}, terminal:{}'.format(r, is_terminal))
-                        # print('obstacle:', self.obs_ls[0])
+                        print("===============Reach Terminal =============")
+                        print('r:{:10.2f}, terminal:{}'.format(r, is_terminal))
+                        print('obstacle:', self.obs_ls[0])
+                        print("===========================================")
+                        print()
                         break
                 # check obstacle and terminal state
                 if np.abs(cur_t-t)>= self.print_time:
                     t =cur_t
                     print()
-                    print('##############################')
+                    print('---------------------------------')
                     print('new state: {:10.2f},{:10.2f},{:10.2f}. '.format(
                         new_real_state[0], new_real_state[1], new_real_state[2]))
                     print('r:{:10.2f}, terminal:{}'.format(r, is_terminal))
-                    print('obstacle:', self.obs_ls[0])
 
                 cur_t = time.time()
             # pause roomba after reaching desired position
@@ -887,29 +908,29 @@ class GridWorld(object):
 
         # record real trajectory here
         ##############################
-
+        self.logger.log(s_old, a, s_new, r, is_terminal, self.obs_ls)
         ##############################
 
 
         # Compute reward and new state after the motion
-        s_new = self.get_gridState(new_real_state)
-        self.grid_state = s_new
-        print("grid s:", s_new)
+        s_new = new_real_state
+        grid_s_new = self.get_gridState(new_real_state)
+        self.grid_state = grid_s_new
+        print("grid s:", grid_s_new)
 
-        #May use alternative method : using feedback to reach desired position
-        ########################################
-        ########################################
 
+        # Clean the useless data
         self.Roomba.PauseQueryStream()
         if self.Roomba.Available() > 0:
             z = self.Roomba.DirectRead(self.Roomba.Available())
             # print(z)
 
         time.sleep(1)
+
         # update Gaussian Mixture model for reward approximation
         ########################################
         ########################################
-        self.logger.log(s_old,a,s_new,r,is_terminal,self.obs_ls)
+
         time.sleep(0.5)
-        return s_new, r, is_terminal
+        return grid_s_new,s_new, r, is_terminal
 

@@ -112,8 +112,9 @@ class Xbee():
                     if "id" in data.keys():
                         # if packet is indicator, just add id and degree
                         packet_type =0
-                        self.id_ls.append(data['id'])
-                        self.degree +=1
+                        if self.id_ls.count(data['id']) ==0:
+                            self.id_ls.append(data['id'])
+                            self.degree +=1
                         syn_t = self.syn_t
                     elif ("0" in data.keys()) and ("1" in data.keys()) and ("2" in data.keys()):
                         # if packet is data packet, read data
@@ -245,12 +246,13 @@ def comm_agents2():
                 xb.data = {"0": [xb.id, 0,random.randint(0,10),xb.degree,round(random.random(),2) , round(random.random(),2), round(random.random(),2)],
                            "1": [round(random.random(),2) for i in range(90)], "2": xb.syn_t}
                 xb.send(xb.data)
+
         if xb.degree ==0 or(xb.id_ls[xb.syn_t] !=xb.id) :
             # receive data from other agents with lower priority
             init_t = time.time()
             cur_t = init_t
-            # time out 8 s
-            timeout = 6
+            # time out 10 s
+            timeout = 10
             # if it is term to send data, but not ready,  check if other agents already timeout and send request
             # if it is not the term to send, keep read data from other agents
             data  = ''
