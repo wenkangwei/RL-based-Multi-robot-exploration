@@ -18,7 +18,7 @@ class Xbee():
 
 
         # wait for other agents to setup
-        time.sleep(2*num_agents)
+        time.sleep(6)
         self.send(data)
         # delay 2s to make sure receive ids from all other agents
         self.degree, self.id_ls = self.read_avail_agents()
@@ -109,7 +109,7 @@ class Xbee():
                     id, t_step,s,p,d = data["0"],data["1"],data["3"],data["4"],data["5"]
                     # decode of new version of format in packet
                 else:
-                    if 'id' in data.keys:
+                    if "id" in data.keys():
                         # if packet is indicator, just add id and degree
                         packet_type =0
                         self.id_ls.append(data['id'])
@@ -251,7 +251,6 @@ def comm_agents2():
             cur_t = init_t
             # time out 8 s
             timeout = 8
-
             # if it is term to send data, but not ready,  check if other agents already timeout and send request
             # if it is not the term to send, keep read data from other agents
             data  = ''
