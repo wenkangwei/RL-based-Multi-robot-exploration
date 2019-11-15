@@ -826,6 +826,7 @@ class GridWorld(object):
         s_old = self.grid_state
         s_new = s_old
         old_real_state, new_real_state, r, is_terminal = 0,0,0,False
+
         L_cnt, R_cnt, bump, DLightBump, AnalogBump = None, None,None,None,None
         # track sensor information when moving
         self.Roomba.StartQueryStream(7, 43, 44, 45, 46, 47, 48, 49, 50, 51)  # Start getting bumper values
