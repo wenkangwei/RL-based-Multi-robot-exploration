@@ -170,8 +170,8 @@ class MotorEncoder():
         # Update current position
         self.x = self.x + d*math.cos(theta-0.5*del_agl)
         self.y = self.y + d * math.sin(theta - 0.5 * del_agl)
-        self.x = round(self.x, 3)/self.unit_div
-        self.y = round(self.y, 3)/self.unit_div
+        self.x = round(self.x/self.unit_div, 3)
+        self.y = round(self.y/self.unit_div, 3)
         self.theta =round(self.theta,3)
         return self.x, self.y, self.theta
 
