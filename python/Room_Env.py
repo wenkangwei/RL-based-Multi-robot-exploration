@@ -314,14 +314,14 @@ class GridWorld(object):
         [left_start, right_start] = self.Roomba.Query(43, 44)
 
         self.Motion = MotorEncoder(left_start, right_start,self.unit_div)
-        print("========Initial state:",self.Motion.get_CurPos(left_start,right_start))
+        print("Initial state:",self.Motion.get_CurPos(left_start,right_start))
         # Initialize Bumper
         self.bumper= LighBumper()
 
         self.degree = 0
         time.sleep(2)
         # update degree at initial position
-        self.read_global_s()
+        # self.read_global_s()
 
 
 
