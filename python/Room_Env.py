@@ -600,8 +600,9 @@ class GridWorld(object):
                 x = round(x, 2)
                 y = round(y, 2)
                 th = round(th, 2)
-                # s = self.get_gridState(real_state=[x, y, th])
-                obstacles.append((x, y, th))
+                # obstacles.append((x, y, th))
+                s = self.get_gridState(real_state=[x, y, th])
+                obstacles.append((s[0], s[1]))
                 th = self.Motion.theta +  b_avg_angle
                 x = self.Motion.x + d_obs * math.cos(th)
                 y = self.Motion.y + d_obs * math.sin(th)
@@ -609,8 +610,9 @@ class GridWorld(object):
                 y = round(y, 2)
                 th = round(th,2)
                 # convert real continuous state to discrete grid world state
-                # s = self.get_gridState(real_state=[x, y, th])
-                obstacles.append((x,y,th))
+                s = self.get_gridState(real_state=[x, y, th])
+                obstacles.append((s[0],s[1]))
+                # obstacles.append((x,y,th))
             else:
                 alg = (b_avg_angle+lb_avg_agl)/2.0
                 th= self.Motion.theta+ alg
@@ -619,9 +621,9 @@ class GridWorld(object):
                 x = round(x, 2)
                 y = round(y, 2)
                 th = round(th, 2)
-                # s= self.get_gridState(real_state=[x,y,th])
-                # obstacles.append((s[0],s[1]))
-                obstacles.append((x, y, th))
+                s= self.get_gridState(real_state=[x,y,th])
+                obstacles.append((s[0],s[1]))
+                # obstacles.append((x, y, th))
         return terminal, obstacles
 
     def observe_Env(self, mode='all'):
