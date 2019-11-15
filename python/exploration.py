@@ -67,6 +67,8 @@ def run_agent(Env):
             # do action and sample experience here
             print('action: ', a)
             grid_s_new, s_new, r, is_terminal = Env.step(a)
+            time.sleep(2)
+            print(a, grid_s_new)
 
             # debug
             # s_new, r, is_terminal = [round(random.random(),2) for i in range(3)],round(random.random(),2),False
