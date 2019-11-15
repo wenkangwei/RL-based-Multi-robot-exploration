@@ -263,6 +263,7 @@ def comm_agents1():
                 d, xb.syn_t= xb.decode_data(data)
                 # check if the packet is what we want
                 if d is not None  and xb.syn_t != None:
+                    print('d:',d)
                     data_ls.extend(d)
                     print("")
                     print("Agent:",xb.id," Got data: ",data_ls)
