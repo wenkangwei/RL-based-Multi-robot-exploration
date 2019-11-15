@@ -277,12 +277,12 @@ def comm_agents2():
 
             # if received data
             if len(data)>3:
-                print('data: ',data)
+                # print('data: ',data)
                 # read data and synchronous time
                 d, xb.syn_t, p_type= xb.decode_data(data)
                 # check if the packet is what we want
                 if p_type==1 and d is not None  and xb.syn_t != None:
-                    print('d:',d)
+                    # print('d:',d)
                     data_ls.extend(d)
                     print("")
                     print("Agent:",xb.id," Got data: ",data_ls)
@@ -368,7 +368,7 @@ def comm_agents1():
 
             # if received data
             if len(data)>3:
-                print('data: ',data)
+                # print('data: ',data)
                 # read data and synchronous time
                 d, xb.syn_t= xb.decode_data(data)
                 # check if the packet is what we want

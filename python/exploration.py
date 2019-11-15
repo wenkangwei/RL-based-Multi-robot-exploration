@@ -62,7 +62,7 @@ def run_agent(Env):
     try:
 
         # test_observation(Env)
-        set = [random.choice(Env.action_space) for i in range(1)]
+        set = [random.choice(Env.action_space) for i in range(3)]
         for a in set:
             # do action and sample experience here
             print('action: ', a)
@@ -76,7 +76,7 @@ def run_agent(Env):
             # Training local Q value/ V state value here
 
             # Send local information to other agents
-            w = []
+            w = [round(random.random(),2) for i in range(10)]
             Env.send_states(t=t,state= s_new,p=w)
 
             # receive info from other agents
