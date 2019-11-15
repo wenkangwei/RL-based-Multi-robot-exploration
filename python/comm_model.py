@@ -202,6 +202,89 @@ def test_json():
     print('Update:',f)
     xb.write_data([xb.data])
 
+
+
+
+
+def comm_agents2():
+    hn = socket.gethostname()
+    id = int(hn[-1])
+    xb = Xbee(id)
+    data_ls = []
+
+    xb.syn_t = 0
+    while True:
+        # ready = xb.check_state_updated()
+
+        # # if it is the term to send
+        if (xb.id_ls[xb.syn_t] ==xb.id):
+                time.sleep(2)
+                print("Agent:", xb.id_ls[xb.syn_t]," Sending data")
+                # update synchronous time to allow next agent to send data
+                xb.syn_t = xb.syn_t+1
+                # reset synchronous time if it overflows
+                if xb.syn_t >= len(xb.id_ls):
+                    xb.syn_t= 0
+
+                # xb.data["2"] =xb.syn_t
+                # Note: "0":[id, timestep, action_ind, degree, state0,state1,state2]
+                #       "1": [parameters]
+                #       "2": synchronous time
+                xb.data = {"0": [xb.id, 0,random.randint(0,10),xb.degree,round(random.random(),2) , round(random.random(),2), round(random.random(),2)],
+                           "1": [round(random.random(),2) for i in range(90)], "2": xb.syn_t}
+                xb.send(xb.data)
+        else:
+            # receive data from other agents with lower priority
+            init_t = time.time()
+            cur_t = init_t
+            # time out 8 s
+            timeout = 20
+
+            # if it is term to send data, but not ready,  check if other agents already timeout and send request
+            # if it is not the term to send, keep read data from other agents
+            data  = ''
+            while abs(cur_t - init_t) < timeout:
+                # check update of data, if updated send data
+                while xb.Available():
+                    data += xb.read()
+
+            # if received data
+            if len(data)>3:
+                print('data: ',data)
+                # read data and synchronous time
+                d, xb.syn_t= xb.decode_data(data)
+                # check if the packet is what we want
+                if d is not None  and xb.syn_t != None:
+                    print('d:',d)
+                    data_ls.extend(d)
+                    print("")
+                    print("Agent:",xb.id," Got data: ",data_ls)
+                    print("Syn time:", xb.syn_t)
+                    print("Next agent to send:", xb.id_ls[xb.syn_t])
+                    # check
+                    for new_d in d:
+                        id = new_d[0]
+                        if id not in xb.id_ls:
+                            xb.id_ls.append(id)
+                            xb.id_ls.sort()
+                            xb.degree += 1
+                    # break
+
+            # if any one of agents fail to send data in limited time,
+            # skip this agent, let the next one sent data
+            if len(data)<=2 and abs(cur_t - init_t) >= timeout:
+                print("Agent ",xb.id_ls[xb.syn_t]," Timeout")
+                xb.syn_t += 1
+                # reset synchronous time
+                if xb.syn_t >=len(xb.id_ls):
+                    xb.syn_t = 0
+
+            # write data back to r_buffer
+            if len(data_ls) > 0:
+                xb.write_data(data_ls)
+                data_ls.clear()
+
+
 def comm_agents1():
     hn = socket.gethostname()
     id = int(hn[-1])
@@ -246,26 +329,13 @@ def comm_agents1():
             init_t = time.time()
             cur_t = init_t
             # time out 8 s
-            timeout = 30
+            timeout = 10
 
             # if it is term to send data, but not ready,  check if other agents already timeout and send request
             # if it is not the term to send, keep read data from other agents
             data  = ''
             while abs(cur_t - init_t) < timeout:
                 # check update of data, if updated send data
-                if abs(c_t - i_t) >= 1.5:
-                    ready = True
-                    i_t = c_t
-                c_t = time.time()
-
-                if ready and (xb.id_ls[xb.syn_t] == xb.id):
-                    xb.data = {"0": [xb.id, 0, random.randint(0, 10), xb.degree, round(random.random(), 2),
-                                     round(random.random(), 2), round(random.random(), 2)],
-                               "1": [round(random.random(), 2) for i in range(90)], "2": xb.syn_t}
-                    xb.send(xb.data)
-
-                cur_t = time.time()
-
                 while xb.Available():
                     data += xb.read()
 
@@ -296,7 +366,6 @@ def comm_agents1():
                 # reset synchronous time
                 if xb.syn_t >=len(xb.id_ls):
                     xb.syn_t = 0
-
 
             # write data back to r_buffer
             if len(data_ls) > 0:
