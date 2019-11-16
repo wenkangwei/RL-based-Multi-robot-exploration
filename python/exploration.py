@@ -68,7 +68,8 @@ def actor_critic(Env,max_iteration=10,epoch=3,num_agents =2):
                 # do action and sample experience here
                 print('action: ', a)
                 # share (s,a) pair at time t, where s: st, a: at
-                Env.send_states(t=t, state=global_s[0],a=a, p=model.w_local)
+                ws= model.w_local.tolist()
+                Env.send_states(t=t, state=global_s[0],a=a, p=ws)
                 time.sleep(2)
                 id, global_s, global_a, global_d, global_p = Env.read_global_s(timestep=t, param=None)
 
@@ -85,7 +86,8 @@ def actor_critic(Env,max_iteration=10,epoch=3,num_agents =2):
                 print("Terminal: ", is_terminal)
 
                 # update local w of Q function
-                w_local = model.crtic_step(global_s[0], a, s_new, global_s[1:], global_a[1:], r)
+                w_local = model.crtic_step(global_s[0], a, s_new, global_s[1:], global_a[1:], r).tolist()
+
                 Env.send_states(t=t, state=s_new, p=w_local)
                 time.sleep(2)
                 id, global_s, global_a, global_d, global_p = Env.read_global_s(timestep=t, param=w_local)
