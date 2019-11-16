@@ -1,4 +1,5 @@
 import  numpy as np
+import random
 import  math
 def f_dist_change(si,ai, s,a):
     """
@@ -124,7 +125,15 @@ class actor_critic_q():
         self.cnt_map = map
         self.obs_ls = obstacles
         pass
+    def sample_action(self,si,s,epi=0.5):
 
+        if random.random() >epi:
+            prob = [self.policy_estimator(si, ai, s, []) for ai in self.actions]
+            a = self.actions[np.argmax(prob)]
+            pass
+        else:
+            a = random.choice(self.actions)
+        return  a
     def get_features(self, si, ai, s, a):
         """
         This is a function to update feature x(s,a) used for approximation in RL
@@ -269,6 +278,7 @@ class actor_critic_q():
         for a in self.actions:
             e_sum += np.exp(np.matmul(self.theta,np.transpose(self.get_features(si, ai, s, a))))
         prob =e / e_sum
+
         return prob
 
 

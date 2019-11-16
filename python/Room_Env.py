@@ -349,12 +349,13 @@ class GridWorld(object):
         GPIO.output(gled, GPIO.LOW)
         pass
 
-    def spaces_init(self, world_r=50,world_c=50):
+    def spaces_init(self, world_r=20,world_c=20):
         # Initialize Grid world observation space
         # defaule 50m * 50m. num of grids are 50*1000/grid_size
         r= int(world_r*1000/self.grid_size)+1
         c= int(world_c*1000/self.grid_size)+1
         self.observation_map= np.ones([r,c])
+        self.cnt_map = np.zeros([r,c])
 
         # Initialize Action Space
         # d: distance to move
@@ -488,16 +489,16 @@ class GridWorld(object):
         print("grid angle:",grid_state[2],"real ag:",real_angle)
 
         # correct the degree in rad for moving
-        agl_rad = grid_state[2]*(math.pi/180.0)
-        correct_rot = -(real_state[2] - agl_rad)
-        sp = 100
-        t = (correct_rot* (math.pi/180))/sp
-        cur_t = time.time()
-        past_t = cur_t
-        while abs(past_t-cur_t) <=t+0.5:
-            self.Roomba.Move(0,sp)
-            cur_t = time.time()
-        self.Roomba.Move(0,0)
+        # agl_rad = grid_state[2]*(math.pi/180.0)
+        # correct_rot = -(real_state[2] - agl_rad)
+        # sp = 100
+        # t = (correct_rot* (math.pi/180))/sp
+        # cur_t = time.time()
+        # past_t = cur_t
+        # while abs(past_t-cur_t) <=t+0.5:
+        #     self.Roomba.Move(0,sp)
+        #     cur_t = time.time()
+        # self.Roomba.Move(0,0)
 
         return grid_state
 
@@ -724,7 +725,7 @@ class GridWorld(object):
 
         return data_ls
 
-    def read_global_s(self,timestep=0,param=None):
+    def read_global_s(self,real_s_old,timestep=0,param=None):
         """
         packet format in json:
         {1: {'t':timestep, 's': state, 'p':parameters of learning model},
@@ -735,7 +736,7 @@ class GridWorld(object):
         where 1, 2, 3 are the id of agents
         :return:
         """
-        global_s= [self.real_state]
+        global_s= [real_s_old]
         global_p = [param]
         global_a = [self.action]
         global_d = [0]
@@ -793,7 +794,8 @@ class GridWorld(object):
                     global_d[0] = self.degree
                 else:
                     dt = timestep - int(data[i]['t'])
-                    if data[i]['p'] is not None and data[i]['s'] is not None and dt<=3 :
+
+                    if data[i]['p'] is not None and data[i]['s'] is not None:
                         # if time step difference is >2, consider this agent is delayed, information is not valid
                         # state of agents
                         global_s.append(np.round(data[i]['s'],3))
@@ -863,7 +865,7 @@ class GridWorld(object):
         old_real_state, new_real_state, r, is_terminal,_ = self.observe_Env()
         new_grid_s = self.get_gridState(new_real_state)
         if is_terminal:
-            return new_grid_s, new_real_state, r, is_terminal
+            return real_s_old, new_grid_s, new_real_state, r, is_terminal
 
 
         # Take action if current state is not terminal
@@ -972,5 +974,5 @@ class GridWorld(object):
         ##############################
 
         time.sleep(0.5)
-        return new_grid_s, new_real_state, r, is_terminal
+        return real_s_old,new_grid_s, new_real_state, r, is_terminal
 
