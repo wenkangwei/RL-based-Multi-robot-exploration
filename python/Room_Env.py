@@ -786,12 +786,12 @@ class GridWorld(object):
             #     return id, global_s, global_a, global_d, global_p
 
             for i in data.keys():
-                dt = timestep - int(data[i]['t'])
                 if int(i)== self.id:
                     # update degree
                     self.degree = data[i]['d']
                     global_d[0] = self.degree
                 else:
+                    dt = timestep - int(data[i]['t'])
                     if data[i]['p'] is not None and data[i]['s'] is not None and dt<=3 :
                         # if time step difference is >2, consider this agent is delayed, information is not valid
                         # state of agents

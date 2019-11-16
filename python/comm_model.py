@@ -308,7 +308,7 @@ def comm_agents2():
 
             # write data back to r_buffer
             if len(data_ls) > 0:
-                data_ls.append((xb.id, None,None,None,None,xb.degree))
+                data_ls.append((xb.id, 0,None,None,None,xb.degree))
                 xb.write_data(data_ls)
                 data_ls.clear()
 
