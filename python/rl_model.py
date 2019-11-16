@@ -180,7 +180,7 @@ class actor_critic_q():
         """
         return x
 
-    def crtic_step(self,si,ai,si_new,s,a,r_t1):
+    def crtic_step(self,si,ai,si_new,s,a,r_t1,terminal):
         """
         Perform critic step, updating return, TD error and local weights in Q
         :param si:
@@ -196,7 +196,10 @@ class actor_critic_q():
         # update local return
         self.ret_t1 = (1 - self.beta_w)*self.ret_t + self.beta_w*r_t1
         # compute TD error
-        q_t1 = np.max([self.q_estimator(si_new,a_next,s,a) for a_next in self.actions])
+        if not terminal:
+            q_t1 = np.max([self.q_estimator(si_new,a_next,s,a) for a_next in self.actions])
+        else:
+            q_t1 = 0.0
         q_t = self.q_estimator(si, ai, s, a)
         # update TD error
         self.td_err = (r_t1+ q_t1)-(self.ret_t+ q_t)

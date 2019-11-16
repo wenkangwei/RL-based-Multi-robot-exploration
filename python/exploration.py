@@ -61,24 +61,27 @@ def actor_critic(Env,max_iteration=10,epoch=3,num_agents =2):
     try:
 
         for i in range(max_iteration):
+
+            # sample trajectories
             for j in range(epoch):
-                # sample trajectories
+                # sample current state and action pair
                 si= global_s[0]
                 a= model.sample_action(si,global_s[1:],epi=0.8)
                 # do action and sample experience here
                 print('action: ', a)
+
                 # share (s,a) pair at time t, where s: st, a: at
                 ws= model.w_local.tolist()
                 Env.send_states(t=t, state=global_s[0],a=a, p=ws)
                 time.sleep(2)
-                id, global_s, global_a, global_d, global_p = Env.read_global_s(timestep=t, param=None)
+                id, global_s, global_a, global_d, global_p = Env.read_global_s(si,timestep=t, param=None)
 
                 # update visit count in map
                 for sj in global_s:
                     grid_s = Env.get_gridState(sj)
                     Env.cnt_map[grid_s[0],grid_s[1]] +=1
 
-                # step a
+                # step a, (s,a)
                 real_s_old, grid_s_new, s_new, r, is_terminal = Env.step(a)
                 print("Grid state: ", grid_s_new)
                 print("real state: ", s_new)
@@ -86,11 +89,11 @@ def actor_critic(Env,max_iteration=10,epoch=3,num_agents =2):
                 print("Terminal: ", is_terminal)
 
                 # update local w of Q function
-                w_local = model.crtic_step(global_s[0], a, s_new, global_s[1:], global_a[1:], r).tolist()
+                w_local = model.crtic_step(global_s[0], a, s_new, global_s[1:], global_a[1:], r,is_terminal).tolist()
 
                 Env.send_states(t=t, state=s_new, p=w_local)
                 time.sleep(2)
-                id, global_s, global_a, global_d, global_p = Env.read_global_s(timestep=t, param=w_local)
+                id, global_s, global_a, global_d, global_p = Env.read_global_s(si,timestep=t, param=w_local)
                 # update global w
                 model.update_w_gbl(global_d[0], global_p[1:], global_d[1:])
 
@@ -114,7 +117,10 @@ def actor_critic(Env,max_iteration=10,epoch=3,num_agents =2):
 
                 if is_terminal:
                     break
-                # update global learning model
+
+            # update current real continous state
+            global_s[0] = Env.real_state
+            si =Env.real_state
             # sample new initial state
             a = model.sample_action(si, global_s[1:], epi=1)
             _,new_init_grid_s, new_init_s, r, is_terminal= Env.step(a)
