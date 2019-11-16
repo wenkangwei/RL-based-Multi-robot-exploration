@@ -742,47 +742,59 @@ class GridWorld(object):
         fp = open('r_buf.json','r')
         if fp.readable():
             data = fp.read()
-            print("Global states: ",data)
+            # print("Global states: ",data)
             data = json.loads(data)
-            # d_ls = self.decode_data(data)
+            fp.close()
 
-            steps = [data[k]['t'] for k in data.keys() if int(k)!= self.id]
+            # steps = [data[k]['t'] for k in data.keys() if int(k)!= self.id]
+            # if steps.count(timestep)== 0:
+            #         cur_t = time.time()
+            #         init_t = cur_t
+            #         timeout = 10
+            #         while steps.count(timestep) <:
+            #             # check update each 0.5
+            #             time.sleep(0.5)
+            #             # read data again
+            #             fp = open('r_buf.json', 'r')
+            #             data= fp.read()
+            #             fp.close()
+
             # check if all agents are synchronous at the same time step
             # else wait 5s for data update
-            fp.close()
-            if timestep >= np.max(steps):
-                cur_t = time.time()
-                init_t = cur_t
-                timeout = 10
-                while steps.count(timestep) <len(steps):
-                    # check update each 0.5
-                    time.sleep(0.5)
-                    # read data again
-                    fp = open('r_buf.json', 'r')
-                    data= fp.read()
-                    fp.close()
-
-                    data= json.loads(data)
-                    steps = [data[k]['t'] for k in data.keys() if int(k) != self.id]
-                    cur_t =time.time()
-                    if abs(cur_t - init_t) > timeout:
-                        break
-                    else:
-                        print("Waiting for other agents update data. . .")
-
-            if steps.count(timestep) < len(steps):
-                print("Fail to track other agents")
-                return id, global_s, global_a, global_d, global_p
+            # if timestep > np.min(steps):
+            #     cur_t = time.time()
+            #     init_t = cur_t
+            #     timeout = 10
+            #     while steps.count(timestep) <len(steps):
+            #         # check update each 0.5
+            #         time.sleep(0.5)
+            #         # read data again
+            #         fp = open('r_buf.json', 'r')
+            #         data= fp.read()
+            #         fp.close()
+            #
+            #         data= json.loads(data)
+            #         steps = [data[k]['t'] for k in data.keys() if int(k) != self.id]
+            #         cur_t =time.time()
+            #         if abs(cur_t - init_t) > timeout:
+            #             break
+            #         else:
+            #             print("Waiting for other agents update data. . .")
+            #
+            # if steps.count(timestep) < len(steps):
+            #     print("Fail to track other agents")
+            #     return id, global_s, global_a, global_d, global_p
 
             for i in data.keys():
+                dt = timestep - int(data[i]['t'])
                 if int(i)== self.id:
                     # update degree
                     self.degree = data[i]['d']
                     global_d[0] = self.degree
                 else:
-                    if data[i]['p'] is not None and data[i]['s'] is not None:
+                    if data[i]['p'] is not None and data[i]['s'] is not None and dt<=3 :
+                        # if time step difference is >2, consider this agent is delayed, information is not valid
                         # state of agents
-
                         global_s.append(np.round(data[i]['s'],3))
                         # global actions
                         a= self.action_space[data[i]['a']]
