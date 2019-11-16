@@ -67,6 +67,10 @@ def run_agent(Env):
             # do action and sample experience here
             print('action: ', a)
             grid_s_new, s_new, r, is_terminal = Env.step(a)
+            print("Grid state: ",grid_s_new)
+            print("real state: ", s_new)
+            print("reward: ",round(r,3))
+            print("Terminal: ",is_terminal)
             time.sleep(2)
             print(a, grid_s_new)
 

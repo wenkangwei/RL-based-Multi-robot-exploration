@@ -560,7 +560,8 @@ class GridWorld(object):
         # by measurement, small obstacle (height = height of light bumper) in 2cm: signal 120 ~300
         # within 1cm >400
         # if  big obstacle: (like a wall) at 2cm: 1300~1600
-        d_obs = 140
+        # d_obs = 140
+        d_obs = 300.0
         threshold = d_obs/self.max_strength
         obstacles = []
 
@@ -871,14 +872,14 @@ class GridWorld(object):
         # Rotate Roomba to certain degree
         sign = 1 if d_theta >= 0 else -1
         print("Spinning . . . ")
-        print('-----------------------------------------')
+        # print('-----------------------------------------')
         self.Roomba.Move(0, self.rot_sp* sign)
         t=cur_t
         while np.abs(cur_t-init_t)< tol+np.abs(ArcLen/self.rot_sp):
                 if np.abs(cur_t-t)>= self.print_time:
                     t= cur_t
-                    print('new state: {:10.2f},{:10.2f},{:10.2f}. r:{:10.2f}, terminal:{}'.format(
-                        new_real_state[0], new_real_state[1], new_real_state[2], r, is_terminal))
+                    # print('new state: {:10.2f},{:10.2f},{:10.2f}. r:{:10.2f}, terminal:{}'.format(
+                    #     new_real_state[0], new_real_state[1], new_real_state[2], r, is_terminal))
                 if self.Roomba.Available()>0:
                     # keep track of postion and check if at terminal state, like hitting wall or obstacle
                     old_real_state, new_real_state, r, is_terminal,data= self.observe_Env()
@@ -892,7 +893,7 @@ class GridWorld(object):
         print("Spinning t:", np.abs(cur_t-init_t))
         print('cur s:', new_real_state)
         time.sleep(0.5)
-        print('-----------------------------------------')
+        # print('-----------------------------------------')
 
         if is_terminal:
             # if it is not terminal, move forward
@@ -909,7 +910,7 @@ class GridWorld(object):
             #Roomba moves forward
             print('')
             print("Moving forward. . . . . .")
-            print('-----------------------------------------')
+            # print('-----------------------------------------')
             self.Roomba.Move(self.sp, 0)
             t =cur_t
             while np.abs(cur_t-init_t)< tol+ float(d/self.sp):
@@ -930,10 +931,10 @@ class GridWorld(object):
                 if np.abs(cur_t-t)>= self.print_time:
                     t =cur_t
                     print()
-                    print('---------------------------------')
-                    print('new state: {:10.2f},{:10.2f},{:10.2f}. '.format(
-                        new_real_state[0], new_real_state[1], new_real_state[2]))
-                    print('r:{:10.2f}, terminal:{}'.format(r, is_terminal))
+                    # print('---------------------------------')
+                    # print('new state: {:10.2f},{:10.2f},{:10.2f}. '.format(
+                    #     new_real_state[0], new_real_state[1], new_real_state[2]))
+                    # print('r:{:10.2f}, terminal:{}'.format(r, is_terminal))
 
                 cur_t = time.time()
             # pause roomba after reaching desired position
@@ -947,7 +948,7 @@ class GridWorld(object):
 
             new_grid_s = self.get_gridState(new_real_state)
         self.grid_state = new_grid_s
-        print("grid s:", new_grid_s)
+        # print("grid s:", new_grid_s)
 
 
         # Clean the useless data
