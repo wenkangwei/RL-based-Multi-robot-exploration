@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f9b42f44-d5b1-448c-a67e-6d8be2fc0991" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/python/exploration.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/exploration.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/python/rl_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/rl_model.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -29,11 +28,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="exploration.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="exploration.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/python/exploration.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-323">
-              <caret line="91" column="107" selection-start-line="91" selection-start-column="107" selection-end-line="91" selection-end-column="107" />
+            <state relative-caret-position="427">
+              <caret line="121" column="40" lean-forward="true" selection-start-line="121" selection-start-column="40" selection-end-line="121" selection-end-column="40" />
               <folding>
                 <element signature="e#0#22#0" expanded="true" />
               </folding>
@@ -41,11 +40,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="rl_model.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="rl_model.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/python/rl_model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="542">
-              <caret line="201" column="22" selection-start-line="201" selection-start-column="22" selection-end-line="201" selection-end-column="22" />
+            <state relative-caret-position="-1088">
+              <caret line="41" lean-forward="true" selection-start-line="41" selection-end-line="41" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
@@ -157,8 +156,8 @@
         <option value="$PROJECT_DIR$/python/comm_model.py" />
         <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch_6.py" />
         <option value="$PROJECT_DIR$/python/Room_Env.py" />
-        <option value="$PROJECT_DIR$/python/rl_model.py" />
         <option value="$PROJECT_DIR$/python/exploration.py" />
+        <option value="$PROJECT_DIR$/python/rl_model.py" />
       </list>
     </option>
   </component>
@@ -730,22 +729,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/python/rl_model.py">
+    <entry file="file://$PROJECT_DIR$/python/exploration.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="542">
-          <caret line="201" column="22" selection-start-line="201" selection-start-column="22" selection-end-line="201" selection-end-column="22" />
+        <state relative-caret-position="427">
+          <caret line="121" column="40" lean-forward="true" selection-start-line="121" selection-start-column="40" selection-end-line="121" selection-end-column="40" />
           <folding>
-            <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#0#22#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/python/exploration.py">
+    <entry file="file://$PROJECT_DIR$/python/rl_model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-323">
-          <caret line="91" column="107" selection-start-line="91" selection-start-column="107" selection-end-line="91" selection-end-column="107" />
+        <state relative-caret-position="-1088">
+          <caret line="41" lean-forward="true" selection-start-line="41" selection-end-line="41" />
           <folding>
-            <element signature="e#0#22#0" expanded="true" />
+            <element signature="e#0#19#0" expanded="true" />
           </folding>
         </state>
       </provider>

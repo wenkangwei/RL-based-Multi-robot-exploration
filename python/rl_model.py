@@ -36,9 +36,9 @@ def f_dist_obstacles(si,ai,s,a, obs_ls, max_dis):
     """
     C= max_dis
     d_obs_ls = []
-    si[0] = float(si[0])
-    si[1] = float(si[1])
-    ai[0] = float(ai[0])
+    # si[0] = float(si[0])
+    # si[1] = float(si[1])
+    # ai[0] = float(ai[0])
 
     if len(obs_ls)>0:
         x = si[0] + ai[0] * math.cos(math.radians(si[2]) - 0.5 * math.radians(ai[1]))
