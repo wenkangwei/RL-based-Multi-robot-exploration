@@ -561,7 +561,7 @@ class GridWorld(object):
         # within 1cm >400
         # if  big obstacle: (like a wall) at 2cm: 1300~1600
         # d_obs = 140
-        d_obs = 300.0
+        d_obs = 500.0
         threshold = d_obs/self.max_strength
         obstacles = []
 
