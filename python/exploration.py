@@ -68,7 +68,7 @@ def actor_critic(Env,max_iteration=10,epoch=3,num_agents =2):
                 # do action and sample experience here
                 print('action: ', a)
                 # share (s,a) pair at time t, where s: st, a: at
-                Env.send_states(t=t, state=global_s[0],a=a, p=ac.w_local)
+                Env.send_states(t=t, state=global_s[0],a=a, p=model.w_local)
                 time.sleep(2)
                 id, global_s, global_a, global_d, global_p = Env.read_global_s(timestep=t, param=None)
 
@@ -85,15 +85,15 @@ def actor_critic(Env,max_iteration=10,epoch=3,num_agents =2):
                 print("Terminal: ", is_terminal)
 
                 # update local w of Q function
-                w_local = ac.crtic_step(global_s[0], a, s_new, global_s[1:], global_a[1:], r)
+                w_local = model.crtic_step(global_s[0], a, s_new, global_s[1:], global_a[1:], r)
                 Env.send_states(t=t, state=s_new, p=w_local)
                 time.sleep(2)
                 id, global_s, global_a, global_d, global_p = Env.read_global_s(timestep=t, param=w_local)
                 # update global w
-                ac.update_w_gbl(global_d[0], global_p[1:], global_d[1:])
+                model.update_w_gbl(global_d[0], global_p[1:], global_d[1:])
 
                 # update policy
-                ac.actor_step(global_s[0],global_a[0], global_s[1:], global_a[1:])
+                model.actor_step(global_s[0],global_a[0], global_s[1:], global_a[1:])
                 t += 1
                 track.append(grid_s_new)
 
