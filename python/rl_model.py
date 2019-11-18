@@ -155,7 +155,7 @@ class actor_critic_q():
         max_dist = np.sqrt(sh[0] * sh[0] + sh[1] * sh[1])
         f2 = f_dist_obstacles(si,ai, s,a, self.obs_ls, max_dist)
         x.append(f2)
-        f3 = f_grid_cnt(si, s)
+        f3 = f_grid_cnt(si, s,self.cnts)
         x.append(f3)
         x.append(1)
         x = np.array(x, dtype=float)
