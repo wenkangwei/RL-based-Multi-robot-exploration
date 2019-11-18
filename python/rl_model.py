@@ -218,7 +218,7 @@ class actor_critic_q():
         :return:
         updated global weight
         """
-        if len(w_ls) != len(deg_ls +1):
+        if len(w_ls) != len(deg_ls)+1:
             print("Sizes of Degree list and Weight list are different!")
             return None
 
