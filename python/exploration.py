@@ -105,11 +105,12 @@ def actor_critic(Env,max_iteration=10,epoch=3,num_agents =2):
                 w_local = model.crtic_step(global_s[0],global_a[0], global_sn[0],
                                            global_s[1:], global_a[1:], global_sn[1:],
                                            local_r,is_terminal).tolist()
-                Env.send_states_v2(t, None, p=w_local)
+                Env.xb.send(t, params = w_local)
+                # Env.send_states_v2(t, None, p=w_local)
                 time.sleep(4)
                 while len(Env.xb.receive())<0:
                     pass
-                id, _, _, _, global_d, global_w = Env.decode()
+                id, _, _, _, global_d, global_w = Env.xb.decode()
                 # id, _, _,_, global_d, global_w = Env.read_glob_s_v2(timestep=t,params=w_local,info= "params")
 
                 # old version of sending data
