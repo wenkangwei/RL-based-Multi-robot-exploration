@@ -63,9 +63,9 @@ class Xbee():
         #   '#' as split between different packet
 
         if params == None and transition!= None:
-            a= transition[1]
-            st = transition[2]
-            st1 = transition[3]
+            a= transition[0]
+            st = transition[1]
+            st1 = transition[2]
             p= self.agent_info[self.id][4]
             self.agent_info[self.id] = (t, a, st, st1, p)
             data= {"id":self.id,"t":t,"d":self.degree,"e":transition}
@@ -74,7 +74,7 @@ class Xbee():
             a = self.agent_info[self.id][1]
             st = self.agent_info[self.id][2]
             st1 = self.agent_info[self.id][3]
-            self.agent_info[self.id] = (t, a, st, st1, params,d)
+            self.agent_info[self.id] = (t, a, st, st1, params,self.degree)
             data = {"id": self.id, "t": t,"d":self.degree, "p": params}
         else:
             print("Data must be transition or params")
