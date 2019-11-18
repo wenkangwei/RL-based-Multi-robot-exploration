@@ -251,9 +251,9 @@ class Xbee():
             data = fp.read()
             if len(data) > 3 and (data[0] == '{') and (data[-1] == '}'):
                 data = json.loads(data)
-                print("Comm: Updated data:",data)
                 # encode data here
                 if data["t"] >self.t_step or self.old_data != data:
+                    print("Comm: Updated data:",data)
                     self.old_data = data
                     flag =True
                     ls_0.append(data["id"])
@@ -355,12 +355,13 @@ class Xbee():
             fp = open('trans_buf.json', 'w')
             trans_data = json.dumps(trans_data)
             fp.write(trans_data)
+            print("Comm:   trans_buf updated")
             fp.close()
         if params_data !=None:
             fp = open('params_buf.json', 'w')
             params_data = json.dumps(params_data)
-
             fp.write(params_data)
+            print("Comm:   params_buf updated")
             fp.close()
 
 
@@ -493,6 +494,7 @@ def comm_agents_3():
                 print("enc params:", enc_params)
                 # write data back to r_buffer
                 xb.write_data_v2(enc_trans, enc_params)
+
 
 
 
