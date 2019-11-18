@@ -1053,7 +1053,7 @@ class World(object):
         old_real_state, new_real_state, r, is_terminal,_ = self.observe_Env()
         new_grid_s = self.get_gridState(new_real_state)
         if is_terminal:
-            return real_s_old, new_grid_s, new_real_state, r, is_terminal
+            return grid_s_old, real_s_old, new_grid_s, new_real_state, r, is_terminal
 
 
         # Take action if current state is not terminal
