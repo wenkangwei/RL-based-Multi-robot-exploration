@@ -352,17 +352,20 @@ class Xbee():
 
     def write_data_v2(self,trans_data=None,params_data=None):
         if trans_data != None:
-            fp = open('trans_buf.json', 'w')
-            trans_data = json.dumps(trans_data)
-            fp.write(trans_data)
-            print("Comm:   trans_buf updated")
-            fp.close()
+            if len(trans_data)>3:
+                fp = open('trans_buf.json', 'w')
+                trans_data = json.dumps(trans_data)
+                fp.write(trans_data)
+                print("Comm:   trans_buf updated")
+                fp.close()
         if params_data !=None:
-            fp = open('params_buf.json', 'w')
-            params_data = json.dumps(params_data)
-            fp.write(params_data)
-            print("Comm:   params_buf updated")
-            fp.close()
+            if len(params_data)>3:
+                fp = open('params_buf.json', 'w')
+                params_data = json.dumps(params_data)
+                fp.write(params_data)
+                print("Comm:   params_buf updated")
+                print("Params:", params_data)
+                fp.close()
 
 
 

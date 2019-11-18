@@ -105,7 +105,7 @@ def actor_critic(Env,max_iteration=10,epoch=3,num_agents =2):
                                            global_s[1:], global_a[1:], global_sn[1:],
                                            local_r,is_terminal).tolist()
                 Env.send_states_v2(t, None, p=w_local)
-                time.sleep(3)
+                time.sleep(4)
                 id, _, _,_, global_d, global_w = Env.read_glob_s_v2(timestep=t,params=w_local,info= "params")
 
                 # old version of sending data
