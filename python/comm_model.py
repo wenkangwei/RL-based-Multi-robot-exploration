@@ -188,7 +188,7 @@ class Xbee():
                             trans = list(data["1"])
                             transition_ls.append((id,timestep,degree,trans))
                             pass
-                        if ("2" in data.keys()):
+                        elif ("2" in data.keys()):
                             # if it has learning parameters
                             params = list(data["2"])
                             transition_ls.append((id,timestep,degree,params))
@@ -267,10 +267,9 @@ class Xbee():
                         ls_1.append(data["s"])
                         ls_1.append(data["sn"])
                         p_type += 1
-                    packet["0"] = ls_0
-                    packet["1"] =ls_1
-
-                    if "p" in data.keys():
+                        packet["0"] = ls_0
+                        packet["1"] =ls_1
+                    elif "p" in data.keys():
                         # append parameters
                         packet["2"]=data["p"]
                         p_type +=1
