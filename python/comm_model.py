@@ -251,6 +251,7 @@ class Xbee():
             data = fp.read()
             if len(data) > 3 and (data[0] == '{') and (data[-1] == '}'):
                 data = json.loads(data)
+                print("Comm: Updated data:",data)
                 # encode data here
                 if data["t"] >self.t_step or self.old_data != data:
                     self.old_data = data
@@ -266,7 +267,6 @@ class Xbee():
                         ls_1.append(data["s"])
                         ls_1.append(data["sn"])
                         p_type += 1
-
                     packet["0"] = ls_0
                     packet["1"] =ls_1
 

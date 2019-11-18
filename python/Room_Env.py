@@ -778,6 +778,7 @@ class World(object):
         fp = open('w_buf_1.json','w')
         if fp.writable():
             fp.write(txt)
+            print("Wrote Params. ")
         else:
             print("Error: Fail to write Agent data")
             fp.close()
@@ -827,7 +828,7 @@ class World(object):
             # print("Global states: ",data)
             while len(data) <1:
                 fp.close()
-                print("Waiting for data update")
+                print("Waiting for update: "+file)
                 time.sleep(1)
                 fp = open(file, "r")
                 data = fp.read()
