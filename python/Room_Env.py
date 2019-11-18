@@ -7,6 +7,9 @@ import numpy as np
 import  json
 import serial
 
+
+
+
 # Notes for Roomba settings:
 # 1. analog Light bumper can detect objects around 0.5 m awary from the robot. The range of strength is abbour from 5~3050
 # i don't see the values are higher than 3100 or even 4095 (maximum value)
@@ -33,6 +36,110 @@ yled = 5
 rled = 6
 gled = 13
 
+
+
+class Xbee():
+    def __init__(self,id=1 ):
+        self.id =id
+        self.ctrl = serial.Serial('/dev/ttyUSB0', 115200)  # Baud rate should be 115200
+        self.sendtime = time.time()
+        self.sendtime_offset = 1.0
+        self.basetime = time.time()
+        self.basetime_offset = 0.5
+        self.data =''
+        self.agent_info={}
+        t_step = 0
+        st = [0.0, 0.0, 0.0]
+        st1 = [0.0, 0.0, 0.0]
+        a = 0
+        p = None
+        self.agent_info[id] = (t_step,a,st,st1,p)
+        self.degree = 0
+
+        pass
+
+    def send(self, t,transition=None,params =None):
+        # transition: (a, s, s')
+        #   '#' as split between different packet
+
+        if params == None and transition!= None:
+            a= transition[1]
+            st = transition[2]
+            st1 = transition[3]
+            p= self.agent_info[self.id][4]
+            self.agent_info[self.id] = (t, a, st, st1, p)
+            data= {"id":self.id,"t":t,"d":self.degree,"e":transition}
+        elif params != None and transition== None:
+            t=self.agent_info[self.id][0]
+            a = self.agent_info[self.id][1]
+            st = self.agent_info[self.id][2]
+            st1 = self.agent_info[self.id][3]
+            self.agent_info[self.id] = (t, a, st, st1, params,d)
+            data = {"id": self.id, "t": t,"d":self.degree, "p": params}
+        else:
+            print("Data must be transition or params")
+            return
+        message = json.dumps(data)+'#'
+        self.ctrl.write(message.encode())
+        self.sendtime += self.sendtime_offset
+        pass
+
+    def receive(self):
+        message = ''
+        if self.ctrl.inWaiting() > 0:
+            message = self.ctrl.read(self.ctrl.inWaiting()).decode()
+            self.data += message
+        return message
+
+    def decode(self):
+        t_step = 0
+        st =[0.0,0.0,0.0]
+        st1 = [0.0, 0.0, 0.0]
+        a = 0
+        p =None
+        d_ls = self.data.split("#")
+        self.data=''
+        for d in d_ls:
+
+            if len(d)>3 and "{"==d[0] and "}"==d[-1]:
+                data = json.loads(d)
+                if "id" in data.keys():
+                    id = data["id"]
+                    if id in self.agent_info.keys():
+                        t_step = self.agent_info[id][0]
+                        a = self.agent_info[id][1]
+                        st = self.agent_info[id][2]
+                        st1 = self.agent_info[id][3]
+                        p = self.agent_info[id][4]
+                    else:
+                        if "t" in data.keys():
+                            t_step = data["t"]
+                        if "d" in data.keys():
+                            d= data["d"]
+                        if "e" in data.keys():
+                            a = data["e"][0]
+                            st =data["e"][1]
+                            st1 = data["e"][2]
+                        elif "p" in data.keys():
+                            w = st =data["p"]
+                        self.agent_info[id]= (t_step,a,st,st1,p,d)
+                self.degree = len(self.agent_info.keys())
+
+        global_id = list(self.agent_info.keys())
+        global_a = []
+        global_s = []
+        global_sn = []
+        global_p = []
+        global_d = []
+
+        for k in self.agent_info.keys():
+            global_a.append(self.agent_info[k][1])
+            global_s.append(self.agent_info[k][2])
+            global_sn.append(self.agent_info[k][3])
+            global_p.append(self.agent_info[k][4])
+            global_d.append(self.agent_info[k][5])
+
+        return global_id, global_s, global_sn, global_a, global_d, global_p
 
 
 
@@ -342,9 +449,7 @@ class World(object):
         self.degree = 0
         time.sleep(2)
 
-        # update degree at initial position
-        # self.read_global_s()
-
+        self.xb =Xbee(self.id)
         pass
 
     def GPIO_init(self):
@@ -1068,6 +1173,7 @@ class World(object):
         self.Roomba.Move(0, self.rot_sp* sign)
         t=cur_t
         while np.abs(cur_t-init_t)< tol+np.abs(ArcLen/self.rot_sp):
+                self.xb.receive()
                 if np.abs(cur_t-t)>= self.print_time:
                     t= cur_t
                     # print('new state: {:10.2f},{:10.2f},{:10.2f}. r:{:10.2f}, terminal:{}'.format(
@@ -1106,6 +1212,7 @@ class World(object):
             self.Roomba.Move(self.sp, 0)
             t =cur_t
             while np.abs(cur_t-init_t)< tol+ float(d/self.sp):
+                self.xb.receive()
                 if self.Roomba.Available()>0:
                     # keep track of postion and check if at terminal state, like hitting wall or obstacle
                     old_real_state, new_real_state, r, is_terminal,data= self.observe_Env()
@@ -1122,11 +1229,6 @@ class World(object):
                 # check obstacle and terminal state
                 if np.abs(cur_t-t)>= self.print_time:
                     t =cur_t
-                    # print()
-                    # print('---------------------------------')
-                    # print('new state: {:10.2f},{:10.2f},{:10.2f}. '.format(
-                    #     new_real_state[0], new_real_state[1], new_real_state[2]))
-                    # print('r:{:10.2f}, terminal:{}'.format(r, is_terminal))
 
                 cur_t = time.time()
             # pause roomba after reaching desired position
@@ -1146,8 +1248,6 @@ class World(object):
         self.Roomba.PauseQueryStream()
         if self.Roomba.Available() > 0:
             z = self.Roomba.DirectRead(self.Roomba.Available())
-            # print(z)
-
         time.sleep(1)
 
         # update Gaussian Mixture model for reward approximation
@@ -1160,6 +1260,6 @@ class World(object):
         # record grid state
         # self.logger.log(grid_s_old, a, new_grid_s, r, is_terminal, self.obs_ls)
         ##############################
-
+        self.xb.receive()
         return grid_s_old, real_s_old,new_grid_s, new_real_state, r, is_terminal
 

@@ -88,10 +88,11 @@ def actor_critic(Env,max_iteration=10,epoch=3,num_agents =2):
                 # time.sleep(2)
                 # id, global_s, global_a, global_d, global_p = Env.read_global_s(si, timestep=t, param=None)
 
-                Env.send_states_v2(t,(real_s_old, a,s_new), p=None)
+                Env.xb.send(t, transition=(a, real_s_old, s_new))
+                # Env.send_states_v2(t,(real_s_old, a,s_new), p=None)
                 time.sleep(3)
-                global_id, global_s, global_sn, global_a, global_d,_ = Env.read_glob_s_v2(timestep=t, transition =(real_s_old, a,s_new),info= "trans")
-
+                # global_id, global_s, global_sn, global_a, global_d,_ = Env.read_glob_s_v2(timestep=t, transition =(real_s_old, a,s_new),info= "trans")
+                global_id, global_s, global_sn, global_a, global_d, _ = Env.xb.decode()
                 # update visit count in map
                 print("Global state: ",global_s)
                 cnts = Env.update_cnt_map(global_s)
@@ -106,7 +107,10 @@ def actor_critic(Env,max_iteration=10,epoch=3,num_agents =2):
                                            local_r,is_terminal).tolist()
                 Env.send_states_v2(t, None, p=w_local)
                 time.sleep(4)
-                id, _, _,_, global_d, global_w = Env.read_glob_s_v2(timestep=t,params=w_local,info= "params")
+                while len(Env.xb.receive())<0:
+                    pass
+                id, _, _, _, global_d, global_w = Env.decode()
+                # id, _, _,_, global_d, global_w = Env.read_glob_s_v2(timestep=t,params=w_local,info= "params")
 
                 # old version of sending data
                 # Env.send_states(t=t, state=s_new, p=w_local)
@@ -185,7 +189,6 @@ def run_agent(Env):
     # time step t, used to track update of learning model
     t = 0
     try:
-
         # test_observation(Env)
         set = [random.choice(Env.action_space) for i in range(2)]
         for a in set:
@@ -208,13 +211,15 @@ def run_agent(Env):
 
             # Send local information to other agents
             w = [round(random.random(),2) for i in range(10)]
-            Env.send_states(t=t,state= s_new,p=w)
+
+
+            # Env.send_states(t=t,state= s_new,p=w)
             #
             # # receive info from other agents
             # # Learning model parameters
             # # delay few seconds to update data of agents
             time.sleep(2)
-            id, global_s, global_a, global_d, global_p = Env.read_global_s(timestep=t, param=w)
+            # id, global_s, global_a, global_d, global_p = Env.read_global_s(timestep=t, param=w)
             print()
             print()
             print("Global States: ")

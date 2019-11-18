@@ -465,7 +465,7 @@ def comm_agents_3():
         ready, packet, p_type = xb.check_updated_v2()
         if ready:
             # send data
-            print("Agent:", xb.id_ls[xb.syn_t], " Sending data")
+            # print("Agent:", xb.id_ls[xb.syn_t], " Sending data")
             # update synchronous time
             xb.syn_t = xb.syn_t + 1
             if xb.syn_t >= len(xb.id_ls):
@@ -486,7 +486,6 @@ def comm_agents_3():
 
         # decode data
         if len(data) > 3:
-            # print('data: ',data)
             trans_ls, params_ls, xb.syn_t, p_type = xb.decode_data_v2(data)
             if p_type == 1:
                 enc_trans = xb.encode_data(trans_ls)
