@@ -53,8 +53,8 @@ class Xbee():
         st1 = [0.0, 0.0, 0.0]
         a = 0
         p = None
-        self.agent_info[id] = (t_step,a,st,st1,p)
         self.degree = 0
+        self.agent_info[id] = (t_step,a,st,st1,p,self.degree)
 
         pass
 
@@ -67,7 +67,7 @@ class Xbee():
             st = transition[1]
             st1 = transition[2]
             p= self.agent_info[self.id][4]
-            self.agent_info[self.id] = (t, a, st, st1, p)
+            self.agent_info[self.id] = (t, a, st, st1, p,self.degree)
             data= {"id":self.id,"t":t,"d":self.degree,"e":transition}
         elif params != None and transition== None:
             t=self.agent_info[self.id][0]
