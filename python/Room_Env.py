@@ -835,6 +835,8 @@ class World(object):
                 data = fp.read()
                 delay += 1
                 pass
+            if len(data) <1:
+                return global_id, global_s,global_sn , global_a,global_d,global_p
 
             data = json.loads(data)
             keys = list(data.keys())
