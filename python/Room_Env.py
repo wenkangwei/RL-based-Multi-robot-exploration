@@ -507,7 +507,7 @@ class World(object):
         i = np.argmin(a)
         # calculate approximate degree in grid world
         grid_state[2] = self.angle_set[i]
-        print("grid angle:",grid_state[2],"real ag:",real_angle)
+        # print("grid angle:",grid_state[2],"real ag:",real_angle)
 
         # correct the degree in rad for moving
         # agl_rad = grid_state[2]*(math.pi/180.0)

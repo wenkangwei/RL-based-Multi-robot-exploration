@@ -483,6 +483,8 @@ def comm_agents_3():
                 # pass the detected degree to this agent
                 enc_trans["d"] = xb.degree
                 enc_params = xb.encode_data(params_ls)
+                print("enc trans:",enc_trans)
+                print("enc params:", enc_params)
                 # write data back to r_buffer
                 xb.write_data_v2(enc_trans, enc_params)
 
