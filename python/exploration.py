@@ -93,6 +93,7 @@ def actor_critic(Env,max_iteration=10,epoch=3,num_agents =2):
                 global_id, global_s, global_sn, global_a, global_d,_ = Env.read_glob_s_v2(timestep=t, transition =(real_s_old, a,s_new),info= "trans")
 
                 # update visit count in map
+                print("Global state: ",global_s)
                 cnts = Env.update_cnt_map(global_s)
                 model.cnts =cnts
                 # local reward
