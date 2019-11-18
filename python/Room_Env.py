@@ -850,6 +850,7 @@ class World(object):
                         #  format of packet  {t:[(id,degree,[params]),...],t+1: ...}
                         # (id,timestep,degree,[a, s,sn])
                         # update backup data
+
                         self.global_trans[d[0]] = (d[1],d[2])
 
                 for i in self.global_trans.keys():

@@ -344,9 +344,10 @@ class Xbee():
                     for d in data_ls:
                         if d[1] == t:
                           l.append((d[0],d[2],d[3]))
+                    encoded_data[str(t)] = l
                     #         (id,timestep,degree,trans)
                     #         d[0]: id, d[1]: timestep, d[2]: degree, d[3]: trans (a, s, sn)/ params
-                    encoded_data[str(t)] = [(d[0],d[2],d[3]) for d in data_ls if d[1]== t]
+                    # encoded_data[str(t)] = [(d[0],d[2],d[3]) for d in data_ls if d[1]== t]
 
         return encoded_data
 
