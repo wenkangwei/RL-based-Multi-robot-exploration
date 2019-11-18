@@ -846,10 +846,10 @@ class World(object):
 
                 for t_step in keys:
                     for d in data[t_step]:
-                        #  format of packet  {t:[(id,timestep,degree,[params]),...],t+1: ...}
+                        #  format of packet  {t:[(id,degree,[params]),...],t+1: ...}
                         # (id,timestep,degree,[a, s,sn])
                         # update backup data
-                        self.global_trans[d[0]] = (d[2],d[3])
+                        self.global_trans[d[0]] = (d[1],d[2])
 
                 for i in self.global_trans.keys():
                     transition = self.global_trans[i][1]

@@ -177,7 +177,7 @@ class Xbee():
                         packet_type = 1
                         id = data["0"][0]
                         timestep = data["0"][1]
-                        degree = data["0"][2]
+                        degree =self.degree #data["0"][2]
                         if id not in self.id_ls:
                             self.id_ls.append(id)
                             self.id_ls.sort()
@@ -340,6 +340,12 @@ class Xbee():
                 encoded_data = {}
                 timestep = [d[1] for d in data_ls]
                 for t in list(set(timestep)):
+                    l = []
+                    for d in data_ls:
+                        if d[1] == t:
+                          l.append((d[0],d[2],d[3]))
+                    #         (id,timestep,degree,trans)
+                    #         d[0]: id, d[1]: timestep, d[2]: degree, d[3]: trans (a, s, sn)/ params
                     encoded_data[str(t)] = [(d[0],d[2],d[3]) for d in data_ls if d[1]== t]
 
         return encoded_data
