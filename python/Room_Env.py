@@ -826,12 +826,14 @@ class World(object):
         if fp.readable():
             data = fp.read()
             # print("Global states: ",data)
-            while len(data) <1:
+            delay =0
+            while len(data) <1 and delay <=5:
                 fp.close()
                 print("Waiting for update: "+file)
                 time.sleep(1)
                 fp = open(file, "r")
                 data = fp.read()
+                delay += 1
                 pass
 
             data = json.loads(data)
