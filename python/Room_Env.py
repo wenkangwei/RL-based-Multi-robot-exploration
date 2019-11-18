@@ -39,7 +39,7 @@ gled = 13
 
 
 class Xbee():
-    def __init__(self,id=1 ):
+    def __init__(self,id=1, f_len=7 ):
         self.id =id
         self.ctrl = serial.Serial('/dev/ttyUSB0', 115200)  # Baud rate should be 115200
         self.sendtime = time.time()
@@ -52,7 +52,7 @@ class Xbee():
         st = [0.0, 0.0, 0.0]
         st1 = [0.0, 0.0, 0.0]
         a = 0
-        p = None
+        p = [0.0]*f_len
         self.degree = 0
         self.agent_info[id] = (t_step,a,st,st1,p,self.degree)
 
@@ -358,7 +358,7 @@ class Logger():
 
 
 class World(object):
-    def __init__(self,id,file_name=None,real_state=None,world_w=50, world_h=50):
+    def __init__(self,id,file_name=None,real_state=None,world_w=50, world_h=50,f_len=7):
         # --------Parameters---------
         # -------parameters for defining grid world------
         # State space, define grid world here
@@ -445,11 +445,11 @@ class World(object):
         print("Initial state:",self.Motion.get_CurPos(left_start,right_start))
         # Initialize Bumper
         self.bumper= LighBumper()
-
         self.degree = 0
+        self.xb =Xbee(self.id,f_len=f_len)
+        
         time.sleep(2)
 
-        self.xb =Xbee(self.id)
         pass
 
     def GPIO_init(self):
