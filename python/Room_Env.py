@@ -844,7 +844,7 @@ class World(object):
                     keys.remove("d")
                 else:
                     print("Can't read degree ")
-
+                print("Trans: ",data)
                 for t_step in keys:
                     for d in data[t_step]:
                         #  format of packet  {t:[(id,degree,[params]),...],t+1: ...}
@@ -857,7 +857,7 @@ class World(object):
                     transition = self.global_trans[i][1]
                     global_a.append(transition[0])
                     global_s.append(transition[1])
-                    global_sn.append( transition[2])
+                    global_sn.append(transition[2])
                     global_d.append(self.global_trans[i][0])
                     global_id.append(i)
             else:
