@@ -68,7 +68,7 @@ class Xbee():
                 message = self.ctrl.read(self.ctrl.inWaiting()).decode()  # Read all data in
                 d_ls = message.split('#')
                 for d in d_ls:
-                    if len(d) > 3 and ("{" in d) and ("}" in d):
+                    if len(d) > 3 and (d[0] == '{') and (d[-1] == '}'):
                         d = json.loads(d)
                         # 0:id of agent
                         if "id" in d.keys():
