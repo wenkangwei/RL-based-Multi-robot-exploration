@@ -249,35 +249,35 @@ class Xbee():
         flag = False
         if fp.readable():
             data = fp.read()
-            data = json.loads(data)
-            # encode data here
-            if data["t"] >self.t_step or self.old_data != data:
-                self.old_data = data
-                flag =True
-                ls_0.append(data["id"])
-                ls_0.append(data["t"])
-                ls_0.append(data["d"])
-                self.t_step =data["t"]
-                keys = data.keys()
-                if "s" in keys and "a" in keys and "sn" in keys:
-                    # append transition
-                    ls_1.append(data["a"])
-                    ls_1.append(data["s"])
-                    ls_1.append(data["sn"])
-                    p_type += 1
+            if len(data) > 3 and (data[0] == '{') and (data[-1] == '}'):
+                data = json.loads(data)
+                # encode data here
+                if data["t"] >self.t_step or self.old_data != data:
+                    self.old_data = data
+                    flag =True
+                    ls_0.append(data["id"])
+                    ls_0.append(data["t"])
+                    ls_0.append(data["d"])
+                    self.t_step =data["t"]
+                    keys = data.keys()
+                    if "s" in keys and "a" in keys and "sn" in keys:
+                        # append transition
+                        ls_1.append(data["a"])
+                        ls_1.append(data["s"])
+                        ls_1.append(data["sn"])
+                        p_type += 1
 
-                packet["0"] = ls_0
-                packet["1"] =ls_1
+                    packet["0"] = ls_0
+                    packet["1"] =ls_1
 
-
-                if "p" in data.keys():
-                    # append parameters
-                    packet["2"]=data["p"]
-                    p_type +=1
-                # data sent to other agents via Xbee
-                packet["3"] = self.syn_t
-            else:
-                packet =None
+                    if "p" in data.keys():
+                        # append parameters
+                        packet["2"]=data["p"]
+                        p_type +=1
+                    # data sent to other agents via Xbee
+                    packet["3"] = self.syn_t
+                else:
+                    packet =None
 
 
         return flag, packet, p_type
