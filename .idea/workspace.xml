@@ -2,13 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f9b42f44-d5b1-448c-a67e-6d8be2fc0991" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/python/params_buf.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/python/trans_buf.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/Room_Env.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/Room_Env.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/comm_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/comm_model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/exploration.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/exploration.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/python/rl_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/rl_model.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -22,16 +16,21 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Room_Env.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Room_Env.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/python/Room_Env.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="405">
-              <caret line="830" column="28" selection-start-line="830" selection-start-column="28" selection-end-line="830" selection-end-column="28" />
+            <state relative-caret-position="361">
+              <caret line="828" column="26" lean-forward="true" selection-start-line="828" selection-start-column="26" selection-end-line="828" selection-end-column="26" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
             </state>
           </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="w_buf_1.json" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/python/w_buf_1.json">
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
       <file leaf-file-name="rl_model.py" pinned="false" current-in-tab="false">
@@ -135,8 +134,8 @@
       <find>angle_set</find>
       <find>coverage</find>
       <find>bonus</find>
-      <find>reward</find>
       <find>cnt_map</find>
+      <find>reward</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -402,13 +401,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$USER_HOME$/.PyCharmCE2018.1/system/python_stubs/-1476723290/time.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="226">
-          <caret line="228" column="4" selection-start-line="228" selection-start-column="4" selection-end-line="228" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python35/Lib/site-packages/numpy/core/numeric.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-979">
@@ -725,13 +717,16 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/python/Room_Env.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
-          <caret line="830" column="28" selection-start-line="830" selection-start-column="28" selection-end-line="830" selection-end-column="28" />
+        <state relative-caret-position="361">
+          <caret line="828" column="26" lean-forward="true" selection-start-line="828" selection-start-column="26" selection-end-line="828" selection-end-column="26" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>
         </state>
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/w_buf_1.json">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
   </component>
 </project>
