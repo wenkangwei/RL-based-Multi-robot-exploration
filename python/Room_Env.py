@@ -210,35 +210,47 @@ class Logger():
 
         file_name = os.path.join(self.dir_path, 'cum_reward' + ".txt")  # text file extension
         self.cum_reward = open(file_name, "w")  # Open a text file for storing data
-        self.cum_reward.write('{}'.format(self.r))
+
+        file_name = os.path.join(self.dir_path, 'coverage' + ".txt")  # text file extension
+        self.coverage = open(file_name, "w")  # Open a text file for storing data
 
         pass
-    def log_trajecctory(self,s,a,sn,r,t):
-        experience = {'s:':s,',a':a,'sn':sn,'r':r,'terminal':t}
-        data = json.dumps(experience)
-        self.trajectory.write(data+os.linesep)
+    def log_trajecctory(self,step,s,a,sn,r,t):
+        transition = {"step":step,'s:':s,',a':a,'sn':sn,'r':r,'terminal':t}
+        data = json.dumps(transition)
+        self.trajectory.write(data+"\n")
         pass
-    def log_obstacles(self,obstacle=None):
-        self.obstacles.write('{}'.format(obstacle) + os.linesep)
+    def log_obstacles(self,step,obstacle):
+        # self.obstacles.seek(0,0)
+        data = json.dumps({"step":step,"obs":obstacle})
+        self.obstacles.write(data + "\n")
         pass
-    def log_cum_reward(self,r):
+
+    def log_cum_reward(self,step,r):
         self.r +=r
-        self.cum_reward.write('{}'.format(self.r))
+        data = json.dumps({"step":step,"r":self.r})
+        self.cum_reward.write(data+"\n")
         pass
-    def log(self, s,a,s_,r,t,obs):
-        self.log_trajecctory(s,a,s_,r,t)
-        self.log_cum_reward(r)
-        self.log_obstacles(obs)
+    def log_coverage(self,step,coverage):
+        data = json.dumps({"step":step,"coverage":coverage})
+        self.coverage.write(data+"\n")
+        pass
+    def log(self,step, s,a,s_,r,t,obs,coverage):
+        self.log_trajecctory(step,s,a,s_,r,t)
+        self.log_cum_reward(step,r)
+        self.log_obstacles(step,obs)
+        self.log_coverage(step,coverage)
 
     def terminate(self):
         self.trajectory.close()
         self.cum_reward.close()
         self.obstacles.close()
+        self.coverage.close()
         pass
 
 
 
-class GridWorld(object):
+class World(object):
     def __init__(self,id,file_name=None,real_state=None,world_w=50, world_h=50):
         # --------Parameters---------
         # -------parameters for defining grid world------
@@ -249,19 +261,28 @@ class GridWorld(object):
         # Default unit of x,y : mm
         # divider to convert unit from mm to cm
         self.unit_div =1.0
-
         self.grid_size = 240*2
         self.observation_space = None
         # Action space:
         self.action_space = None
         # if use Q-learning no need for possibility model
         self.trans_model = None
-        # reward table: it is to define the updated reward of the explored area
-        self.reward_tb = {'terminal': -1, 'path': 0, 'goal': 1}
+
+        # reward table:
+        #       terminal: bump sth r= -1, lightbump signal: r = -1~0, wheel drop: r = -2
+        #       infrared signal received: r = +3
+        #       explored area:  r= 1/(1+ visited counts)
+        #
         # a list of obstacles detected
         # the first list is position of obstacle, the second list is its possibilty it is really a obstacle
         self.obs_ls = [[],[]]
+        # list of real position in which agent gets high bonus/ infrared signal
+        self.bonus_pos = []
 
+        # Format: self.global_trans={id: (degree, [a,st,s_t+1])}
+        self.global_trans = {}
+        # ratio of coverage of map
+        self.map_coverage =0.0
 
         #------Variables used for recording data----------
         self.Roomba = RoombaCI_lib.Create_2("/dev/ttyS0", 115200)
@@ -320,10 +341,9 @@ class GridWorld(object):
 
         self.degree = 0
         time.sleep(2)
+
         # update degree at initial position
         # self.read_global_s()
-
-
 
         pass
 
@@ -354,7 +374,6 @@ class GridWorld(object):
         # defaule 50m * 50m. num of grids are 50*1000/grid_size
         r= int(world_r*1000/self.grid_size)+1
         c= int(world_c*1000/self.grid_size)+1
-        self.observation_map= np.ones([r,c])
         self.cnt_map = np.zeros([r,c])
 
         # Initialize Action Space
@@ -377,20 +396,21 @@ class GridWorld(object):
                 L, Front Left, Center Left, Center Right, Front Right, Right
 
         """
+        Infra_Omi, Infra_L, Infra_R = None, None,None
         bump, L_cnt, R_cnt, DLightBump, AnalogBump = None,None,None,None,None
         if selection == 'b':
             # read bumper data only
-            bump,DLightBump, L, FL, CL, CR, FR, R = self.Roomba.ReadQueryStream(7,45, 46, 47,48, 49, 50, 51)
+            Infra_Omi,Infra_L, Infra_R, bump,DLightBump, L, FL, CL, CR, FR, R = self.Roomba.ReadQueryStream(17,52,53, 7,45, 46, 47,48, 49, 50, 51)
             AnalogBump = (L, FL, CL, CR, FR, R)
         elif selection == 'e':
             # read encoder data only
             L_cnt, R_cnt= self.Roomba.ReadQueryStream( 43, 44)
         else:
             # read all data
-            bump, L_cnt,R_cnt, DLightBump, L,FL, CL,CR,FR,R =self.Roomba.ReadQueryStream(7, 43, 44, 45, 46,47,48,49,50,51 )
+            Infra_Omi, Infra_L, Infra_R,bump, L_cnt,R_cnt, DLightBump, L,FL, CL,CR,FR,R =self.Roomba.ReadQueryStream(17,52,53,7, 43, 44, 45, 46,47,48,49,50,51 )
             AnalogBump = (L,FL, CL,CR,FR,R)
 
-        return  L_cnt,R_cnt, bump, DLightBump,AnalogBump
+        return  L_cnt,R_cnt, bump, DLightBump,AnalogBump,Infra_Omi, Infra_L, Infra_R
 
 
 
@@ -402,8 +422,9 @@ class GridWorld(object):
         self.Roomba.PauseQueryStream()
         if self.Roomba.Available() > 0:
             z = self.Roomba.DirectRead(self.Roomba.Available())
-            print(z)
+            # print(z)
         time.sleep(0.1)
+
         ## -- Ending Code Starts Here -- ##
         self.Roomba.ShutDown()  # Shutdown Roomba serial connection
         GPIO.cleanup()  # Reset GPIO pins for next program
@@ -502,7 +523,9 @@ class GridWorld(object):
 
         return grid_state
 
-    def cal_reward(self,bump,DLightBump,AnalogBump):
+
+
+    def cal_reward(self,bump,DLightBump,AnalogBump,Infrared):
         """
         Strategy to compute reward based on data from bumper, digital light bumper and analog light bumper
         Use Gaussian distribution to update reward
@@ -511,31 +534,33 @@ class GridWorld(object):
         :param AnalogBump:
         :return:
         """
-        #
-        # Put calculation here
-        r= float(self.observation_map[self.grid_state[0],self.grid_state[1]])
 
-        # map reward:
-        # Will apply Gaussian mixture to approximate , update reward
-        # by using obstacle data here
-        s = self.grid_state[0],self.grid_state[1]
-        if s in self.obs_ls[0]:
-            r1 =-1
-        else:
-            r1 = float(self.observation_map[self.grid_state[0],self.grid_state[1]])
-        # r1= Gaussian Mixture reward on map
+        r= 0.0
+        ir_om= Infrared[0]
+        ir_l = Infrared[1]
+        ir_r = Infrared[2]
+        if ir_om or ir_l or ir_r:
+            # received infrared signal : r = +3
+            bonus_pos = self.get_gridState(np.round(self.real_state,2).tolist())
+            if self.bonus_pos.count(bonus_pos)==0:
+                self.bonus_pos.append(bonus_pos)
+            r += 3.0
 
-        # immediate reward from sensors
-        k=-1    #k: scale of reward/penalty
-        r2 = k*(np.mean(AnalogBump)/self.max_strength)
-        # r3 is cost from effect of other agents
-        r3= 0
-        # Total reward/penalty
-        r_new = (r1+r2)
-        # update map reward at this position
-        self.observation_map[self.grid_state[0], self.grid_state[1]] = r1
+        # bump something: r =-1
+        r += -1.0 if bump & 1 != 0 or  bump & 2 != 0 else 0
+        # wheel drop: r = -2
+        r += -2.0 if bump & 8 != 0 or bump & 4 != 0 else 0
 
-        return r_new
+        # Detected something light bumper: 0~-1
+        threshold = 100
+        a= 1 if threshold>100 else 0
+        sig_sum = 0.0
+        for s in AnalogBump:
+            sig_sum += s if s >threshold else 0.0
+        sig_sum /= len(AnalogBump)
+        r += (-1.0)*(sig_sum/self.max_strength)
+
+        return r
 
 
     def check_terminal(self,bump,DLightBump, AnalogBump):
@@ -594,39 +619,56 @@ class GridWorld(object):
             # [-90, -60,-30,30,60,90] are heading angles of 6 analog light bumper
             lb_avg_agl = np.dot(prob_obs,[-90, -60,-30,30,60,90])
 
-            # check if there are 2 obstacles or 1 obstacle
+            # if there are 2 obstacles
             if np.abs(lb_avg_agl - b_avg_angle)>=60 or (np.sign(lb_avg_agl) !=np.sign(b_avg_angle)):
                 th = self.Motion.theta +  lb_avg_agl
                 x = self.Motion.x + d_obs * math.cos(th)
                 y = self.Motion.y + d_obs * math.sin(th)
-                x = round(x, 2)
-                y = round(y, 2)
-                th = round(th, 2)
-                # obstacles.append((x, y, th))
-                s = self.get_gridState(real_state=[x, y, th])
-                obstacles.append((s[0], s[1]))
+                x = int(x)
+                y = int(y)
+                s= (x,y)
+                if obstacles.count(s) == 0:
+                    obstacles.append(s)
+                # s = self.get_gridState(real_state=[x, y, th])
+                # obstacles.append((s[0], s[1]))
+
                 th = self.Motion.theta +  b_avg_angle
                 x = self.Motion.x + d_obs * math.cos(th)
                 y = self.Motion.y + d_obs * math.sin(th)
-                x = round(x, 2)
-                y = round(y, 2)
-                th = round(th,2)
+                x = int(x)
+                y = int(y)
+                s = (x,y)
+                if obstacles.count(s) ==0:
+                    obstacles.append(s)
+
                 # convert real continuous state to discrete grid world state
-                s = self.get_gridState(real_state=[x, y, th])
-                obstacles.append((s[0],s[1]))
-                # obstacles.append((x,y,th))
+                # s = self.get_gridState(real_state=[x, y, th])
+                # obstacles.append((s[0],s[1]))
             else:
+                # if there is 1 obstacle
                 alg = (b_avg_angle+lb_avg_agl)/2.0
                 th= self.Motion.theta+ alg
                 x = self.Motion.x + d_obs * math.cos(th)
                 y = self.Motion.y + d_obs * math.sin(th)
-                x = round(x, 2)
-                y = round(y, 2)
-                th = round(th, 2)
-                s= self.get_gridState(real_state=[x,y,th])
-                obstacles.append((s[0],s[1]))
-                # obstacles.append((x, y, th))
+                x = int(x)
+                y = int(y)
+                s = (x,y)
+                if obstacles.count(s) == 0:
+                    obstacles.append(s)
+
+            # check if the obstacle is one of other agents
+            for k in self.global_trans.keys():
+                # Format: self.global_trans={id: (degree, [a,st,s_t+1])}
+                states = self.global_trans[k][1]
+                st = self.get_gridState(states[1])
+                st1 = self.get_gridState(states[2])
+                # if obstacles are other agents, remove them
+                for o in obstacles:
+                    grid_o = self.get_gridState((o[0],o[1],th))
+                    if (grid_o[0],grid_o[1]) == (st[0],st[1]) or (grid_o[0],grid_o[1]) == (st1[0],st1[1]):
+                        obstacles.remove(o)
         return terminal, obstacles
+
 
     def observe_Env(self, mode='all'):
         """
@@ -636,11 +678,10 @@ class GridWorld(object):
         :return:
         old continuous state, new continuous state, reward,flag of terminal
         """
-        L_cnt, R_cnt, bump,DLightBump, AnalogBump = self.achieve_data(mode)
+        L_cnt, R_cnt, bump,DLightBump, AnalogBump,Infra_Omi, Infra_L, Infra_R = self.achieve_data(mode)
         old_state = self.real_state.copy()
 
         if mode != 'e':
-
             # Check if current state is terminal
             terminal,obs = self.check_terminal(bump,DLightBump, AnalogBump)
             # update list of obstacles
@@ -656,7 +697,7 @@ class GridWorld(object):
                     self.obs_ls[1][self.obs_ls[0].index(o)] += 1.0/max_cnt
 
             # The reward is the reward obtained after transition (s,a,s')
-            r = self.cal_reward(bump, DLightBump, AnalogBump)
+            r = self.cal_reward(bump, DLightBump, AnalogBump,(Infra_Omi, Infra_L, Infra_R))
         else:
             # if encoder mode, return encoder info only, without calculate rewards and terminals
             r= 0
@@ -707,23 +748,135 @@ class GridWorld(object):
         fp.close()
         return True
 
-    def decode_data(self, data=''):
-        # Template of format in r_buffer
-        # {
-        #     "1": {"t": 0, "s": [1, 2, 3], "p": [0, 0, 0, 0], "d": 0},
-        #     "2": {"t": 0, "s": [1, 2, 3], "p": [0, 0, 0, 0], "d": 0},
-        #     "3": {"t": 0, "s": [1, 2, 3], "p": [0, 0, 0, 0], "d": 0}
-        #
-        # }
-        d_ls = data.split('#')
-        data_ls = []
-        for d in d_ls:
-            if len(d) > 3 and ('{' in d) and ('}' in d):
-                data = json.loads(d)
-                id, t_step, s, p, d = data[0], data[1], data[3], data[4], data[5]
-                data_ls.append((id, t_step, s, p, d))
+    def send_states_v2(self,t, transition=None, p=None):
+        """
 
-        return data_ls
+        data in json packet
+        id: id
+        t: time step in float type,
+        s: old continuous state st
+        a: action, at
+        sn: s_t+1
+        d: degree
+        :param: transition (st,at,,s_t+1)
+        :param p: weight parameters
+        :return:
+        """
+
+        data = {}
+        data["id"] =self.id
+        data["t"] =round(t,1)
+        data["d"] =self.degree
+        if p != None:
+            data["p"] = p
+
+        if transition != None:
+            data["s"] = np.round(transition[0],2).tolist()
+            data["a"] = list(self.action_space).index(transition[1])
+            data["sn"] = np.round(transition[2],2).tolist()
+        txt = json.dumps(data)
+        fp = open('w_buf_1.json','w')
+        if fp.writable():
+            fp.write(txt)
+        else:
+            print("Error: Fail to write Agent data")
+            fp.close()
+            return False
+        fp.close()
+        return True
+
+    def read_glob_s_v2(self,timestep, transition=None,params = None, info= "trans"):
+        """
+
+        :param timestep:
+        :param transition:
+        :param info:
+        :return:
+        global_s: list of s_t of all agents
+        global_a : list of a_t of all agents
+        global_d : list of degree of all agents
+        global_id: list of id of all agents
+        global_sn: list of s_t+1 of all agents
+        global_p: list of a_t of other agents except agent i
+        """
+        file = ''
+        global_s = None
+        global_a = None
+        global_sn = None
+        global_p = None
+        global_d = [self.degree]
+        global_id = [self.id]
+        if transition != None:
+            s_old ,a, s_new = transition[0],transition[1],transition[2]
+            global_s = [s_old]
+            global_a = [a]
+            global_sn = [s_new]
+        if params != None:
+            global_p = [params]
+
+        if info == "trans":
+            file = "trans_buf.json"
+            pass
+        else:
+            file = "params_buf.json"
+            pass
+
+        fp = open(file, "r")
+        if fp.readable():
+            data = fp.read()
+            # print("Global states: ",data)
+            while len(data) <1:
+                fp.close()
+                print("Waiting for data update")
+                time.sleep(1)
+                fp = open(file, "r")
+                data = fp.read()
+                pass
+
+            data = json.loads(data)
+            keys = list(data.keys())
+            keys.sort()
+            if info == "trans":
+                # read transition states
+                if "d" in keys:
+                    self.degree = int(data["d"])
+                    keys.remove("d")
+                else:
+                    print("Can't read degree ")
+
+                for t_step in keys:
+                    for d in data[t_step]:
+                        #  format of packet  {t:[(id,timestep,degree,[params]),...],t+1: ...}
+                        # (id,timestep,degree,[a, s,sn])
+                        # update backup data
+                        self.global_trans[d[0]] = (d[2],d[3])
+
+                for i in self.global_trans.keys():
+                    transition = self.global_trans[i][1]
+                    global_a.append(transition[0])
+                    global_s.append(transition[1])
+                    global_sn.append( transition[2])
+                    global_d.append(self.global_trans[i][0])
+                    global_id.append(i)
+            else:
+                # read parameters
+                if "d" in keys:
+                    keys.remove("d")
+                global_p= []
+                keys.sort()
+                for t_step in keys:
+                    for d in data[t_step]:
+                        global_id.append(d[0])
+                        global_d.append(d[2])
+                        global_p.append(d[3])
+                pass
+
+        fp.close()
+
+        return global_id, global_s,global_sn , global_a,global_d,global_p
+
+
+
 
     def read_global_s(self,real_s_old,timestep=0,param=None):
         """
@@ -827,6 +980,39 @@ class GridWorld(object):
             return True
         return False
 
+
+    def update_cnt_map(self,s):
+        """
+        update visit count of grid world
+        :param s:
+        :return:
+        """
+        cnts = []
+        num_grid = self.cnt_map.shape[0]*self.cnt_map.shape[1]
+        old_coverage =num_grid- self.cnt_map.flatten().tolist().count(0)
+        for sj in s:
+            grid_s = self.get_gridState(sj)
+            self.cnt_map[grid_s[0], grid_s[1]] += 1
+            cnts.append(self.cnt_map[grid_s[0], grid_s[1]])
+
+        self.coverage = num_grid - self.cnt_map.flatten().tolist().count(0)
+
+        return cnts
+
+
+    def get_LocalReward(self,immediate_r, s):
+        r_cnt = 0.0
+        for sj in s:
+            grid_s = self.get_gridState(sj)
+            cnt = self.cnt_map[grid_s[0], grid_s[1]]
+            cnt = (cnt-1.0) if cnt >0 else 0.0
+            r_cnt = 1.0/(1.0+ (cnt))
+        # average coverage reward
+        r_coverage = r_cnt/ len(s)
+
+        r = immediate_r + r_coverage
+        return r
+
     def step(self,a):
         """
         Move robot to expected position and track the current position and reward
@@ -857,7 +1043,7 @@ class GridWorld(object):
 
 
         # track sensor information when moving
-        self.Roomba.StartQueryStream(7, 43, 44, 45, 46, 47, 48, 49, 50, 51)  # Start getting bumper values
+        self.Roomba.StartQueryStream(17,52,53,7, 43, 44, 45, 46, 47, 48, 49, 50, 51)  # Start getting bumper values
 
         # determine if s is terminal before taking action
         # if it is terminal, don't move and return state directly
@@ -869,8 +1055,6 @@ class GridWorld(object):
 
 
         # Take action if current state is not terminal
-
-        # using time delay method to reach desired position
         # Rotate Roomba to certain degree
         sign = 1 if d_theta >= 0 else -1
         print("Spinning . . . ")
@@ -932,7 +1116,7 @@ class GridWorld(object):
                 # check obstacle and terminal state
                 if np.abs(cur_t-t)>= self.print_time:
                     t =cur_t
-                    print()
+                    # print()
                     # print('---------------------------------')
                     # print('new state: {:10.2f},{:10.2f},{:10.2f}. '.format(
                     #     new_real_state[0], new_real_state[1], new_real_state[2]))
@@ -946,9 +1130,8 @@ class GridWorld(object):
 
 
 
-        # Compute reward and new state after the motion
-
-            new_grid_s = self.get_gridState(new_real_state)
+        # Compute new grid state after the motion
+        new_grid_s = self.get_gridState(new_real_state)
         self.grid_state = new_grid_s
         # print("grid s:", new_grid_s)
 
@@ -964,15 +1147,13 @@ class GridWorld(object):
         # update Gaussian Mixture model for reward approximation
         ########################################
         ########################################
-
         # record real trajectory here
         ##############################
         # record real continuous state
         # self.logger.log(real_s_old, a, new_real_state, r, is_terminal, self.obs_ls)
         # record grid state
-        self.logger.log(grid_s_old, a, new_grid_s, r, is_terminal, self.obs_ls)
+        # self.logger.log(grid_s_old, a, new_grid_s, r, is_terminal, self.obs_ls)
         ##############################
 
-        time.sleep(0.5)
-        return real_s_old,new_grid_s, new_real_state, r, is_terminal
+        return grid_s_old, real_s_old,new_grid_s, new_real_state, r, is_terminal
 

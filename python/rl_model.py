@@ -59,18 +59,17 @@ def f_dist_obstacles(si,ai,s,a, obs_ls, max_dis):
     return  f_d_obs
 
 
-def f_grid_cnt(si, s,cnt_map):
+def f_grid_cnt(si, s,cnts):
     """
     :param si: state of agent i
     :param s: global states of all other agents, not including ith agent
-    :param cnt_map: map used for memorizing visit count to each grid
+    :param cnts: list of visit count of positions s
     :return:
     """
     cnt = 0.0
     C = 1.0
-    cnt = cnt_map[si[0],si[1]]
-    for sj in s:
-        cnt +=  cnt_map[sj[0],sj[1]]
+    for c in cnts:
+        cnt +=  c
 
     cnt /= (len(s)+1)
     f_cnt = C/ (C + cnt)
@@ -100,7 +99,7 @@ def dist_agents(si,ai,s,a):
     return max_dist, min_dist,mean_d
 
 class actor_critic_q():
-    def __init__(self,input_size,map, obstacles,action_set ,discount=1):
+    def __init__(self,input_size, map_shape,obstacles,action_set ,discount=1):
         """
 
         :param input_size: size/number of features x(s,a)
@@ -122,8 +121,9 @@ class actor_critic_q():
         # beta of w
         self.beta_w = 1.0
         self.beta_theta = 1.0
-        self.cnt_map = map
+        self.cnts= []
         self.obs_ls = obstacles
+        self.map_shape =map_shape
         pass
     def sample_action(self,si,s,epi=0.5):
 
@@ -151,11 +151,11 @@ class actor_critic_q():
         x.append(mean_d)
         f1 = f_dist_change(si,ai, s, a)
         x.append(f1)
-        sh = np.shape(self.cnt_map)
+        sh = self.map_shape
         max_dist = np.sqrt(sh[0] * sh[0] + sh[1] * sh[1])
         f2 = f_dist_obstacles(si,ai, s,a, self.obs_ls, max_dist)
         x.append(f2)
-        f3 = f_grid_cnt(si, s, self.cnt_map)
+        f3 = f_grid_cnt(si, s)
         x.append(f3)
         x.append(1)
         x = np.array(x, dtype=float)
@@ -180,13 +180,14 @@ class actor_critic_q():
         """
         return x
 
-    def crtic_step(self,si,ai,si_new,s,a,r_t1,terminal):
+    def crtic_step(self,si,ai,si_new,s,a,s_new,r_t1,terminal):
         """
         Perform critic step, updating return, TD error and local weights in Q
         :param si:
         :param ai:
         :param s:
         :param a:
+        :param s_new: st+1 of other agents
         :param r_t1:
         :param ws:
         :param ds:
@@ -197,7 +198,7 @@ class actor_critic_q():
         self.ret_t1 = (1 - self.beta_w)*self.ret_t + self.beta_w*r_t1
         # compute TD error
         if not terminal:
-            q_t1 = np.max([self.q_estimator(si_new,a_next,s,a) for a_next in self.actions])
+            q_t1 = np.max([self.q_estimator(si_new,a_next,s_new,a) for a_next in self.actions])
         else:
             q_t1 = 0.0
         q_t = self.q_estimator(si, ai, s, a)
@@ -208,23 +209,27 @@ class actor_critic_q():
         # Need to share w_local to other agents after learning
         return self.w_local
 
-    def update_w_gbl(self,deg_i, w_ls, deg_ls):
+    def update_w_gbl(self,deg_i, deg_ls,w_ls):
         """
         Update global weights for global q function
         :param deg_i degree of agent i
-        :param w_ls:list of q function weights of other agents with len n
+        :param w_ls:list of q function weights of all agents with len n
         :param deg_ls: list of degree of other agents. It should have shape 1xn
         :return:
         updated global weight
         """
-        if len(w_ls) != len(deg_ls):
+        if len(w_ls) != len(deg_ls +1):
             print("Sizes of Degree list and Weight list are different!")
             return None
 
         self.w_global = 0.0
+        c_sum = 0.0
         for j, d in enumerate(deg_ls):
             cj=  1.0/(1.0 + max(deg_i, d))
-            self.w_global += cj*w_ls[j]
+            c_sum += cj
+            self.w_global += cj*w_ls[j+1]
+
+        self.w_global += (1-c_sum)*w_ls[0]
 
         return self.w_global
 
@@ -283,6 +288,11 @@ class actor_critic_q():
         prob =e / e_sum
 
         return prob
+
+
+
+
+
 
 
 class actor_critic_rv():
