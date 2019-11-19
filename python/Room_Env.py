@@ -388,7 +388,7 @@ class Logger():
         self.log_cum_reward(step,r)
         self.log_obstacles(step,obs)
         self.log_coverage(step,coverage)
-        log_bonus_pos(step, bonus_pos)
+        self.log_bonus_pos(step, bonus_pos)
 
     def terminate(self):
         self.trajectory.close()
