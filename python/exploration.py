@@ -53,7 +53,8 @@ def test_json(Env):
 def actor_critic_2(Env,max_iteration=10,epoch=3,num_agents =2):
 
     sh = np.shape(Env.cnt_map)
-    model = ac.actor_critic_q(7,sh ,Env.obs_ls[0],Env.action_space ,discount=1)
+    grid_size = 240
+    model = ac.actor_critic_q(grid_size, 7,sh ,Env.obs_ls[0],Env.action_space ,discount=1)
     track = []
     # time step t
     t = 0
