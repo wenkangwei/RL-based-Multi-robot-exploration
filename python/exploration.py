@@ -63,12 +63,16 @@ def actor_critic_2(Env,max_iteration=10,epoch=3,num_agents =2):
     Env.update_cnt_map(global_s)
     max_iteration =5
     epoch =10
+    epi = 1
     try:
         for i in range(max_iteration):
             for j in range(epoch):
+                model.beta_w = 1.0- (j/float(epoch))
+                model.beta_theta = 1.0- (j/float(epoch))
+                epi *= 0.95
                 # sample current state and action pair
                 si= global_s[0]
-                a= model.sample_action(si,global_s[1:],epi=0.5)
+                a= model.sample_action(si,global_s[1:],epi=epi)
                 print('action: ', a)
 
                 # step
