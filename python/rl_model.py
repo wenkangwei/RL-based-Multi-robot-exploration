@@ -80,7 +80,7 @@ def f_grid_cnt(si, s,cnts):
     f_cnt = C/ (C + cnt)
     return f_cnt
 
-def dist_agents(si,ai,s,a):
+def dist_agents(si,ai,s,a,max_world_dis):
     """
     return maximum and  minimum distance to other agents/ distance to the closest/ futherest agents
     :param si: ith ageent
@@ -97,14 +97,14 @@ def dist_agents(si,ai,s,a):
         for sj in s:
             d = np.sqrt(np.square(si[0] - sj[0]) + np.square(si[1] - sj[1]))
             ls.append(d)
-        max_dist = np.max(ls)
-        min_dist = np.min(ls)
-        mean_d = np.mean(ls)
+        max_dist = np.max(ls)/max_world_dis
+        min_dist = np.min(ls)/max_world_dis
+        mean_d = np.mean(ls)/max_world_dis
 
     return max_dist, min_dist,mean_d
 
 class actor_critic_q():
-    def __init__(self,input_size, map_shape,obstacles,action_set ,discount=1):
+    def __init__(self,grid_size,input_size, map_shape,obstacles,action_set ,discount=1):
         """
 
         :param input_size: size/number of features x(s,a)
@@ -117,6 +117,7 @@ class actor_critic_q():
         self.w_local=np.zeros([1,input_size],dtype=float)/input_size
         self.w_global = np.zeros([1,input_size],dtype=float) / input_size
         self.theta = np.ones([1,input_size],dtype=float) / input_size
+        self.grid_size =float(grid_size)  #grid is square
         # return at t
         self.ret_t = 0.0
         # return at t+1
@@ -150,7 +151,8 @@ class actor_critic_q():
         :return: feature vector X
         """
         x = []
-        max_d, min_d, mean_d = dist_agents(si,ai,s,a)
+        max_dis = self.grid_size*np.max(self.map_shape)
+        max_d, min_d, mean_d = dist_agents(si,ai,s,a,max_dist)
         x.append(max_d)
         x.append(min_d)
         x.append(mean_d)

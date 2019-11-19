@@ -402,6 +402,7 @@ class World(object):
         # Default unit of x,y : mm
         # divider to convert unit from mm to cm
         self.unit_div =1.0
+        # a grid is 240mm*240mm
         self.grid_size = 240*2/self.unit_div
         self.observation_space = None
         # Action space:
