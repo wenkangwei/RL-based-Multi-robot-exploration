@@ -107,6 +107,7 @@ class Xbee():
         st1 = self.agent_info[self.id][3]
         a = self.agent_info[self.id][1]
         p =self.agent_info[self.id][4]
+        degree = self.agent_info[self.id][5]
         d_ls = self.data.split("#")
         self.data=''
         for d in d_ls:
