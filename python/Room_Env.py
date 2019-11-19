@@ -1198,7 +1198,7 @@ class World(object):
         # update current action
         self.action = a
         # change of distance in mm
-        d = a[0]
+        d = float(a[0])
         # degree to rad, from angle to Arc Length
         d_theta = a[1] * (math.pi / 180.0)
         ArcLen = self.Motion.Agl2ArcLen(d_theta)
