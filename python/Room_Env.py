@@ -1219,18 +1219,26 @@ class World(object):
         while np.abs(cur_t - init_t) <= rot_time+forward_time:
             cur_t = time.time()
             self.xb.receive()
-            if np.abs(cur_t - init_t) < rot_time :
-                if ((d_theta + old_real_state[2]) - new_real_state[2]) > 1e-1:
-                    print("Spinning . . . ")
-                    if self.Roomba.Available() > 0:
-                        self.Roomba.Move(0, self.rot_sp * sign)
-                        old_real_state, new_real_state, r, is_terminal, data = self.observe_Env()
-                else:
-                    # Pause roomba for a while
-                    self.Roomba.Move(0, 0)
-                    print("Spinning t:", np.abs(cur_t - init_t))
-                    print('cur s:', new_real_state)
-                    time.sleep(0.5)
+            dt = np.abs(cur_t - init_t)
+
+            if dt <= rot_time and ((d_theta + old_real_state[2]) - new_real_state[2]) > 1e-1:
+                print("Spinning . . . ")
+                self.Roomba.Move(0, self.rot_sp * sign)
+                if self.Roomba.Available() > 0:
+                    old_real_state, new_real_state, r, is_terminal, data = self.observe_Env()
+
+            else:
+                self.Roomba.Move(0, 0)
+                print("Spinning t:", np.abs(cur_t - init_t))
+                print('cur s:', new_real_state)
+                time.sleep(0.5)
+
+                # Roomba moves forward
+                print('')
+                print("Moving forward. . . . . .")
+                if self.Roomba.Available() > 0:
+                    self.Roomba.Move(self.sp, 0)
+                    old_real_state, new_real_state, r, is_terminal, data = self.observe_Env()
 
             if is_terminal:
                 self.Roomba.Move(0, 0)
@@ -1240,18 +1248,10 @@ class World(object):
                 print("===========================================")
                 print()
                 break
-            dt = np.abs(cur_t - init_t)
-            if dt < forward_time+rot_time and dt > rot_time :
-                # Roomba moves forward
-                print('')
-                print("Moving forward. . . . . .")
-                if self.Roomba.Available() > 0:
-                    self.Roomba.Move(self.sp, 0)
-                    old_real_state, new_real_state, r, is_terminal, data = self.observe_Env()
-            else:
-                self.Roomba.Move(0, 0)
-                print("forward t:", np.abs(cur_t - init_t))
-                print('-----------------------------------------')
+
+        self.Roomba.Move(0, 0)
+        print("forward t:", np.abs(cur_t - init_t))
+        print('-----------------------------------------')
 
         # Compute new grid state after the motion
         new_grid_s = self.get_gridState(new_real_state)
