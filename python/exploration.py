@@ -160,7 +160,8 @@ def actor_critic(Env,max_iteration=10,epoch=3,num_agents =2):
             si =Env.real_state
             # sample new initial state
             a = model.sample_action(si, global_s[1:], epi=1)
-            _,new_init_grid_s, new_init_s, r, is_terminal= Env.step(a)
+            # grid_s_old, real_s_old, grid_s_new, s_new, immediate_r, is_terminal
+            _,_,new_init_grid_s, new_init_s, immediate_r, is_terminal= Env.step(a)
 
             # show msp here
             if Env.is_map_updated() and len(Env.obs_ls) > 0:
