@@ -1227,14 +1227,6 @@ class World(object):
                     old_real_state, new_real_state, r, is_terminal, data = self.observe_Env()
 
             else:
-                # self.Roomba.Move(0, 0)
-                # print("Spinning t:", np.abs(cur_t - init_t))
-                # print('cur s:', new_real_state)
-                # time.sleep(0.5)
-
-                # Roomba moves forward
-                print('')
-                print("Moving forward. . . . . .")
                 if self.Roomba.Available() > 0:
                     self.Roomba.Move(self.sp, 0)
                     old_real_state, new_real_state, r, is_terminal, data = self.observe_Env()
