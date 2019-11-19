@@ -62,11 +62,10 @@ def actor_critic(Env,max_iteration=10,epoch=3,num_agents =2):
     global_s[0] = Env.real_state
     Env.update_cnt_map(global_s)
     max_iteration =1
-    epoch =1
+    epoch =6
     try:
 
         for i in range(max_iteration):
-            # sample trajectories
             for j in range(epoch):
                 # sample current state and action pair
                 si= global_s[0]
@@ -158,15 +157,18 @@ def actor_critic(Env,max_iteration=10,epoch=3,num_agents =2):
 
 
                 if is_terminal:
+                    # sample new init state
+                    # update current real continous state
+                    global_s[0] = Env.real_state
+                    si = Env.real_state
+                    # sample new initial state
+                    a = model.sample_action(si, global_s[1:], epi=0.9)
+                    Env.xb.receive()
+                    _, _, new_init_grid_s, new_init_s, immediate_r, is_terminal = Env.step(a)
+
                     break
 
-            # update current real continous state
-            global_s[0] = Env.real_state
-            si =Env.real_state
-            # sample new initial state
-            a = model.sample_action(si, global_s[1:], epi=1)
-            Env.xb.receive()
-            _,_,new_init_grid_s, new_init_s, immediate_r, is_terminal= Env.step(a)
+
 
         pass
 

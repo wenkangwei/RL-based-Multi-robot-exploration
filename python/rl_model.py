@@ -3,6 +3,7 @@ import random
 import  math
 def f_dist_change(si,ai, s,a):
     """
+    change of distance from agent i to other agents
     Note angle of both action and state should be in   degree
     :param s: list of states of all other agents , [ [x, y, theta], [x, y, theta] ....]
     :param si: the sette of ith agent, [x, y, theta]
@@ -19,7 +20,8 @@ def f_dist_change(si,ai, s,a):
             y = si[1] + ai[0] * math.sin(math.radians(si[2]) - 0.5 * math.radians(ai[1]))
             d2 =np.sqrt(np.square(x- sj[0]) + np.square(y- sj[1]))
             # dist_c_ls.append(d1-d2)
-            avg_dist_c += (d1-d2)
+            # normalize change of distance
+            avg_dist_c += ((d1-d2)/d1)
         avg_dist_c /= len(s)
 
     return  avg_dist_c
@@ -34,7 +36,7 @@ def f_dist_obstacles(si,ai,s,a, obs_ls, max_dis):
     :return:
         feature related to distance to the closest obstacle
     """
-    C= max_dis
+    C= 100.0
     d_obs_ls = []
     # si[0] = float(si[0])
     # si[1] = float(si[1])
@@ -109,8 +111,8 @@ class actor_critic_q():
         :param discount:
         """
         self.input_size =input_size
-        self.w_local=np.ones([1,input_size],dtype=float)/input_size
-        self.w_global = np.ones([1,input_size],dtype=float) / input_size
+        self.w_local=np.zeros([1,input_size],dtype=float)/input_size
+        self.w_global = np.zeros([1,input_size],dtype=float) / input_size
         self.theta = np.ones([1,input_size],dtype=float) / input_size
         # return at t
         self.ret_t = 0.0
@@ -295,9 +297,9 @@ class actor_critic_q():
         e_sum = 0.0
         for aj in self.actions:
             e_sum += np.exp(np.matmul(self.theta, np.transpose(self.get_features(si, ai, s, aj))))
-        print("e:",e,"e sum:",e_sum)
-        prob =np.round(e/e_sum,3)
-        print("a:",a, "Prob:",prob)
+        # print("e:",e,"e sum:",e_sum)
+        prob =np.round(e/e_sum,5)
+        # print("a:",a, "Prob:",prob)
         return prob
 
 

@@ -1269,7 +1269,7 @@ class World(object):
                 print()
                 print("===============Reach Terminal =============")
                 print('r:{:10.2f}, terminal:{}'.format(r, is_terminal))
-                print('obstacle:', self.obs_ls[0])
+                # print('obstacle:', self.obs_ls[0])
                 print("===========================================")
                 print()
                 break
