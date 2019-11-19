@@ -8,6 +8,14 @@ import  json
 import serial
 
 
+# Problem so far:
+# 1. Q learning parameter inf or Nan, data is not valid
+# 2. unable to receive data correctly through json data
+# 3. position/state tracking data weird, after using unit divider=10.0 converting mm to cm
+
+
+
+
 
 
 # Notes for Roomba settings:
@@ -64,17 +72,17 @@ class Xbee():
 
         if params == None and transition!= None:
             a= transition[0]
-            st = np.round(transition[1],2)
-            st1 =np.round(transition[2],2)
+            st = np.round(transition[1],5)
+            st1 =np.round(transition[2],5)
             p= self.agent_info[self.id][4]
             self.agent_info[self.id] = (t, a, st, st1, p,self.degree)
             data= {"id":self.id,"t":t,"d":self.degree,"e":transition}
         elif params != None and transition== None:
-            params = np.round(params,4).tolist()
+            params = np.round(params,5).tolist()
             t=self.agent_info[self.id][0]
             a = self.agent_info[self.id][1]
-            st = np.round(self.agent_info[self.id][2],2)
-            st1 = np.round(self.agent_info[self.id][3],2)
+            st = np.round(self.agent_info[self.id][2],5)
+            st1 = np.round(self.agent_info[self.id][3],5)
             self.agent_info[self.id] = (t, a, st, st1, params,self.degree)
             data = {"id": self.id, "t": t,"d":self.degree, "p": params}
         else:
@@ -92,6 +100,7 @@ class Xbee():
             self.data += message
         return message
 
+
     def decode(self):
         t_step = self.agent_info[self.id][0]
         st =self.agent_info[self.id][2]
@@ -105,13 +114,16 @@ class Xbee():
                 data = json.loads(d)
                 if "id" in data.keys():
                     id = data["id"]
+                    print("Str data:",data)
                     if id in self.agent_info.keys():
+                        # if packet from known agent
                         t_step = self.agent_info[id][0]
                         a = self.agent_info[id][1]
                         st = self.agent_info[id][2]
                         st1 = self.agent_info[id][3]
                         p = self.agent_info[id][4]
                     else:
+                        # if packet from new agent
                         if "t" in data.keys():
                             t_step = data["t"]
                         if "d" in data.keys():
@@ -122,8 +134,9 @@ class Xbee():
                             st1 = data["e"][2]
                         elif "p" in data.keys():
                             p =data["p"]
-                        print("Receive data from ",id,":", t_step,a,st,st1,p,d)
-                        self.agent_info[id]= (t_step,a,st,st1,p,d)
+                    print("Receive data from ",id,":", t_step,a,st,st1,p,d)
+                    self.agent_info[id]= (t_step,a,st,st1,p,d)
+                    print("Json data:",(t_step,a,st,st1,p,d))
                 self.degree = len(self.agent_info.keys())
 
         global_id = list(self.agent_info.keys())
@@ -368,7 +381,7 @@ class World(object):
 
         # Default unit of x,y : mm
         # divider to convert unit from mm to cm
-        self.unit_div =10.0
+        self.unit_div =1.0
         self.grid_size = 240*2/self.unit_div
         self.observation_space = None
         # Action space:
@@ -1220,6 +1233,7 @@ class World(object):
         while np.abs(cur_t - init_t) <= rot_time+forward_time:
             cur_t = time.time()
             self.xb.receive()
+            print("data: ",self.xb.data)
             dt = np.abs(cur_t - init_t)
             if self.Roomba.Available() > 0:
                 if dt <= rot_time and np.abs((d_theta + old_real_state[2]) - new_real_state[2]) > 1e-1:

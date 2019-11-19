@@ -203,6 +203,7 @@ class actor_critic_q():
         else:
             q_t1 = 0.0
         q_t = self.q_estimator(si, ai, s, a)
+        print("Q(st,at): ",q_t)
         # update TD error
         self.td_err = (r_t1+ q_t1)-(self.ret_t+ q_t)
         # update local weights
@@ -249,6 +250,7 @@ class actor_critic_q():
         :return:
         """
         self.theta +=  self.beta_theta* self.advantage(si,ai,s,a)*self.phi(si,ai,s,a)
+        print("Policy theta: ",self.theta)
         return self.theta
 
 
@@ -289,7 +291,7 @@ class actor_critic_q():
         e= np.exp(np.matmul(self.theta,np.transpose(self.get_features(si, ai, s, a))))
         e_sum = 0.0
         for aj in self.actions:
-            e_sum += np.exp(np.matmul(self.theta,np.transpose(self.get_features(si, ai, s, aj))))
+            e_sum += np.exp(np.matmul(self.theta, np.transpose(self.get_features(si, ai, s, aj))))
         print("e:",e,"e sum:",e_sum)
         prob =np.round(e/e_sum,3)
         print("a:",a, "Prob:",prob)
