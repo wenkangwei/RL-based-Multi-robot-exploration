@@ -206,9 +206,9 @@ class actor_critic_q():
         # update TD error
         self.td_err = (r_t1+ q_t1)-(self.ret_t+ q_t)
         # update local weights
-        self.w_local += self.beta_w*self.td_err*self.q_gradient(x)
+        self.w_global += self.beta_w*self.td_err*self.q_gradient(x)
         # Need to share w_local to other agents after learning
-        return self.w_local
+        return self.w_global
 
     def update_w_gbl(self,deg_i, deg_ls,w_ls):
         """
@@ -223,7 +223,8 @@ class actor_critic_q():
             print("Sizes of Degree list and Weight list are different!")
             return None
 
-        self.w_global = np.zeros([1, self.input_size])
+        # self.w_global = np.zeros([1, self.input_size])
+        w_global = np.zeros([1, self.input_size])
         w_ls = np.array(w_ls)
         c_sum = 0.0
         for j, d in enumerate(deg_ls):
@@ -231,10 +232,10 @@ class actor_critic_q():
             print("j:",j)
             cj=  1.0/(1.0 + max(deg_i, d))
             c_sum += cj
-            self.w_global += cj*w_ls[j]
+            w_global += np.multiply(cj,w_ls[j])
 
-        self.w_global += (1-c_sum)*w_ls[0]
-
+        self.w_global = (1-c_sum)*self.w_global + w_global
+        self.w_local =self.w_global
         return self.w_global
 
 
