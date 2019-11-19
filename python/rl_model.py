@@ -119,8 +119,8 @@ class actor_critic_q():
         self.td_err = 0.0
         self.actions = action_set
         # beta of w
-        self.beta_w = 1.0
-        self.beta_theta = 1.0
+        self.beta_w = 0.001
+        self.beta_theta = 0.001
         self.cnts= []
         self.obs_ls = obstacles
         self.map_shape =map_shape

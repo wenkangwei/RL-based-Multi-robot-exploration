@@ -93,9 +93,9 @@ def actor_critic(Env,max_iteration=10,epoch=3,num_agents =2):
                 time.sleep(3)
                 # global_id, global_s, global_sn, global_a, global_d,_ = Env.read_glob_s_v2(timestep=t, transition =(real_s_old, a,s_new),info= "trans")
                 global_id, global_s, global_sn, global_a, global_d, global_w= Env.xb.decode()
-                print("Lens: ",len(global_id),len(global_s),len(global_sn),len(global_a),len(global_d),len(global_w))
+                # print("Lens: ",len(global_id),len(global_s),len(global_sn),len(global_a),len(global_d),len(global_w))
                 # update visit count in map
-                print("Global state: ",global_s)
+                # print("Global state: ",global_s)
                 cnts = Env.update_cnt_map(global_s)
                 model.cnts =cnts
                 # local reward
@@ -113,10 +113,10 @@ def actor_critic(Env,max_iteration=10,epoch=3,num_agents =2):
                     pass
 
                 global_id, global_s, global_sn, global_a, global_d, global_w = Env.xb.decode()
-                print("Lens: ", len(global_id), len(global_s), len(global_sn), len(global_a), len(global_d),
-                      len(global_w))
+                # print("Lens: ", len(global_id), len(global_s), len(global_sn), len(global_a), len(global_d),
+                #       len(global_w))
                 print("global w:",global_w)
-                print("global degree ",global_d)
+                # print("global degree ",global_d)
 
                 # id, _, _,_, global_d, global_w = Env.read_glob_s_v2(timestep=t,params=w_local,info= "params")
                 # old version of sending data
@@ -142,6 +142,7 @@ def actor_critic(Env,max_iteration=10,epoch=3,num_agents =2):
                 print("Global States: ")
                 for i in range(len(global_id)):
                     print('==========================')
+                    print("t: ", t)
                     print("id's:", global_id[i])
                     print("state: ", global_s[i])
                     print("action:", global_a[i])
@@ -159,6 +160,7 @@ def actor_critic(Env,max_iteration=10,epoch=3,num_agents =2):
             si =Env.real_state
             # sample new initial state
             a = model.sample_action(si, global_s[1:], epi=1)
+            Env.xb.receive()
             _,_,new_init_grid_s, new_init_s, immediate_r, is_terminal= Env.step(a)
 
         pass

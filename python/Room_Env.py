@@ -1058,133 +1058,211 @@ class World(object):
         r = immediate_r + r_coverage
         return r
 
+    # def step(self,a):
+    #     """
+    #     Move robot to expected position and track the current position and reward
+    #     :param a: action of Roomba. It is expected to contain rotation angles and moving distance
+    #     :return:
+    #     new_grid_s, new_real_state, r, is_terminal
+    #     """
+    #     # update current action
+    #     self.action = a
+    #     # change of distance in mm
+    #     d= a[0]
+    #     # degree to rad, from angle to Arc Length
+    #     d_theta = a[1]*(math.pi/180.0)
+    #     ArcLen = self.Motion.Agl2ArcLen(d_theta)
+    #     # tolerance of time difference
+    #     tol = -0e-1
+    #
+    #     init_t = time.time()
+    #     cur_t = init_t
+    #
+    #     # back up current real and grid state s
+    #     grid_s_old = self.grid_state.copy()
+    #     real_s_old = self.real_state.copy()
+    #     old_real_state, new_real_state, r, is_terminal = self.real_state,self.real_state,0.0,False
+    #
+    #     # track sensor information when moving
+    #     self.Roomba.StartQueryStream(17,52,53,7, 43, 44, 45, 46, 47, 48, 49, 50, 51)  # Start getting bumper values
+    #
+    #     # Take action if current state is not terminal
+    #     # Rotate Roomba to certain degree
+    #     sign = 1 if d_theta >= 0 else -1
+    #     print("Spinning . . . ")
+    #     # print('-----------------------------------------')
+    #     self.Roomba.Move(0, self.rot_sp* sign)
+    #     t=cur_t
+    #     while np.abs(cur_t-init_t)< tol+np.abs(ArcLen/self.rot_sp):
+    #             self.xb.receive()
+    #             if np.abs(cur_t-t)>= self.print_time:
+    #                 t= cur_t
+    #                 # print('new state: {:10.2f},{:10.2f},{:10.2f}. r:{:10.2f}, terminal:{}'.format(
+    #                 #     new_real_state[0], new_real_state[1], new_real_state[2], r, is_terminal))
+    #             if self.Roomba.Available()>0:
+    #                 # keep track of postion and check if at terminal state, like hitting wall or obstacle
+    #                 old_real_state, new_real_state, r, is_terminal,data= self.observe_Env()
+    #                 # L_cnt, R_cnt, bump, DLightBump, AnalogBump = data
+    #             if ((d_theta+ old_real_state[2]) - new_real_state[2])> 1e-1 :
+    #                 break
+    #             cur_t = time.time()
+    #
+    #     # Pause roomba for a while
+    #     self.Roomba.Move(0, 0)
+    #     print("Spinning t:", np.abs(cur_t-init_t))
+    #     print('cur s:', new_real_state)
+    #     time.sleep(0.5)
+    #     # print('-----------------------------------------')
+    #
+    #     if is_terminal:
+    #         # if it is not terminal, move forward
+    #         # print("AnalogBump: ", AnalogBump)
+    #         print("===============Reach Terminal =============")
+    #         print('r:{:10.2f}, terminal:{}'.format(r, is_terminal))
+    #         print('obstacle:', self.obs_ls[0])
+    #         print("===========================================")
+    #         print()
+    #     else:
+    #         # reset time
+    #         init_t = time.time()
+    #         cur_t = init_t
+    #         #Roomba moves forward
+    #         print('')
+    #         print("Moving forward. . . . . .")
+    #         # print('-----------------------------------------')
+    #         self.Roomba.Move(self.sp, 0)
+    #         t =cur_t
+    #         while np.abs(cur_t-init_t)< tol+ float(d/self.sp):
+    #             self.xb.receive()
+    #             if self.Roomba.Available()>0:
+    #                 # keep track of postion and check if at terminal state, like hitting wall or obstacle
+    #                 old_real_state, new_real_state, r, is_terminal,data= self.observe_Env()
+    #                 # L_cnt, R_cnt, bump, DLightBump, AnalogBump = data
+    #
+    #                 if is_terminal:
+    #                     # print("AnalogBump: ", AnalogBump)
+    #                     print("===============Reach Terminal =============")
+    #                     print('r:{:10.2f}, terminal:{}'.format(r, is_terminal))
+    #                     print('obstacle:', self.obs_ls[0])
+    #                     print("===========================================")
+    #                     print()
+    #                     break
+    #             # check obstacle and terminal state
+    #             if np.abs(cur_t-t)>= self.print_time:
+    #                 t =cur_t
+    #
+    #             cur_t = time.time()
+    #         # pause roomba after reaching desired position
+    #         self.Roomba.Move(0, 0)
+    #         print("forward t:", np.abs(cur_t - init_t))
+    #         print('-----------------------------------------')
+    #
+    #
+    #
+    #     # Compute new grid state after the motion
+    #     new_grid_s = self.get_gridState(new_real_state)
+    #     self.grid_state = new_grid_s
+    #     # print("grid s:", new_grid_s)
+    #
+    #
+    #     # Clean the useless data
+    #     self.Roomba.PauseQueryStream()
+    #     if self.Roomba.Available() > 0:
+    #         z = self.Roomba.DirectRead(self.Roomba.Available())
+    #     time.sleep(1)
+    #
+    #     # update Gaussian Mixture model for reward approximation
+    #     ########################################
+    #     ########################################
+    #     # record real trajectory here
+    #     ##############################
+    #     # record real continuous state
+    #     # self.logger.log(real_s_old, a, new_real_state, r, is_terminal, self.obs_ls)
+    #     # record grid state
+    #     # self.logger.log(grid_s_old, a, new_grid_s, r, is_terminal, self.obs_ls)
+    #     ##############################
+    #     self.xb.receive()
+    #     return grid_s_old, real_s_old,new_grid_s, new_real_state, r, is_terminal
+    #
+    #
+
+
     def step(self,a):
         """
-        Move robot to expected position and track the current position and reward
-        :param a: action of Roomba. It is expected to contain rotation angles and moving distance
-        :return:
-        new_grid_s, new_real_state, r, is_terminal
-        """
+               Move robot to expected position and track the current position and reward
+               :param a: action of Roomba. It is expected to contain rotation angles and moving distance
+               :return:
+               new_grid_s, new_real_state, r, is_terminal
+               """
         # update current action
         self.action = a
-
         # change of distance in mm
-        d= a[0]
+        d = a[0]
         # degree to rad, from angle to Arc Length
-        d_theta = a[1]*(math.pi/180.0)
+        d_theta = a[1] * (math.pi / 180.0)
         ArcLen = self.Motion.Agl2ArcLen(d_theta)
         # tolerance of time difference
         tol = -0e-1
-
         init_t = time.time()
         cur_t = init_t
-
+        rot_time =tol + np.abs(ArcLen / self.rot_sp)
+        forward_time = tol + float(d / self.sp)
         # back up current real and grid state s
         grid_s_old = self.grid_state.copy()
         real_s_old = self.real_state.copy()
-
-        old_real_state, new_real_state, r, is_terminal = self.real_state,self.real_state,0.0,False
-        # L_cnt, R_cnt, bump, DLightBump, AnalogBump = None, None,None,None,None
-
-
+        old_real_state, new_real_state, r, is_terminal = self.real_state, self.real_state, 0.0, False
         # track sensor information when moving
-        self.Roomba.StartQueryStream(17,52,53,7, 43, 44, 45, 46, 47, 48, 49, 50, 51)  # Start getting bumper values
+        self.Roomba.StartQueryStream(17, 52, 53, 7, 43, 44, 45, 46, 47, 48, 49, 50, 51)  # Start getting bumper values
 
-        # Take action if current state is not terminal
-        # Rotate Roomba to certain degree
         sign = 1 if d_theta >= 0 else -1
-        print("Spinning . . . ")
-        # print('-----------------------------------------')
-        self.Roomba.Move(0, self.rot_sp* sign)
-        t=cur_t
-        while np.abs(cur_t-init_t)< tol+np.abs(ArcLen/self.rot_sp):
-                self.xb.receive()
-                if np.abs(cur_t-t)>= self.print_time:
-                    t= cur_t
-                    # print('new state: {:10.2f},{:10.2f},{:10.2f}. r:{:10.2f}, terminal:{}'.format(
-                    #     new_real_state[0], new_real_state[1], new_real_state[2], r, is_terminal))
-                if self.Roomba.Available()>0:
-                    # keep track of postion and check if at terminal state, like hitting wall or obstacle
-                    old_real_state, new_real_state, r, is_terminal,data= self.observe_Env()
-                    # L_cnt, R_cnt, bump, DLightBump, AnalogBump = data
-                if ((d_theta+ old_real_state[2]) - new_real_state[2])> 1e-1 :
-                    break
-                cur_t = time.time()
 
-        # Pause roomba for a while
-        self.Roomba.Move(0, 0)
-        print("Spinning t:", np.abs(cur_t-init_t))
-        print('cur s:', new_real_state)
-        time.sleep(0.5)
-        # print('-----------------------------------------')
+        while np.abs(cur_t - init_t) <= rot_time+forward_time:
+            cur_t = time.time()
+            self.xb.receive()
+            if np.abs(cur_t - init_t) < rot_time :
+                if ((d_theta + old_real_state[2]) - new_real_state[2]) > 1e-1:
+                    print("Spinning . . . ")
+                    if self.Roomba.Available() > 0:
+                        self.Roomba.Move(0, self.rot_sp * sign)
+                        old_real_state, new_real_state, r, is_terminal, data = self.observe_Env()
+                else:
+                    # Pause roomba for a while
+                    self.Roomba.Move(0, 0)
+                    print("Spinning t:", np.abs(cur_t - init_t))
+                    print('cur s:', new_real_state)
+                    time.sleep(0.5)
 
-        if is_terminal:
-            # if it is not terminal, move forward
-            # print("AnalogBump: ", AnalogBump)
-            print("===============Reach Terminal =============")
-            print('r:{:10.2f}, terminal:{}'.format(r, is_terminal))
-            print('obstacle:', self.obs_ls[0])
-            print("===========================================")
-            print()
-        else:
-            # reset time
-            init_t = time.time()
-            cur_t = init_t
-            #Roomba moves forward
-            print('')
-            print("Moving forward. . . . . .")
-            # print('-----------------------------------------')
-            self.Roomba.Move(self.sp, 0)
-            t =cur_t
-            while np.abs(cur_t-init_t)< tol+ float(d/self.sp):
-                self.xb.receive()
-                if self.Roomba.Available()>0:
-                    # keep track of postion and check if at terminal state, like hitting wall or obstacle
-                    old_real_state, new_real_state, r, is_terminal,data= self.observe_Env()
-                    # L_cnt, R_cnt, bump, DLightBump, AnalogBump = data
-
-                    if is_terminal:
-                        # print("AnalogBump: ", AnalogBump)
-                        print("===============Reach Terminal =============")
-                        print('r:{:10.2f}, terminal:{}'.format(r, is_terminal))
-                        print('obstacle:', self.obs_ls[0])
-                        print("===========================================")
-                        print()
-                        break
-                # check obstacle and terminal state
-                if np.abs(cur_t-t)>= self.print_time:
-                    t =cur_t
-
-                cur_t = time.time()
-            # pause roomba after reaching desired position
-            self.Roomba.Move(0, 0)
-            print("forward t:", np.abs(cur_t - init_t))
-            print('-----------------------------------------')
-
-
+            if is_terminal:
+                self.Roomba.Move(0, 0)
+                print("===============Reach Terminal =============")
+                print('r:{:10.2f}, terminal:{}'.format(r, is_terminal))
+                print('obstacle:', self.obs_ls[0])
+                print("===========================================")
+                print()
+                break
+            dt = np.abs(cur_t - init_t)
+            if dt < forward_time+rot_time and dt > rot_time :
+                # Roomba moves forward
+                print('')
+                print("Moving forward. . . . . .")
+                if self.Roomba.Available() > 0:
+                    self.Roomba.Move(self.sp, 0)
+                    old_real_state, new_real_state, r, is_terminal, data = self.observe_Env()
+            else:
+                self.Roomba.Move(0, 0)
+                print("forward t:", np.abs(cur_t - init_t))
+                print('-----------------------------------------')
 
         # Compute new grid state after the motion
         new_grid_s = self.get_gridState(new_real_state)
         self.grid_state = new_grid_s
-        # print("grid s:", new_grid_s)
-
 
         # Clean the useless data
         self.Roomba.PauseQueryStream()
         if self.Roomba.Available() > 0:
             z = self.Roomba.DirectRead(self.Roomba.Available())
-        time.sleep(1)
 
-        # update Gaussian Mixture model for reward approximation
-        ########################################
-        ########################################
-        # record real trajectory here
-        ##############################
-        # record real continuous state
-        # self.logger.log(real_s_old, a, new_real_state, r, is_terminal, self.obs_ls)
-        # record grid state
-        # self.logger.log(grid_s_old, a, new_grid_s, r, is_terminal, self.obs_ls)
-        ##############################
         self.xb.receive()
-        return grid_s_old, real_s_old,new_grid_s, new_real_state, r, is_terminal
+        return grid_s_old, real_s_old, new_grid_s, new_real_state, r, is_terminal
+
 
