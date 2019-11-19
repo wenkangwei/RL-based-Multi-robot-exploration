@@ -60,8 +60,8 @@ def actor_critic_2(Env,max_iteration=10,epoch=3,num_agents =2):
     global_s = [[0.0,0.0,0.0] for i in range(num_agents)]
     global_s[0] = Env.real_state
     Env.update_cnt_map(global_s)
-    max_iteration =1
-    epoch =6
+    max_iteration =6
+    epoch =10
     try:
         for i in range(max_iteration):
             for j in range(epoch):
