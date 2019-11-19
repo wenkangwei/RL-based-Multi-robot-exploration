@@ -222,7 +222,8 @@ class actor_critic_q():
             print("Sizes of Degree list and Weight list are different!")
             return None
 
-        self.w_global = 0.0
+        self.w_global = np.zeros([1, self.input_size])
+        w_ls = np.array(w_ls)
         c_sum = 0.0
         for j, d in enumerate(deg_ls):
             cj=  1.0/(1.0 + max(deg_i, d))
