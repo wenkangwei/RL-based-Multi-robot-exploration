@@ -8,8 +8,6 @@ import rl_model as ac
 import time
 
 
-# def local_reward(r, )
-
 
 def test_observation(Env):
     import time
@@ -48,8 +46,131 @@ def test_json(Env):
     id, global_s, global_d, global_p = Env.read_global_s(timestep=0, param=None)
     print('id:{},global_s:{},d:{}, p:{}'.format(id, global_s, global_d, global_p))
 
-# def Xbee_comm():
-#     comm_agents()
+
+
+
+
+def actor_critic_2(Env,max_iteration=10,epoch=3,num_agents =2):
+
+    sh = np.shape(Env.cnt_map)
+    model = ac.actor_critic_q(7,sh ,Env.obs_ls[0],Env.action_space ,discount=1)
+    track = []
+    # time step t
+    t = 0
+    global_s = [[0.0,0.0,0.0] for i in range(num_agents)]
+    global_s[0] = Env.real_state
+    Env.update_cnt_map(global_s)
+    max_iteration =1
+    epoch =6
+    try:
+        for i in range(max_iteration):
+            for j in range(epoch):
+                # sample current state and action pair
+                si= global_s[0]
+                a= model.sample_action(si,global_s[1:],epi=0.5)
+                print('action: ', a)
+
+                # step
+                grid_s_old, real_s_old, grid_s_new, s_new, immediate_r, is_terminal = Env.step(a)
+                print("Grid state: ", grid_s_new)
+                print("real state: ", s_new)
+                print("reward: ", round(immediate_r, 3))
+                print("Terminal: ", is_terminal)
+
+                # share (s,a) pair at time t, where s: st, a: at
+                Env.xb.receive()
+                Env.xb.send(t, transition=(a, real_s_old, s_new))
+                time.sleep(3)
+                global_t,global_id, global_s, global_sn, global_a, global_d, global_w= Env.xb.decode()
+
+                # update state info inside agent
+                for i, id in enumerate(global_id):
+                    Env.global_trans[id] = (global_d[i],(global_a[i],global_s[i],global_sn[i],))
+
+                cnts = Env.update_cnt_map(global_s)
+                model.cnts =cnts
+
+                # local reward
+                local_r= Env.get_LocalReward(immediate_r, global_s)
+                print("Imm Reward: ",immediate_r, ", total Reward:",local_r)
+                
+                # update local w of Q function
+                # global_s[0]: s of ith agent,  global_s[1:]: s of other agents
+                w_local = model.crtic_step(global_s[0],global_a[0], global_sn[0],
+                                           global_s[1:], global_a[1:], global_sn[1:],
+                                           local_r,is_terminal).tolist()
+                Env.xb.send(t, params = w_local)
+                time.sleep(2)
+                while len(Env.xb.receive())<0:
+                    pass
+
+                global_t,global_id, global_s, global_sn, global_a, global_d, global_w = Env.xb.decode()
+                print("global w:",global_w)
+                # update global w
+                model.update_w_gbl(global_d[0], global_d[1:], global_w)
+
+                # update policy
+                model.actor_step(global_s[0],global_a[0], global_s[1:], global_a[1:])
+                t += 1
+                # record real trajectory here
+                ##############################
+                track.append(grid_s_new)
+                Env.logger.log(t,grid_s_old, a, grid_s_new, local_r, is_terminal, Env.obs_ls,Env.map_coverage)
+                ##############################
+                print()
+                print()
+                print("Global States: ")
+                for i in range(len(global_id)):
+                    print('==========================')
+                    print("t: ", global_t[i])
+                    print("id's:", global_id[i])
+                    print("state: ", global_s[i])
+                    print("Grid state:", Env.get_gridState(global_s[i]))
+                    print("action:", global_a[i])
+                    print("degree: ", global_d[i])
+                    print("Params: ", global_w[i])
+                    print('==========================')
+                    print()
+
+                if is_terminal:
+                    # sample new init state
+                    # update current real continous state
+                    global_s[0] = Env.real_state
+                    si = Env.real_state
+                    # sample new initial state
+                    a = model.sample_action(si, global_s[1:], epi=0.9)
+                    Env.xb.receive()
+                    _, _, new_init_grid_s, new_init_s, immediate_r, is_terminal = Env.step(a)
+                    break
+        pass
+
+    except KeyboardInterrupt:
+        Env.terminate()
+        print('obstacles：')
+        for o in Env.obs_ls[0]:
+            x,y,theta= Env.get_gridState((o[0],o[1],0))
+            print((x,y))
+            # print(Env.obs_ls[0])
+        print('Track:')
+        for i in track:
+            print(i)
+
+    Env.terminate()
+    print()
+    print('obstacles：')
+    for o in Env.obs_ls[0]:
+        x, y, theta = Env.get_gridState((o[0], o[1], 0))
+        print((x, y))
+    print('Track:')
+    for i in track:
+        print(i)
+    pass
+
+
+
+
+
+
 
 def actor_critic(Env,max_iteration=10,epoch=3,num_agents =2):
 
@@ -94,6 +215,10 @@ def actor_critic(Env,max_iteration=10,epoch=3,num_agents =2):
                 time.sleep(3)
                 # global_id, global_s, global_sn, global_a, global_d,_ = Env.read_glob_s_v2(timestep=t, transition =(real_s_old, a,s_new),info= "trans")
                 global_t,global_id, global_s, global_sn, global_a, global_d, global_w= Env.xb.decode()
+
+
+                for i, id in enumerate(global_id):
+                    Env.global_trans[id] = (global_d[i],(global_a[i],global_s[i],global_sn[i],))
 
                 # print("Lens: ",len(global_id),len(global_s),len(global_sn),len(global_a),len(global_d),len(global_w))
                 # update visit count in map
@@ -283,7 +408,7 @@ if __name__ == '__main__':
 
     Env = World(id)
     # run_agent(Env)
-    actor_critic(Env, max_iteration=10, num_agents=2)
+    actor_critic_2(Env, max_iteration=10, num_agents=2)
     # test_json(Env)
     # Env.terminate()
 

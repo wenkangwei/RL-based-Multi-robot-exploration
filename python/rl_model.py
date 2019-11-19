@@ -160,7 +160,8 @@ class actor_critic_q():
         f3 = f_grid_cnt(si, s,self.cnts)
         x.append(f3)
         x.append(1)
-        x = np.array(x, dtype=float).reshape([1,self.input_size])
+        x = np.array(x, dtype=float)
+        x.reshape([1, self.input_size])
         return x
 
     def q_estimator(self,si,ai,s,a):
