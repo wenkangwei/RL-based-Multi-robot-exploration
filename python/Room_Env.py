@@ -1222,7 +1222,6 @@ class World(object):
             dt = np.abs(cur_t - init_t)
 
             if dt <= rot_time and ((d_theta + old_real_state[2]) - new_real_state[2]) > 1e-1:
-                print("Spinning . . . ")
                 self.Roomba.Move(0, self.rot_sp * sign)
                 if self.Roomba.Available() > 0:
                     old_real_state, new_real_state, r, is_terminal, data = self.observe_Env()
