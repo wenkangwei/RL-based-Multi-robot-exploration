@@ -402,8 +402,14 @@ class World(object):
         # Default unit of x,y : mm
         # divider to convert unit from mm to cm
         self.unit_div =1.0
-        # a grid is 240mm*240mm
-        self.grid_size = 240*2/self.unit_div
+        # a grid is 240mm*240mm in real world
+        self.real_grid_size =240.0
+        # Since when i want roomba to move to next grid,
+        # it actually move half of the grid. The grid size it thinks is actually
+        #  smaller than the actual grid size, so need to multiply it by 2
+        #  And the data read from encoder is real data from world, it is measuring
+        # real grid size
+        self.grid_size = self.real_grid_size*2/self.unit_div
         self.observation_space = None
         # Action space:
         self.action_space = None
