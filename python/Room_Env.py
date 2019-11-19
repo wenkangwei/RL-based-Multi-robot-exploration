@@ -277,8 +277,8 @@ class MotorEncoder():
         # Update current position
         self.x = self.x + d*math.cos(theta-0.5*del_agl)
         self.y = self.y + d * math.sin(theta - 0.5 * del_agl)
-        self.x = round(self.x/self.unit_div, 4)
-        self.y = round(self.y/self.unit_div, 4)
+        self.x = round(self.x/self.unit_div, 2)
+        self.y = round(self.y/self.unit_div, 2)
         self.theta =round(self.theta,3)
         return self.x, self.y, self.theta
 
@@ -367,8 +367,8 @@ class World(object):
 
         # Default unit of x,y : mm
         # divider to convert unit from mm to cm
-        self.unit_div =1.0
-        self.grid_size = 240*2
+        self.unit_div =10.0
+        self.grid_size = 240*2/self.unit_div
         self.observation_space = None
         # Action space:
         self.action_space = None
@@ -554,32 +554,6 @@ class World(object):
         self.trans_model = None
         pass
 
-    def Move_d(self, sp, d):
-        """
-
-        :param sp: speed to move  in mm/s
-        :param d: distance to move, either rotation in rad or distance in mm
-        :return:
-        """
-        if len(sp)==len(d):
-            if len(sp)==1:
-                pass
-            else:
-                pass
-        else:
-            print("Error input of speed and distance")
-            return False
-
-
-        t = (d * (math.pi / 180)) / sp
-        cur_t = time.time()
-        past_t = cur_t
-        while abs(past_t - cur_t) <= t:
-            self.Roomba.Move(0, sp)
-            cur_t = time.time()
-        self.Roomba.Move(0, 0)
-
-        return True
 
     def get_gridState(self,real_state=None):
         """
@@ -590,7 +564,7 @@ class World(object):
         """
         if real_state is None:
             # convert unit back to mm
-            r_state =[self.real_state[0]*self.unit_div,self.real_state[1]*self.unit_div,self.real_state[2]]
+            r_state =[self.real_state[0],self.real_state[1],self.real_state[2]]
         else:
             r_state = real_state
 
@@ -1011,46 +985,6 @@ class World(object):
             # print("Global states: ",data)
             data = json.loads(data)
             fp.close()
-
-            # steps = [data[k]['t'] for k in data.keys() if int(k)!= self.id]
-            # if steps.count(timestep)== 0:
-            #         cur_t = time.time()
-            #         init_t = cur_t
-            #         timeout = 10
-            #         while steps.count(timestep) <:
-            #             # check update each 0.5
-            #             time.sleep(0.5)
-            #             # read data again
-            #             fp = open('r_buf.json', 'r')
-            #             data= fp.read()
-            #             fp.close()
-
-            # check if all agents are synchronous at the same time step
-            # else wait 5s for data update
-            # if timestep > np.min(steps):
-            #     cur_t = time.time()
-            #     init_t = cur_t
-            #     timeout = 10
-            #     while steps.count(timestep) <len(steps):
-            #         # check update each 0.5
-            #         time.sleep(0.5)
-            #         # read data again
-            #         fp = open('r_buf.json', 'r')
-            #         data= fp.read()
-            #         fp.close()
-            #
-            #         data= json.loads(data)
-            #         steps = [data[k]['t'] for k in data.keys() if int(k) != self.id]
-            #         cur_t =time.time()
-            #         if abs(cur_t - init_t) > timeout:
-            #             break
-            #         else:
-            #             print("Waiting for other agents update data. . .")
-            #
-            # if steps.count(timestep) < len(steps):
-            #     print("Fail to track other agents")
-            #     return id, global_s, global_a, global_d, global_p
-
             for i in data.keys():
                 if int(i)== self.id:
                     # update degree
@@ -1155,15 +1089,6 @@ class World(object):
 
         # track sensor information when moving
         self.Roomba.StartQueryStream(17,52,53,7, 43, 44, 45, 46, 47, 48, 49, 50, 51)  # Start getting bumper values
-
-        # determine if s is terminal before taking action
-        # if it is terminal, don't move and return state directly
-        print("Observe Environment...")
-        old_real_state, new_real_state, r, is_terminal,_ = self.observe_Env()
-        new_grid_s = self.get_gridState(new_real_state)
-        if is_terminal:
-            return grid_s_old, real_s_old, new_grid_s, new_real_state, r, is_terminal
-
 
         # Take action if current state is not terminal
         # Rotate Roomba to certain degree

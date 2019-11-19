@@ -108,7 +108,7 @@ def actor_critic(Env,max_iteration=10,epoch=3,num_agents =2):
                                            local_r,is_terminal).tolist()
                 Env.xb.send(t, params = w_local)
                 # Env.send_states_v2(t, None, p=w_local)
-                time.sleep(4)
+                time.sleep(2)
                 while len(Env.xb.receive())<0:
                     pass
 
@@ -117,8 +117,8 @@ def actor_critic(Env,max_iteration=10,epoch=3,num_agents =2):
                       len(global_w))
                 print("global w:",global_w)
                 print("global degree ",global_d)
-                # id, _, _,_, global_d, global_w = Env.read_glob_s_v2(timestep=t,params=w_local,info= "params")
 
+                # id, _, _,_, global_d, global_w = Env.read_glob_s_v2(timestep=t,params=w_local,info= "params")
                 # old version of sending data
                 # Env.send_states(t=t, state=s_new, p=w_local)
                 # time.sleep(3)
@@ -154,33 +154,30 @@ def actor_critic(Env,max_iteration=10,epoch=3,num_agents =2):
                 if is_terminal:
                     break
 
-
             # update current real continous state
             global_s[0] = Env.real_state
             si =Env.real_state
             # sample new initial state
             a = model.sample_action(si, global_s[1:], epi=1)
-            # grid_s_old, real_s_old, grid_s_new, s_new, immediate_r, is_terminal
             _,_,new_init_grid_s, new_init_s, immediate_r, is_terminal= Env.step(a)
 
-            # show msp here
-            if Env.is_map_updated() and len(Env.obs_ls) > 0:
-                # update parameters of learning model
-                # share parameter if local map is updated
-                pass
         pass
 
     except KeyboardInterrupt:
         Env.terminate()
         print('obstacles：')
-        print(Env.obs_ls[0])
+        for o in Env.obs_ls[0]:
+            x,y,theta= Env.get_gridState((o[0],o[1],0))
+            print((x,y))
+            # print(Env.obs_ls[0])
         print('Track:')
         for i in track:
             print(i)
 
     Env.terminate()
-    print('obstacles：')
-    print(Env.obs_ls[0])
+    for o in Env.obs_ls[0]:
+        x, y, theta = Env.get_gridState((o[0], o[1], 0))
+        print((x, y))
     print('Track:')
     for i in track:
         print(i)
