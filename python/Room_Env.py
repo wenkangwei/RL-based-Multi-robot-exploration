@@ -1220,7 +1220,6 @@ class World(object):
             cur_t = time.time()
             self.xb.receive()
             dt = np.abs(cur_t - init_t)
-
             if dt <= rot_time and ((d_theta + old_real_state[2]) - new_real_state[2]) > 1e-1:
                 self.Roomba.Move(0, self.rot_sp * sign)
                 if self.Roomba.Available() > 0:
