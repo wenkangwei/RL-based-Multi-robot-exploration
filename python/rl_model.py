@@ -152,7 +152,7 @@ class actor_critic_q():
         """
         x = []
         max_dis = self.grid_size*np.max(self.map_shape)
-        max_d, min_d, mean_d = dist_agents(si,ai,s,a,max_dist)
+        max_d, min_d, mean_d = dist_agents(si,ai,s,a,max_dis)
         x.append(max_d)
         x.append(min_d)
         x.append(mean_d)
