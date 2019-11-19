@@ -1107,6 +1107,7 @@ class World(object):
                     # keep track of postion and check if at terminal state, like hitting wall or obstacle
                     old_real_state, new_real_state, r, is_terminal,data= self.observe_Env()
                     L_cnt, R_cnt, bump, DLightBump, AnalogBump = data
+                    print(old_real_state, new_real_state)
                 if ((d_theta+ old_real_state[2]) - new_real_state[2])> 1e-1 :
                     break
                 cur_t = time.time()
