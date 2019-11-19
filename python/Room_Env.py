@@ -127,16 +127,16 @@ class Xbee():
                         if "t" in data.keys():
                             t_step = data["t"]
                         if "d" in data.keys():
-                            d= data["d"]
+                            degree= data["d"]
                         if "e" in data.keys():
                             a = data["e"][0]
                             st =data["e"][1]
                             st1 = data["e"][2]
                         elif "p" in data.keys():
                             p =data["p"]
-                    print("Receive data from ",id,":", t_step,a,st,st1,p,d)
-                    self.agent_info[id]= (t_step,a,st,st1,p,d)
-                    print("Json data:",(t_step,a,st,st1,p,d))
+                    print("Receive data from ",id,":", t_step,a,st,st1,p,degree)
+                    self.agent_info[id]= (t_step,a,st,st1,p,degree)
+                    print("Json data:",(t_step,a,st,st1,p,degree))
                 self.degree = len(self.agent_info.keys())
 
         global_id = list(self.agent_info.keys())
@@ -1233,7 +1233,7 @@ class World(object):
         while np.abs(cur_t - init_t) <= rot_time+forward_time:
             cur_t = time.time()
             self.xb.receive()
-            print("data: ",self.xb.data)
+            # print("data: ",self.xb.data)
             dt = np.abs(cur_t - init_t)
             if self.Roomba.Available() > 0:
                 if dt <= rot_time and np.abs((d_theta + old_real_state[2]) - new_real_state[2]) > 1e-1:
