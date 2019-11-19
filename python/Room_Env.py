@@ -1203,7 +1203,7 @@ class World(object):
         d_theta = a[1] * (math.pi / 180.0)
         ArcLen = self.Motion.Agl2ArcLen(d_theta)
         # tolerance of time difference
-        tol = -0e-1
+        tol = -1e-1
         init_t = time.time()
         cur_t = init_t
         rot_time =tol + np.abs(ArcLen / self.rot_sp)
@@ -1221,13 +1221,12 @@ class World(object):
             cur_t = time.time()
             self.xb.receive()
             dt = np.abs(cur_t - init_t)
-            if dt <= rot_time and ((d_theta + old_real_state[2]) - new_real_state[2]) > 1e-1:
-                self.Roomba.Move(0, self.rot_sp * sign)
-                if self.Roomba.Available() > 0:
+            if self.Roomba.Available() > 0:
+                if dt <= rot_time and np.abs((d_theta + old_real_state[2]) - new_real_state[2]) > 1e-1:
+                    self.Roomba.Move(0, self.rot_sp * sign)
                     old_real_state, new_real_state, r, is_terminal, data = self.observe_Env()
 
-            else:
-                if self.Roomba.Available() > 0:
+                elif dt > rot_time and dt <=rot_time+forward_time:
                     self.Roomba.Move(self.sp, 0)
                     old_real_state, new_real_state, r, is_terminal, data = self.observe_Env()
 
