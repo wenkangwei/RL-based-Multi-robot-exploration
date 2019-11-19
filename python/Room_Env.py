@@ -70,7 +70,7 @@ class Xbee():
             self.agent_info[self.id] = (t, a, st, st1, p,self.degree)
             data= {"id":self.id,"t":t,"d":self.degree,"e":transition}
         elif params != None and transition== None:
-            params = np.round(params,2).tolist()
+            params = np.round(params,4).tolist()
             t=self.agent_info[self.id][0]
             a = self.agent_info[self.id][1]
             st = np.round(self.agent_info[self.id][2],2)
@@ -121,8 +121,9 @@ class Xbee():
                             st =data["e"][1]
                             st1 = data["e"][2]
                         elif "p" in data.keys():
-                            w = st =data["p"]
-                        self.agent_info[id]= (t_step,a,st,st1,p,d)
+
+                            p = st =data["p"]
+                        self.agent_info[id]= (t_step,a,st,st1,p,p)
                 self.degree = len(self.agent_info.keys())
 
         global_id = list(self.agent_info.keys())

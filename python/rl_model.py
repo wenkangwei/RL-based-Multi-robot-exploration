@@ -109,9 +109,9 @@ class actor_critic_q():
         :param discount:
         """
         self.input_size =input_size
-        self.w_local=np.ones(input_size,dtype=float)/input_size
-        self.w_global = np.ones(input_size,dtype=float) / input_size
-        self.theta = np.ones(input_size,dtype=float) / input_size
+        self.w_local=np.ones([1,input_size],dtype=float)/input_size
+        self.w_global = np.ones([1,input_size],dtype=float) / input_size
+        self.theta = np.ones([1,input_size],dtype=float) / input_size
         # return at t
         self.ret_t = 0.0
         # return at t+1
@@ -158,7 +158,7 @@ class actor_critic_q():
         f3 = f_grid_cnt(si, s,self.cnts)
         x.append(f3)
         x.append(1)
-        x = np.array(x, dtype=float)
+        x = np.array(x, dtype=float).reshape([1,self.input_size])
         return x
 
     def q_estimator(self,si,ai,s,a):
@@ -286,8 +286,8 @@ class actor_critic_q():
         e_sum = 0.0
         for a in self.actions:
             e_sum += np.exp(np.matmul(self.theta,np.transpose(self.get_features(si, ai, s, a))))
-        prob =e / e_sum
-
+        prob =np.round(e,3) / np.round(e_sum,3)
+        print("a:",a, "Prob:",prob)
         return prob
 
 
