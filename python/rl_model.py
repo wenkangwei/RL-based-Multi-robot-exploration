@@ -231,7 +231,7 @@ class actor_critic_q():
             print("j:",j)
             cj=  1.0/(1.0 + max(deg_i, d))
             c_sum += cj
-            self.w_global += cj*w_ls[j+1]
+            self.w_global += cj*w_ls[j]
 
         self.w_global += (1-c_sum)*w_ls[0]
 
