@@ -227,6 +227,8 @@ class actor_critic_q():
         w_ls = np.array(w_ls)
         c_sum = 0.0
         for j, d in enumerate(deg_ls):
+            print("d:",d)
+            print("j:",j)
             cj=  1.0/(1.0 + max(deg_i, d))
             c_sum += cj
             self.w_global += cj*w_ls[j+1]
@@ -287,7 +289,7 @@ class actor_critic_q():
         e_sum = 0.0
         for a in self.actions:
             e_sum += np.exp(np.matmul(self.theta,np.transpose(self.get_features(si, ai, s, a))))
-        prob =np.round(e,3) / np.round(e_sum,3)
+        prob =np.round(e /e_sum,3)
         print("a:",a, "Prob:",prob)
         return prob
 
