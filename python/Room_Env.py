@@ -1270,16 +1270,16 @@ class World(object):
                 elif dt > rot_time and dt <=rot_time+forward_time:
                     self.Roomba.Move(self.sp, 0)
                     old_real_state, new_real_state, r, is_terminal, data = self.observe_Env()
-
-            if is_terminal:
-                self.Roomba.Move(0, 0)
-                print()
-                print("===============Reach Terminal =============")
-                print('r:{:10.2f}, terminal:{}'.format(r, is_terminal))
-                # print('obstacle:', self.obs_ls[0])
-                print("===========================================")
-                print()
-                break
+                    
+                    if is_terminal:
+                        self.Roomba.Move(0, 0)
+                        print()
+                        print("===============Reach Terminal =============")
+                        print('r:{:10.2f}, terminal:{}'.format(r, is_terminal))
+                        # print('obstacle:', self.obs_ls[0])
+                        print("===========================================")
+                        print()
+                        break
 
         self.Roomba.Move(0, 0)
         # print("forward t:", np.abs(cur_t - init_t))
