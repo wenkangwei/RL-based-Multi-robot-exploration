@@ -511,7 +511,7 @@ class World(object):
 
     def spaces_init(self, world_r=20,world_c=20):
         # Initialize Grid world observation space
-        # defaule 50m * 50m. num of grids are 50*1000/grid_size
+        # defaule 20m * 20m= 20*1000mm * 20*1000mm. num of grids are 50*1000/grid_size
         r= int(world_r*1000/self.grid_size)+1
         c= int(world_c*1000/self.grid_size)+1
         self.cnt_map = np.zeros([r,c])
