@@ -123,7 +123,7 @@ class Xbee():
                         elif "p" in data.keys():
 
                             p = st =data["p"]
-                        self.agent_info[id]= (t_step,a,st,st1,p,p)
+                        self.agent_info[id]= (t_step,a,st,st1,p,d)
                 self.degree = len(self.agent_info.keys())
 
         global_id = list(self.agent_info.keys())
