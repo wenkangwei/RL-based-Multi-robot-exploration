@@ -51,7 +51,7 @@ class Xbee():
         t_step = 0
         st = [0.0, 0.0, 0.0]
         st1 = [0.0, 0.0, 0.0]
-        a = 0
+        a = [0,0]
         p = [0.0]*f_len
         self.degree = 0
         self.agent_info[id] = (t_step,a,st,st1,p,self.degree)
@@ -64,16 +64,17 @@ class Xbee():
 
         if params == None and transition!= None:
             a= transition[0]
-            st = transition[1]
-            st1 = transition[2]
+            st = np.round(transition[1],2)
+            st1 =np.round(transition[2],2)
             p= self.agent_info[self.id][4]
             self.agent_info[self.id] = (t, a, st, st1, p,self.degree)
             data= {"id":self.id,"t":t,"d":self.degree,"e":transition}
         elif params != None and transition== None:
+            params = np.round(params,2).tolist()
             t=self.agent_info[self.id][0]
             a = self.agent_info[self.id][1]
-            st = self.agent_info[self.id][2]
-            st1 = self.agent_info[self.id][3]
+            st = np.round(self.agent_info[self.id][2],2)
+            st1 = np.round(self.agent_info[self.id][3],2)
             self.agent_info[self.id] = (t, a, st, st1, params,self.degree)
             data = {"id": self.id, "t": t,"d":self.degree, "p": params}
         else:

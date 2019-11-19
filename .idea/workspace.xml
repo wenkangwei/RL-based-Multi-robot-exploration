@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f9b42f44-d5b1-448c-a67e-6d8be2fc0991" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/python/rl_model.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/rl_model.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/python/Room_Env.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/Room_Env.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/python/exploration.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/exploration.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -16,11 +17,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Room_Env.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Room_Env.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/python/Room_Env.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-688">
-              <caret line="93" column="8" selection-start-line="93" selection-start-column="8" selection-end-line="93" selection-end-column="8" />
+            <state relative-caret-position="-1400">
+              <caret line="53" column="16" selection-start-line="53" selection-start-column="16" selection-end-line="53" selection-end-column="16" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
@@ -28,11 +29,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="rl_model.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="rl_model.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/python/rl_model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="93">
-              <caret line="225" column="28" selection-start-line="225" selection-start-column="28" selection-end-line="225" selection-end-column="28" />
+            <state relative-caret-position="2719">
+              <caret line="236" lean-forward="true" selection-start-line="236" selection-end-line="236" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
@@ -81,8 +82,8 @@
       <file leaf-file-name="exploration.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/python/exploration.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="39">
-              <caret line="113" column="60" selection-start-line="113" selection-start-column="60" selection-end-line="113" selection-end-column="60" />
+            <state relative-caret-position="152">
+              <caret line="94" column="82" selection-start-line="94" selection-start-column="82" selection-end-line="94" selection-end-column="82" />
               <folding>
                 <element signature="e#0#22#0" expanded="true" />
               </folding>
@@ -151,10 +152,10 @@
         <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch_6.py" />
         <option value="$PROJECT_DIR$/python/MapAndMove.py" />
         <option value="$PROJECT_DIR$/python/comm_model.py" />
-        <option value="$PROJECT_DIR$/python/Room_Env.py" />
-        <option value="$PROJECT_DIR$/python/exploration.py" />
         <option value="$APPLICATION_CONFIG_DIR$/scratches/scratch.py" />
         <option value="$PROJECT_DIR$/python/rl_model.py" />
+        <option value="$PROJECT_DIR$/python/exploration.py" />
+        <option value="$PROJECT_DIR$/python/Room_Env.py" />
       </list>
     </option>
   </component>
@@ -666,26 +667,6 @@
     <entry file="file://$PROJECT_DIR$/python/w_buf_1.json">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
-    <entry file="file://$PROJECT_DIR$/python/exploration.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="39">
-          <caret line="113" column="60" selection-start-line="113" selection-start-column="60" selection-end-line="113" selection-end-column="60" />
-          <folding>
-            <element signature="e#0#22#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/python/Room_Env.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-688">
-          <caret line="93" column="8" selection-start-line="93" selection-start-column="8" selection-end-line="93" selection-end-column="8" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$APPLICATION_CONFIG_DIR$/scratches/buf.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="187">
@@ -715,8 +696,28 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/python/rl_model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="93">
-          <caret line="225" column="28" selection-start-line="225" selection-start-column="28" selection-end-line="225" selection-end-column="28" />
+        <state relative-caret-position="2719">
+          <caret line="236" lean-forward="true" selection-start-line="236" selection-end-line="236" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/exploration.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="152">
+          <caret line="94" column="82" selection-start-line="94" selection-start-column="82" selection-end-line="94" selection-end-column="82" />
+          <folding>
+            <element signature="e#0#22#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/python/Room_Env.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1400">
+          <caret line="53" column="16" selection-start-line="53" selection-start-column="16" selection-end-line="53" selection-end-column="16" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>

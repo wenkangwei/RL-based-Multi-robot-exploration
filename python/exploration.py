@@ -140,7 +140,7 @@ def actor_critic(Env,max_iteration=10,epoch=3,num_agents =2):
                 for i in range(len(id)):
                     print('==========================')
                     print("id's:", id[i])
-                    print("state: ", global_a[i])
+                    print("state: ", global_s[i])
                     print("action:", global_a[i])
                     print("degree: ", global_d[i])
                     print("Params: ", global_w[i])
