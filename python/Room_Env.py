@@ -1083,8 +1083,8 @@ class World(object):
         grid_s_old = self.grid_state.copy()
         real_s_old = self.real_state.copy()
 
-        old_real_state, new_real_state, r, is_terminal = 0,0,0,False
-        L_cnt, R_cnt, bump, DLightBump, AnalogBump = None, None,None,None,None
+        old_real_state, new_real_state, r, is_terminal = self.real_state,self.real_state,0.0,False
+        # L_cnt, R_cnt, bump, DLightBump, AnalogBump = None, None,None,None,None
 
 
         # track sensor information when moving
@@ -1106,8 +1106,7 @@ class World(object):
                 if self.Roomba.Available()>0:
                     # keep track of postion and check if at terminal state, like hitting wall or obstacle
                     old_real_state, new_real_state, r, is_terminal,data= self.observe_Env()
-                    L_cnt, R_cnt, bump, DLightBump, AnalogBump = data
-                    print(old_real_state, new_real_state)
+                    # L_cnt, R_cnt, bump, DLightBump, AnalogBump = data
                 if ((d_theta+ old_real_state[2]) - new_real_state[2])> 1e-1 :
                     break
                 cur_t = time.time()
@@ -1142,7 +1141,7 @@ class World(object):
                 if self.Roomba.Available()>0:
                     # keep track of postion and check if at terminal state, like hitting wall or obstacle
                     old_real_state, new_real_state, r, is_terminal,data= self.observe_Env()
-                    L_cnt, R_cnt, bump, DLightBump, AnalogBump = data
+                    # L_cnt, R_cnt, bump, DLightBump, AnalogBump = data
 
                     if is_terminal:
                         # print("AnalogBump: ", AnalogBump)
