@@ -93,7 +93,7 @@ def actor_critic_2(Env,max_iteration=10,epoch=3,num_agents =2):
                 # local reward
                 local_r= Env.get_LocalReward(immediate_r, global_s)
                 print("Imm Reward: ",immediate_r, ", total Reward:",local_r)
-                
+
                 # update local w of Q function
                 # global_s[0]: s of ith agent,  global_s[1:]: s of other agents
                 w_local = model.crtic_step(global_s[0],global_a[0], global_sn[0],

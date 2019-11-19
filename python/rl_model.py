@@ -21,7 +21,11 @@ def f_dist_change(si,ai, s,a):
             d2 =np.sqrt(np.square(x- sj[0]) + np.square(y- sj[1]))
             # dist_c_ls.append(d1-d2)
             # normalize change of distance
-            avg_dist_c += ((d1-d2)/d1)
+            if d1 != 0:
+                d_dis += ((d1-d2)/d1)
+            else:
+                d_dis = 0
+            avg_dist_c += d_dis
         avg_dist_c /= len(s)
 
     return  avg_dist_c
@@ -294,11 +298,11 @@ class actor_critic_q():
         probability p(ai|s) that agent i take action a at global states s
         """
         prob = 0.0
-        e= np.exp(np.matmul(self.theta,np.transpose(self.get_features(si, ai, s, a))))
-        e_sum = 0.0
-        for aj in self.actions:
-            e_sum += np.exp(np.matmul(self.theta, np.transpose(self.get_features(si, ai, s, aj))))
-        # print("e:",e,"e sum:",e_sum)
+        h=np.matmul(self.theta,np.transpose(self.get_features(si, ai, s, a)))
+        hs = [np.matmul(self.theta,np.transpose(self.get_features(si, aj, s, a))) for aj in self.actions]
+        e = np.exp(h-np.max(hs))
+        e_sum = np.sum(np.exp(hs- np.max(hs)))
+        print("e:",e,"e sum:",e_sum)
         prob =np.round(e/e_sum,5)
         # print("a:",a, "Prob:",prob)
         return prob
