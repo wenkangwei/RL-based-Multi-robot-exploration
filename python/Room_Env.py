@@ -121,8 +121,8 @@ class Xbee():
                             st =data["e"][1]
                             st1 = data["e"][2]
                         elif "p" in data.keys():
-
-                            p = st =data["p"]
+                            p =data["p"]
+                        print("Receive data from ",id,":", t_step,a,st,st1,p,d)
                         self.agent_info[id]= (t_step,a,st,st1,p,d)
                 self.degree = len(self.agent_info.keys())
 

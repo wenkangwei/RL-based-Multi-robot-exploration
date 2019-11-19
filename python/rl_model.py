@@ -288,9 +288,10 @@ class actor_critic_q():
         prob = 0.0
         e= np.exp(np.matmul(self.theta,np.transpose(self.get_features(si, ai, s, a))))
         e_sum = 0.0
-        for a in self.actions:
-            e_sum += np.exp(np.matmul(self.theta,np.transpose(self.get_features(si, ai, s, a))))
-        prob =np.round(e /e_sum,3)
+        for aj in self.actions:
+            e_sum += np.exp(np.matmul(self.theta,np.transpose(self.get_features(si, ai, s, aj))))
+        print("e:",e,"e sum:",e_sum)
+        prob =np.round(e/e_sum,3)
         print("a:",a, "Prob:",prob)
         return prob
 

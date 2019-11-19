@@ -69,7 +69,7 @@ def actor_critic(Env,max_iteration=10,epoch=3,num_agents =2):
             for j in range(epoch):
                 # sample current state and action pair
                 si= global_s[0]
-                a= model.sample_action(si,global_s[1:],epi=0.8)
+                a= model.sample_action(si,global_s[1:],epi=0.5)
                 print('action: ', a)
 
                 # step
@@ -81,6 +81,7 @@ def actor_critic(Env,max_iteration=10,epoch=3,num_agents =2):
 
 
                 # share (s,a) pair at time t, where s: st, a: at
+                Env.xb.receive()
 
                 # old version of sending data
                 # ws = model.w_local.tolist()
