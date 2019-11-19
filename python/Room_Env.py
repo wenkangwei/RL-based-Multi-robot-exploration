@@ -102,6 +102,7 @@ class Xbee():
 
 
     def decode(self):
+        id = None
         t_step = self.agent_info[self.id][0]
         st =self.agent_info[self.id][2]
         st1 = self.agent_info[self.id][3]
@@ -136,20 +137,23 @@ class Xbee():
                 #         elif "p" in data.keys():
                 #             p =data["p"]
                 # if packet from new agent
-                if "t" in data.keys():
-                    t_step = data["t"]
-                if "d" in data.keys():
-                    degree = data["d"]
-                if "e" in data.keys():
-                    a = data["e"][0]
-                    st = data["e"][1]
-                    st1 = data["e"][2]
-                elif "p" in data.keys():
-                    p = data["p"]
-                print("Receive data from ",id,":", t_step,a,st,st1,p,degree)
-                self.agent_info[id]= (t_step,a,st,st1,p,degree)
-                print("Json data:",(t_step,a,st,st1,p,degree))
-                self.degree = len(self.agent_info.keys())
+                if "id" in data.keys():
+                    id = data["id"]
+                if id !=None:
+                    if "t" in data.keys():
+                        t_step = data["t"]
+                    if "d" in data.keys():
+                        degree = data["d"]
+                    if "e" in data.keys():
+                        a = data["e"][0]
+                        st = data["e"][1]
+                        st1 = data["e"][2]
+                    elif "p" in data.keys():
+                        p = data["p"]
+                    print("Receive data from ",id,":", t_step,a,st,st1,p,degree)
+                    self.agent_info[id]= (t_step,a,st,st1,p,degree)
+                    print("Json data:",(t_step,a,st,st1,p,degree))
+                    self.degree = len(self.agent_info.keys())
 
         global_id = list(self.agent_info.keys())
         global_a = []
