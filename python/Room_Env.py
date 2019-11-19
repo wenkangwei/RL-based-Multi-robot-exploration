@@ -734,7 +734,7 @@ class World(object):
             # Assume Left , right bumpers are at -45 degree, 45 degree
             # Then find the average degree of object:0, -45, 45 degree
             b_avg_angle = 45*(r_bump -l_bump)
-            prob_obs /= prob_obs.sum()
+            prob_obs /= (prob_obs.sum()+1.0)
             # average angles of obstacle detected by light bumper
             # [-90, -60,-30,30,60,90] are heading angles of 6 analog light bumper
             lb_avg_agl = np.dot(prob_obs,[-90, -60,-30,30,60,90])
@@ -1270,7 +1270,7 @@ class World(object):
                 elif dt > rot_time and dt <=rot_time+forward_time:
                     self.Roomba.Move(self.sp, 0)
                     old_real_state, new_real_state, r, is_terminal, data = self.observe_Env()
-                    
+
                     if is_terminal:
                         self.Roomba.Move(0, 0)
                         print()
