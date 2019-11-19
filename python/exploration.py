@@ -139,6 +139,7 @@ def actor_critic_2(Env,max_iteration=10,epoch=3,num_agents =2):
                         # a = model.sample_action(si, global_s[1:], epi=0.9)
                         # sample new initial state
                         _, _, new_init_grid_s, new_init_s, immediate_r, is_terminal = Env.step(a)
+                        print("Sampling new state by action:", a)
                         if not is_terminal:
                             global_s[0] = Env.real_state
                             print("New init s: ", Env.real_state)
