@@ -134,7 +134,8 @@ def actor_critic_2(Env,max_iteration=10,epoch=3,num_agents =2):
                     print()
 
                 if is_terminal:
-                    for a in Env.action_space:
+                    a= Env.action_space[1]
+                    for i in range(8):
                         Env.xb.receive()
                         # a = model.sample_action(si, global_s[1:], epi=0.9)
                         # sample new initial state
