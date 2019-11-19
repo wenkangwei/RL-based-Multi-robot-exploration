@@ -135,6 +135,7 @@ class actor_critic_q():
 
         if random.random() >epi:
             prob = [self.policy_estimator(si, ai, s, []) for ai in self.actions]
+            print("Pi(a|s):", prob)
             a = self.actions[np.argmax(prob)]
             pass
         else:
@@ -303,7 +304,7 @@ class actor_critic_q():
         hs = [np.matmul(self.theta,np.transpose(self.get_features(si, aj, s, a))) for aj in self.actions]
         e = np.exp(h-np.max(hs))
         e_sum = np.sum(np.exp(hs- np.max(hs)))
-        print("e:",e,"e sum:",e_sum)
+        # print("e:",e,"e sum:",e_sum)
         prob =np.round(e/e_sum,5)
         # print("a:",a, "Prob:",prob)
         return prob

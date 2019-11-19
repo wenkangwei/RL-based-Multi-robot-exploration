@@ -61,8 +61,8 @@ def actor_critic_2(Env,max_iteration=10,epoch=3,num_agents =2):
     global_s = [[0.0,0.0,0.0] for i in range(num_agents)]
     global_s[0] = Env.real_state
     Env.update_cnt_map(global_s)
-    max_iteration =1
-    epoch =6
+    max_iteration =5
+    epoch =10
     try:
         for i in range(max_iteration):
             for j in range(epoch):
@@ -134,13 +134,14 @@ def actor_critic_2(Env,max_iteration=10,epoch=3,num_agents =2):
                     print()
 
                 if is_terminal:
-                    Env.xb.receive()
                     for a in Env.action_space:
+                        Env.xb.receive()
                         # a = model.sample_action(si, global_s[1:], epi=0.9)
                         # sample new initial state
                         _, _, new_init_grid_s, new_init_s, immediate_r, is_terminal = Env.step(a)
                         if not is_terminal:
                             global_s[0] = Env.real_state
+                            print("New init s: ", Env.real_state)
                             break
 
                     break
