@@ -61,7 +61,8 @@ def actor_critic(Env,max_iteration=10,epoch=3,num_agents =2):
     global_s = [[0.0,0.0,0.0] for i in range(num_agents)]
     global_s[0] = Env.real_state
     Env.update_cnt_map(global_s)
-
+    max_iteration =1
+    epoch =1
     try:
 
         for i in range(max_iteration):
@@ -148,6 +149,7 @@ def actor_critic(Env,max_iteration=10,epoch=3,num_agents =2):
                     print("t: ", global_t[i])
                     print("id's:", global_id[i])
                     print("state: ", global_s[i])
+                    print("Grid state:", Env.get_gridState(global_s[i]))
                     print("action:", global_a[i])
                     print("degree: ", global_d[i])
                     print("Params: ", global_w[i])
@@ -180,6 +182,8 @@ def actor_critic(Env,max_iteration=10,epoch=3,num_agents =2):
             print(i)
 
     Env.terminate()
+    print()
+    print('obstacles：')
     for o in Env.obs_ls[0]:
         x, y, theta = Env.get_gridState((o[0], o[1], 0))
         print((x, y))
