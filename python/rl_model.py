@@ -19,12 +19,11 @@ def f_dist_change(si,ai, s,a):
             x = si[0] + ai[0] * math.cos(math.radians(si[2]) - 0.5 * math.radians(ai[1]))
             y = si[1] + ai[0] * math.sin(math.radians(si[2]) - 0.5 * math.radians(ai[1]))
             d2 =np.sqrt(np.square(x- sj[0]) + np.square(y- sj[1]))
-            # dist_c_ls.append(d1-d2)
             # normalize change of distance
             if d1 != 0:
-                d_dis += ((d1-d2)/d1)
+                d_dis = ((d1-d2)/d1)
             else:
-                d_dis = 0
+                d_dis = 0.0
             avg_dist_c += d_dis
         avg_dist_c /= len(s)
 
