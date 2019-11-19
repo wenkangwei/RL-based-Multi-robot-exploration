@@ -110,7 +110,9 @@ def actor_critic(Env,max_iteration=10,epoch=3,num_agents =2):
                 time.sleep(4)
                 while len(Env.xb.receive())<0:
                     pass
+
                 id, _, _, _, global_d, global_w = Env.xb.decode()
+                print("global w:",global_w)
                 # id, _, _,_, global_d, global_w = Env.read_glob_s_v2(timestep=t,params=w_local,info= "params")
 
                 # old version of sending data

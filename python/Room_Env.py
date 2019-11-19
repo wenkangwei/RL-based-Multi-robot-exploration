@@ -92,15 +92,14 @@ class Xbee():
         return message
 
     def decode(self):
-        t_step = 0
-        st =[0.0,0.0,0.0]
-        st1 = [0.0, 0.0, 0.0]
-        a = 0
-        p =None
+        t_step = self.agent_info[self.id][0]
+        st =self.agent_info[self.id][2]
+        st1 = self.agent_info[self.id][3]
+        a = self.agent_info[self.id][1]
+        p =self.agent_info[self.id][4]
         d_ls = self.data.split("#")
         self.data=''
         for d in d_ls:
-
             if len(d)>3 and "{"==d[0] and "}"==d[-1]:
                 data = json.loads(d)
                 if "id" in data.keys():
@@ -131,7 +130,7 @@ class Xbee():
         global_sn = []
         global_p = []
         global_d = []
-
+        print("keys:",self.agent_info.keys())
         for k in self.agent_info.keys():
             global_a.append(self.agent_info[k][1])
             global_s.append(self.agent_info[k][2])
@@ -447,7 +446,7 @@ class World(object):
         self.bumper= LighBumper()
         self.degree = 0
         self.xb =Xbee(self.id,f_len=f_len)
-        
+
         time.sleep(2)
 
         pass
