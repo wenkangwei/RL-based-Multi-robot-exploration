@@ -195,6 +195,9 @@ class actor_critic_q():
         :return:
         """
         x = self.get_features(si,ai,s,a)
+        print("Features: ", x)
+        print()
+
         # update local return
         self.ret_t1 = (1 - self.beta_w)*self.ret_t + self.beta_w*r_t1
         # compute TD error

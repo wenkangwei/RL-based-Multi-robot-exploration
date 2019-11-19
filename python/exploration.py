@@ -93,7 +93,7 @@ def actor_critic(Env,max_iteration=10,epoch=3,num_agents =2):
                 # Env.send_states_v2(t,(real_s_old, a,s_new), p=None)
                 time.sleep(3)
                 # global_id, global_s, global_sn, global_a, global_d,_ = Env.read_glob_s_v2(timestep=t, transition =(real_s_old, a,s_new),info= "trans")
-                global_id, global_s, global_sn, global_a, global_d, global_w= Env.xb.decode()
+                global_t,global_id, global_s, global_sn, global_a, global_d, global_w= Env.xb.decode()
 
                 # print("Lens: ",len(global_id),len(global_s),len(global_sn),len(global_a),len(global_d),len(global_w))
                 # update visit count in map
@@ -115,7 +115,7 @@ def actor_critic(Env,max_iteration=10,epoch=3,num_agents =2):
                 while len(Env.xb.receive())<0:
                     pass
 
-                global_id, global_s, global_sn, global_a, global_d, global_w = Env.xb.decode()
+                global_t,global_id, global_s, global_sn, global_a, global_d, global_w = Env.xb.decode()
                 # print("Lens: ", len(global_id), len(global_s), len(global_sn), len(global_a), len(global_d),
                 #       len(global_w))
                 print("global w:",global_w)
@@ -145,7 +145,7 @@ def actor_critic(Env,max_iteration=10,epoch=3,num_agents =2):
                 print("Global States: ")
                 for i in range(len(global_id)):
                     print('==========================')
-                    print("t: ", t)
+                    print("t: ", global_t[i])
                     print("id's:", global_id[i])
                     print("state: ", global_s[i])
                     print("action:", global_a[i])

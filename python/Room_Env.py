@@ -152,8 +152,10 @@ class Xbee():
                         p = data["p"]
                     print("Receive data from ",id,":", t_step,a,st,st1,p,degree)
                     self.agent_info[id]= (t_step,a,st,st1,p,degree)
+                    print()
                     print("Json data:",(t_step,a,st,st1,p,degree))
                     self.degree = len(self.agent_info.keys())
+                    print()
 
         global_id = list(self.agent_info.keys())
         global_a = []
@@ -161,15 +163,17 @@ class Xbee():
         global_sn = []
         global_p = []
         global_d = []
+        global_t = []
         print("keys:",self.agent_info.keys())
         for k in self.agent_info.keys():
+            global_t.append(self.agent_info[k][0])
             global_a.append(self.agent_info[k][1])
             global_s.append(self.agent_info[k][2])
             global_sn.append(self.agent_info[k][3])
             global_p.append(self.agent_info[k][4])
             global_d.append(self.agent_info[k][5])
 
-        return global_id, global_s, global_sn, global_a, global_d, global_p
+        return global_t, global_id, global_s, global_sn, global_a, global_d, global_p
 
 
 
@@ -1262,6 +1266,7 @@ class World(object):
 
             if is_terminal:
                 self.Roomba.Move(0, 0)
+                print()
                 print("===============Reach Terminal =============")
                 print('r:{:10.2f}, terminal:{}'.format(r, is_terminal))
                 print('obstacle:', self.obs_ls[0])
@@ -1270,8 +1275,8 @@ class World(object):
                 break
 
         self.Roomba.Move(0, 0)
-        print("forward t:", np.abs(cur_t - init_t))
-        print('-----------------------------------------')
+        # print("forward t:", np.abs(cur_t - init_t))
+        # print('-----------------------------------------')
 
         # Compute new grid state after the motion
         new_grid_s = self.get_gridState(new_real_state)
