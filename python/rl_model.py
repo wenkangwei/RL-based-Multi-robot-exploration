@@ -169,7 +169,8 @@ class actor_critic_q():
         # obtain features
         x = self.get_features(si,ai,s,a)
         # linear approximator
-        q= np.dot(self.w_global, x)
+
+        q= np.matmul(self.w_global, np.transpose(x))
         return q
 
     def q_gradient(self,x):
