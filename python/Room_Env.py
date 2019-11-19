@@ -355,7 +355,14 @@ class Logger():
         file_name = os.path.join(self.dir_path, 'coverage' + ".txt")  # text file extension
         self.coverage = open(file_name, "w")  # Open a text file for storing data
 
+        file_name = os.path.join(self.dir_path, 'Bonus' + ".txt")  # text file extension
+        self.bonus = open(file_name, "w")  # Open a text file for storing data
+
         pass
+    def log_bonus_pos(self,step,bonus_pos):
+        data = json.dumps({"step": step, "bonus": bonus_pos})
+        self.obstacles.write(data + "\n")
+
     def log_trajecctory(self,step,s,a,sn,r,t):
         transition = {"step":step,'s:':s,',a':a,'sn':sn,'r':r,'terminal':t}
         data = json.dumps(transition)
@@ -376,11 +383,12 @@ class Logger():
         data = json.dumps({"step":step,"coverage":coverage})
         self.coverage.write(data+"\n")
         pass
-    def log(self,step, s,a,s_,r,t,obs,coverage):
+    def log(self,step, s,a,s_,r,t,obs,coverage,bonus_pos):
         self.log_trajecctory(step,s,a,s_,r,t)
         self.log_cum_reward(step,r)
         self.log_obstacles(step,obs)
         self.log_coverage(step,coverage)
+        log_bonus_pos(step, bonus_pos)
 
     def terminate(self):
         self.trajectory.close()
@@ -469,11 +477,20 @@ class World(object):
         self.grid_state = self.get_gridState(real_state)
         # Current actions: [d,theta1]: d distance to move forward, theta1: change of heading angle
         self.action = [0.0,0.0]
-
+        self.reward_tb = {}
+        # map coverage count reward
+        self.reward_tb["map_cnt"]= 3.0
+        # infrared from dock
+        self.reward_tb["infrared"] = 5.0
+        # bumper hitting
+        self.reward_tb["hit"] = -2.0
+        # wheel drop
+        self.reward_tb["drop"] = -3.0
+        # light bumper bump signal
+        self.reward_tb["light"] = -1.0
 
         # Initialize action space, state space
         self.spaces_init(world_w,world_h)
-
         # initialize GPIO
         self.GPIO_init()
         # Open a text file for data retrieval
@@ -663,13 +680,15 @@ class World(object):
             # received infrared signal : r = +3
             bonus_pos = self.get_gridState(np.round(self.real_state,2).tolist())
             if self.bonus_pos.count(bonus_pos)==0:
-                self.bonus_pos.append(bonus_pos)
-            r += 3.0
+                x,y= int(self.real_state[0]), int(self.real_state[1])
+                self.bonus_pos.append((x,y))
+            r += self.reward_tb["infrared"]
 
         # bump something: r =-1
-        r += -1.0 if bump & 1 != 0 or  bump & 2 != 0 else 0
+
+        r += self.reward_tb["hit"] if bump & 1 != 0 or  bump & 2 != 0 else 0
         # wheel drop: r = -2
-        r += -2.0 if bump & 8 != 0 or bump & 4 != 0 else 0
+        r += self.reward_tb["drop"] if bump & 8 != 0 or bump & 4 != 0 else 0
 
         # Detected something light bumper: 0~-1
         threshold = 100
@@ -678,7 +697,7 @@ class World(object):
         for s in AnalogBump:
             sig_sum += s if s >threshold else 0.0
         sig_sum /= len(AnalogBump)
-        r += (-1.0)*(sig_sum/self.max_strength)
+        r += self.reward_tb["light"]*(sig_sum/self.max_strength)
 
         return r
 
@@ -1081,18 +1100,22 @@ class World(object):
             self.cnt_map[grid_s[0], grid_s[1]] += 1
             cnts.append(self.cnt_map[grid_s[0], grid_s[1]])
 
-        self.coverage = num_grid - self.cnt_map.flatten().tolist().count(0)
+        self.map_coverage = num_grid - self.cnt_map.flatten().tolist().count(0)
+        print("Coverage:",self.map_coverage)
+        print("Change of coverage:",self.map_coverage-old_coverage)
 
         return cnts
 
 
     def get_LocalReward(self,immediate_r, s):
         r_cnt = 0.0
+
         for sj in s:
             grid_s = self.get_gridState(sj)
             cnt = self.cnt_map[grid_s[0], grid_s[1]]
             cnt = (cnt-1.0) if cnt >0 else 0.0
-            r_cnt = 1.0/(1.0+ (cnt))
+            r_cnt = self.reward_tb["map_cnt"]
+            r_cnt = r_cnt* 1.0/(1.0+ (cnt))
         # average coverage reward
         r_coverage = r_cnt/ len(s)
 

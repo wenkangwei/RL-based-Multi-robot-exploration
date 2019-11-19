@@ -58,7 +58,7 @@ def f_dist_obstacles(si,ai,s,a, obs_ls, max_dis):
         # f_d_obs = d_obs/float(max_dis)
         # as distance to obs -> infinity feature =0, no need to learn
         # ,otherwise it goes to -1 as distance decrease, close to obstacles
-        f_d_obs = -C / (C + d_obs)
+        f_d_obs = C / (C + d_obs)
     else:
         f_d_obs = 0.0
     return  f_d_obs
@@ -100,7 +100,6 @@ def dist_agents(si,ai,s,a,max_world_dis):
         max_dist = np.max(ls)/max_world_dis
         min_dist = np.min(ls)/max_world_dis
         mean_d = np.mean(ls)/max_world_dis
-
     return max_dist, min_dist,mean_d
 
 class actor_critic_q():
