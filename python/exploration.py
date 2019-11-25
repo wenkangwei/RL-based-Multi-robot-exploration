@@ -73,14 +73,12 @@ def actor_critic_2(Env,max_iteration=10,epoch=3,num_agents =2):
                 # sample current state and action pair
                 si= global_s[0]
                 a= model.sample_action(si,global_s[1:],epi=epi)
-                print('action: ', a)
+
 
                 # step
                 grid_s_old, real_s_old, grid_s_new, s_new, immediate_r, is_terminal = Env.step(a)
-                print("Grid state: ", grid_s_new)
-                print("real state: ", s_new)
-                print("reward: ", round(immediate_r, 3))
-                print("Terminal: ", is_terminal)
+                # print("Grid state: ", grid_s_new)
+                # print("real state: ", s_new)
 
                 # share (s,a) pair at time t, where s: st, a: at
                 Env.xb.receive()
@@ -97,7 +95,7 @@ def actor_critic_2(Env,max_iteration=10,epoch=3,num_agents =2):
 
                 # local reward
                 local_r= Env.get_LocalReward(immediate_r, global_s)
-                print("Imm Reward: ",immediate_r, ", total Reward:",local_r)
+
 
                 # update local w of Q function
                 # global_s[0]: s of ith agent,  global_s[1:]: s of other agents
@@ -120,7 +118,7 @@ def actor_critic_2(Env,max_iteration=10,epoch=3,num_agents =2):
                 # record real trajectory here
                 ##############################
                 track.append(grid_s_new)
-                Env.logger.log(t,grid_s_old, a, grid_s_new, local_r, is_terminal, Env.obs_ls,Env.map_coverage,Env.bonus_pos)
+                Env.logger.log(t,real_s_old, a, s_new, immediate_r, is_terminal, Env.obs_ls,Env.map_coverage,Env.bonus_pos)
                 ##############################
                 print()
                 print()
@@ -133,19 +131,22 @@ def actor_critic_2(Env,max_iteration=10,epoch=3,num_agents =2):
                     print("Grid state:", Env.get_gridState(global_s[i]))
                     print("action:", global_a[i])
                     print("degree: ", global_d[i])
+                    if global_id[i] == Env.id:
+                        print('action: ', a)
+                        print("Imm Reward: ", round(immediate_r, 3), ", total Reward:", local_r)
+                        print("Terminal: ", is_terminal)
                     print("Params: ", global_w[i])
                     print('==========================')
                     print()
 
                 if is_terminal:
-                    for i in range(8):
+                    for i in range(10):
                         a = random.choice(Env.action_space)
-
                         print("move away from terminal:",a)
                         Env.xb.receive()
                         # a = model.sample_action(si, global_s[1:], epi=0.9)
                         # sample new initial state
-                        _, _, new_init_grid_s, new_init_s, immediate_r, is_terminal = Env.step(a)
+                        _, _, new_init_grid_s, new_init_s, immediate_r, is_terminal = Env.step(a,reset= True)
                         print("Sampling new state by action:", a)
                         if not is_terminal:
                             global_s[0] = Env.real_state

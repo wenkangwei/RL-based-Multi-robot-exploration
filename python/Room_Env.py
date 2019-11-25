@@ -114,29 +114,6 @@ class Xbee():
         for d in d_ls:
             if len(d)>3 and "{"==d[0] and "}"==d[-1]:
                 data = json.loads(d)
-                # if "id" in data.keys():
-                #     id = data["id"]
-                #     print("Str data:",data)
-                #     if id in self.agent_info.keys():
-                #         # if packet from known agent
-                #         t_step = self.agent_info[id][0]
-                #         a = self.agent_info[id][1]
-                #         st = self.agent_info[id][2]
-                #         st1 = self.agent_info[id][3]
-                #         p = self.agent_info[id][4]
-                #     else:
-                #         # if packet from new agent
-                #         if "t" in data.keys():
-                #             t_step = data["t"]
-                #         if "d" in data.keys():
-                #             degree= data["d"]
-                #         if "e" in data.keys():
-                #             a = data["e"][0]
-                #             st =data["e"][1]
-                #             st1 = data["e"][2]
-                #         elif "p" in data.keys():
-                #             p =data["p"]
-                # if packet from new agent
                 if "id" in data.keys():
                     id = data["id"]
                 if id !=None:
@@ -153,7 +130,7 @@ class Xbee():
                     print("Receive data from ",id,":", t_step,a,st,st1,p,degree)
                     self.agent_info[id]= (t_step,a,st,st1,p,degree)
                     print()
-                    print("Json data:",(t_step,a,st,st1,p,degree))
+                    # print("Json data:",(t_step,a,st,st1,p,degree))
                     self.degree = len(self.agent_info.keys())
                     print()
 
@@ -164,7 +141,7 @@ class Xbee():
         global_p = []
         global_d = []
         global_t = []
-        print("keys:",self.agent_info.keys())
+        # print("keys:",self.agent_info.keys())
         for k in self.agent_info.keys():
             global_t.append(self.agent_info[k][0])
             global_a.append(self.agent_info[k][1])
@@ -481,15 +458,16 @@ class World(object):
         self.action = [0.0,0.0]
         self.reward_tb = {}
         # map coverage count reward
-        self.reward_tb["map_cnt"]= 1.0
+        self.reward_tb["map_cnt"]= 2.0
         # infrared from dock
-        self.reward_tb["infrared"] = 5.0
+        self.reward_tb["infrared"] = 10.0
         # bumper hitting
         self.reward_tb["hit"] = -2.0
         # wheel drop
         self.reward_tb["drop"] = -5.0
         # light bumper bump signal
         self.reward_tb["light"] = -1.0
+        self.reward_tb["d_agents"] = -2.0
 
         # Initialize action space, state space
         self.spaces_init(world_w,world_h)
@@ -631,7 +609,7 @@ class World(object):
         grid_state = [0,0,0]
         # assume orignal point is the center of the starting piece
         for i in range(2):
-            if real_state[i] < (self.grid_size)/2.0:
+            if np.abs(real_state[i]) < (self.grid_size)/2.0:
                 grid_state[i] =0
             else:
                 # tol = round(self.grid_size/10.0, 2) #tolerance of floating point number
@@ -685,10 +663,11 @@ class World(object):
             bonus_pos = (int(s[0]),int(s[1]))
             if self.bonus_pos.count(bonus_pos)==0:
                 self.bonus_pos.append(bonus_pos)
+        else:
+            # bump something: r =-1
+            r += self.reward_tb["hit"] if bump & 1 != 0 or  bump & 2 != 0 else 0
 
 
-        # bump something: r =-1
-        r += self.reward_tb["hit"] if bump & 1 != 0 or  bump & 2 != 0 else 0
         # wheel drop: r = -2
         r += self.reward_tb["drop"] if bump & 8 != 0 or bump & 4 != 0 else 0
 
@@ -1107,18 +1086,22 @@ class World(object):
 
 
     def get_LocalReward(self,immediate_r, s):
-        r_cnt = 0.0
-
+        r = 0.0
+        si = self.real_state
+        d_agent= []
+        cnt = 0
         for sj in s:
-            grid_s = self.get_gridState(sj)
-            cnt = self.cnt_map[grid_s[0], grid_s[1]]
-            cnt = (cnt-1.0) if cnt >0 else 0.0
-            r_cnt = self.reward_tb["map_cnt"]
-            r_cnt = r_cnt* 1.0/(1.0+ (cnt))
-        # average coverage reward
-        r_coverage = r_cnt/ len(s)
+            d = np.sqrt(np.square(si[0] - sj[0]) + np.square(si[1] - sj[1]))
+            d_agent.append(d)
+        # reward/ penalty of getting close to other agents
+        if np.min(d_agent)//self.grid_size <= 1:
+            r += self.reward_tb["d_agents"]
 
-        r = immediate_r + r_coverage
+        # bonus for visiting new area
+        grid_s = self.get_gridState(si)
+        cnt = self.cnt_map[grid_s[0], grid_s[1]]
+        r_cnt = self.reward_tb["map_cnt"]* 1.0/(1.0+ (cnt))
+        r += (immediate_r + r_cnt)
         return r
 
     # def step(self,a):
