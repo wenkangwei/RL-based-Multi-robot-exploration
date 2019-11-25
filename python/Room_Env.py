@@ -660,7 +660,7 @@ class World(object):
             # received infrared signal : r = +5
             r += self.reward_tb["infrared"]
             s= self.real_state
-            bonus_pos = (int(s[0]),int(s[1]))
+            bonus_pos = (int(s[0]//10*10),int(s[1]//10*10))
             if self.bonus_pos.count(bonus_pos)==0:
                 self.bonus_pos.append(bonus_pos)
         else:
