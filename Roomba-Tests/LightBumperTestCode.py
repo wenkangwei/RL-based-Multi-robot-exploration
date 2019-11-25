@@ -50,7 +50,7 @@ if Roomba.Available() > 0: # If anything is in the Roomba receive buffer
 print(" ROOMBA Setup Complete")
 time1 = time.time()
 # Main Code #
-Roomba.StartQueryStream(45,7,17,52,53) #Begins querying for the light bumpers, regular bumpers, and IR sensors
+Roomba.StartQueryStream(45,7,17,52,53,9,10,11,12) #Begins querying for the light bumpers, regular bumpers, and IR sensors
 while True:	
 	try:
 		
