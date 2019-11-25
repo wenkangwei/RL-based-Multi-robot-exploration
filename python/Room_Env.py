@@ -1249,7 +1249,7 @@ class World(object):
     #
 
 
-    def step(self,a):
+    def step(self,a,reset = False):
         """
                Move robot to expected position and track the current position and reward
                :param a: action of Roomba. It is expected to contain rotation angles and moving distance
@@ -1292,7 +1292,7 @@ class World(object):
                     self.Roomba.Move(self.sp, 0)
                     old_real_state, new_real_state, r, is_terminal, data = self.observe_Env()
 
-                    if is_terminal:
+                    if is_terminal and not reset:
                         self.Roomba.Move(0, 0)
                         print()
                         print("===============Reach Terminal =============")
