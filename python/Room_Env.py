@@ -340,9 +340,11 @@ class LighBumper():
 
 
 class Logger():
-    def __init__(self, file_name_input='Trajectory'):
+    def __init__(self, id):
         self.r =0.0
-        self.dir_path = '../Data/'  # Directory path to save file
+        self.dir_path = '../Data/Roomba_'  # Directory path to save file
+        self.dir_path += str(id)+"/"
+
         file_name = os.path.join(self.dir_path, 'Trajectory' + ".txt")  # text file extension
         self.trajectory = open(file_name, "w")  # Open a text file for storing data
 
@@ -361,7 +363,7 @@ class Logger():
         pass
     def log_bonus_pos(self,step,bonus_pos):
         data = json.dumps({"step": step, "bonus": bonus_pos})
-        self.obstacles.write(data + "\n")
+        self.bonus.write(data + "\n")
 
     def log_trajecctory(self,step,s,a,sn,r,t):
         transition = {"step":step,'s:':s,',a':a,'sn':sn,'r':r,'terminal':t}
@@ -479,13 +481,13 @@ class World(object):
         self.action = [0.0,0.0]
         self.reward_tb = {}
         # map coverage count reward
-        self.reward_tb["map_cnt"]= 3.0
+        self.reward_tb["map_cnt"]= 1.0
         # infrared from dock
         self.reward_tb["infrared"] = 5.0
         # bumper hitting
         self.reward_tb["hit"] = -2.0
         # wheel drop
-        self.reward_tb["drop"] = -3.0
+        self.reward_tb["drop"] = -5.0
         # light bumper bump signal
         self.reward_tb["light"] = -1.0
 
@@ -494,7 +496,7 @@ class World(object):
         # initialize GPIO
         self.GPIO_init()
         # Open a text file for data retrieval
-        self.logger =Logger()
+        self.logger =Logger(self.id)
         # Start achieving data
         self.start_time = time.time()
         [left_start, right_start] = self.Roomba.Query(43, 44)
@@ -678,21 +680,19 @@ class World(object):
         ir_r = Infrared[2]
         if ir_om or ir_l or ir_r:
             # received infrared signal : r = +3
-            bonus_pos = self.get_gridState(np.round(self.real_state,2).tolist())
+            s= self.real_state
+            bonus_pos = (int(s[0]),int(s[1]))
             if self.bonus_pos.count(bonus_pos)==0:
-                x,y= int(self.real_state[0]), int(self.real_state[1])
-                self.bonus_pos.append((x,y))
+                self.bonus_pos.append(bonus_pos)
             r += self.reward_tb["infrared"]
 
         # bump something: r =-1
-
         r += self.reward_tb["hit"] if bump & 1 != 0 or  bump & 2 != 0 else 0
         # wheel drop: r = -2
         r += self.reward_tb["drop"] if bump & 8 != 0 or bump & 4 != 0 else 0
 
         # Detected something light bumper: 0~-1
-        threshold = 100
-        a= 1 if threshold>100 else 0
+        threshold = 200
         sig_sum = 0.0
         for s in AnalogBump:
             sig_sum += s if s >threshold else 0.0
@@ -768,8 +768,6 @@ class World(object):
                 s= (x,y)
                 if obstacles.count(s) == 0:
                     obstacles.append(s)
-                # s = self.get_gridState(real_state=[x, y, th])
-                # obstacles.append((s[0], s[1]))
 
                 th = self.Motion.theta +  b_avg_angle
                 x = self.Motion.x + d_obs * math.cos(th)
