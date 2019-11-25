@@ -457,8 +457,8 @@ class World(object):
         # maximum light bumper signal strength
         self.max_strength =3000.0
         # moving speed 100mm/s, rotate 50mm/s
-        self.sp = 90
-        self.rot_sp = 50
+        self.sp = 120
+        self.rot_sp = 80
         # forward distance
         self.fd =int( self.grid_size*self.unit_div*1.5)
 
