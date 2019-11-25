@@ -19,8 +19,8 @@
       <file leaf-file-name="Room_Env.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/python/Room_Env.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="146">
-              <caret line="662" column="57" selection-start-line="662" selection-start-column="57" selection-end-line="662" selection-end-column="57" />
+            <state relative-caret-position="308">
+              <caret line="729" column="22" lean-forward="true" selection-start-line="729" selection-start-column="22" selection-end-line="729" selection-end-column="22" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
@@ -123,7 +123,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>policy_estimator</find>
       <find>d_dis</find>
       <find>self.trans</find>
       <find>get_fea</find>
@@ -153,6 +152,7 @@
       <find>get_Loca</find>
       <find>self.reward_tb[&quot;light&quot;]</find>
       <find>bonus</find>
+      <find>check</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -762,8 +762,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/python/Room_Env.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="146">
-          <caret line="662" column="57" selection-start-line="662" selection-start-column="57" selection-end-line="662" selection-end-column="57" />
+        <state relative-caret-position="308">
+          <caret line="729" column="22" lean-forward="true" selection-start-line="729" selection-start-column="22" selection-end-line="729" selection-end-column="22" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>

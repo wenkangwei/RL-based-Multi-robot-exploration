@@ -682,7 +682,7 @@ class World(object):
         return r
 
 
-    def check_terminal(self,bump,DLightBump, AnalogBump):
+    def check_terminal(self,bump,DLightBump, AnalogBump, IR):
         """
         Strategy to determine if current state is terminal
         Since strength of light bumper signal is affected by both the distance to object and the size of object
@@ -709,6 +709,10 @@ class World(object):
         d_obs = 500.0
         threshold = d_obs/self.max_strength
         obstacles = []
+        Infra_Omi, Infra_L, Infra_R =IR
+        goal =False
+        if Infra_Omi!=0 or Infra_L!=0 or Infra_R!= 0:
+            goal = True
 
         L, FL, CL, CR, FR, R = AnalogBump
         # using analog light bumper
@@ -719,14 +723,19 @@ class World(object):
             strength[i] = 1 if strength[i] >=threshold else 0
 
         cnt = strength.sum()
-        # print('bump: {0:0>8b}:'.format(bump))
+        if goal:
+            terminal =True
+            x = int(self.Motion.x +d_obs)
+            y = int(self.Motion.y)
+            s = (x, y)
+            obstacles.append(s)
+
         if bump != 0 or cnt >=1:
             # May need reset the position of roomba to previous position using  grid world position (center of last grid)
             # since roomba may drift after hitting obstacle and the data will be incorrect
             terminal=True
             # stop immediately
             self.Roomba.Move(0,0)
-
             #-------------determine position of obstacles-------------
             l_bump = 1 if bump&2 !=0 else 0
             r_bump = 1 if bump& 1 !=0 else 0
@@ -800,7 +809,7 @@ class World(object):
 
         if mode != 'e':
             # Check if current state is terminal
-            terminal,obs = self.check_terminal(bump,DLightBump, AnalogBump)
+            terminal,obs = self.check_terminal(bump,DLightBump, AnalogBump,(Infra_Omi, Infra_L, Infra_R))
             # update list of obstacles
             # maximum count for determining if the obstacle 100% exists
             max_cnt =5.0
