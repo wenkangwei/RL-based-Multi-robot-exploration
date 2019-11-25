@@ -61,7 +61,7 @@ while True:
 			#[light_bumper,bumper,l_cliff,fl_cliff,fr_cliff,r_cliff,strl_cliff,strfl_cliff,strfr_cliff,strr_cliff] = Roomba.Query(45,7,9,10,11,12,28,29,30,31)
 			#print ("Cliffs:{0}{1}{2}{3}".format(l_cliff,fl_cliff,fr_cliff,r_cliff))
 		if Roomba.Available()>0:
-			[light_bumper,bumper,Omni_IR,left_Omni,right_Omni]=Roomba.ReadQueryStream(45,7,17,52,53)
+			[light_bumper,bumper,Omni_IR,left_Omni,right_Omni,C_L,C_FL,C_R,C_FR]=Roomba.ReadQueryStream(45,7,17,52,53,9,10,11,12)
 			
 		time2 = time.time() #Sets up timer for data return
 		if time2-time1 >.5: #Timer returns data every .5 seconds
@@ -70,6 +70,8 @@ while True:
 			print ("Omni IR:{0}".format(Omni_IR)) #Prints omni IR sensor output
 			print ("left_Omni:{0}".format(left_Omni)) #Prints left IR sensor output
 			print ("right_Omni:{0}".format(right_Omni)) #Prints right IR sensor output
+			print("Cliff:{0},{0},{0},{0}".format(C_L, C_FL, C_R, C_FR))  # Prints right IR sensor output
+
 			time1 = time1+.5 #Makes time1 catch up with time 2, resetting the timer
 	except KeyboardInterrupt: #Allows for input of "Ctrl+c" to end code without error
 		break
