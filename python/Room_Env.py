@@ -679,12 +679,13 @@ class World(object):
         ir_l = Infrared[1]
         ir_r = Infrared[2]
         if ir_om or ir_l or ir_r:
-            # received infrared signal : r = +3
+            # received infrared signal : r = +5
+            r += self.reward_tb["infrared"]
             s= self.real_state
             bonus_pos = (int(s[0]),int(s[1]))
             if self.bonus_pos.count(bonus_pos)==0:
                 self.bonus_pos.append(bonus_pos)
-            r += self.reward_tb["infrared"]
+
 
         # bump something: r =-1
         r += self.reward_tb["hit"] if bump & 1 != 0 or  bump & 2 != 0 else 0
