@@ -141,12 +141,13 @@ def actor_critic_2(Env,max_iteration=10,epoch=3,num_agents =2):
 
                 if is_terminal:
                     for i in range(10):
-                        a = random.choice(Env.action_space)
+                        # a = random.choice(Env.action_space)
+                        a = Env.action_space[2]
                         print("move away from terminal:",a)
                         Env.xb.receive()
                         # a = model.sample_action(si, global_s[1:], epi=0.9)
                         # sample new initial state
-                        _, _, new_init_grid_s, new_init_s, immediate_r, is_terminal = Env.step(a,reset= True)
+                        _, _, new_init_grid_s, new_init_s, immediate_r, is_terminal = Env.step(a)
                         print("Sampling new state by action:", a)
                         if not is_terminal:
                             global_s[0] = Env.real_state

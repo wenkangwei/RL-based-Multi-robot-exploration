@@ -710,20 +710,15 @@ class World(object):
         threshold = d_obs/self.max_strength
         obstacles = []
         Infra_Omi, Infra_L, Infra_R =IR
-        goal =False
-        if Infra_Omi!=0 or Infra_L!=0 or Infra_R!= 0:
-            goal = True
 
         L, FL, CL, CR, FR, R = AnalogBump
-        # using analog light bumper
         prob_obs =np.array([L, FL, CL, CR, FR, R]).astype(float)
-        # prob_obs = np.convolve(prob_obs, (0.1,0.8,0.1))[1:-2]
         strength = prob_obs/self.max_strength  # maximum signal strength light bumper can receive
         for i in range(len(strength)):
             strength[i] = 1 if strength[i] >=threshold else 0
 
         cnt = strength.sum()
-        if goal:
+        if Infra_Omi!=0 or Infra_L!=0 or Infra_R!= 0:
             terminal =True
             x = int(self.Motion.x +d_obs)
             y = int(self.Motion.y)
@@ -731,8 +726,6 @@ class World(object):
             obstacles.append(s)
 
         if bump != 0 or cnt >=1:
-            # May need reset the position of roomba to previous position using  grid world position (center of last grid)
-            # since roomba may drift after hitting obstacle and the data will be incorrect
             terminal=True
             # stop immediately
             self.Roomba.Move(0,0)
@@ -767,9 +760,6 @@ class World(object):
                 if obstacles.count(s) ==0:
                     obstacles.append(s)
 
-                # convert real continuous state to discrete grid world state
-                # s = self.get_gridState(real_state=[x, y, th])
-                # obstacles.append((s[0],s[1]))
             else:
                 # if there is 1 obstacle
                 alg = (b_avg_angle+lb_avg_agl)/2.0
@@ -1285,7 +1275,7 @@ class World(object):
                     self.Roomba.Move(self.sp, 0)
                     old_real_state, new_real_state, r, is_terminal, data = self.observe_Env()
 
-                    if is_terminal and not reset:
+                    if is_terminal:
                         self.Roomba.Move(0, 0)
                         print()
                         print("===============Reach Terminal =============")
