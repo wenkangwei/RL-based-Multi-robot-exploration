@@ -139,6 +139,7 @@ def actor_critic_2(Env,max_iteration=10,epoch=3,num_agents =2):
 
                 if is_terminal:
                     a= Env.action_space[-1]
+                    print("move away from terminal:",a)
                     for i in range(8):
                         Env.xb.receive()
                         # a = model.sample_action(si, global_s[1:], epi=0.9)
