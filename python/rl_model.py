@@ -134,6 +134,7 @@ class actor_critic_q():
 
         if random.random() >epi:
             prob = [self.policy_estimator(si, ai, s, []) for ai in self.actions]
+            prob = np.divide(prob,np.sum(prob))
             print("Pi(a|s):", prob)
             # a = self.actions[np.argmax(prob)]
             ls = [i for i in range(len(self.actions))]
