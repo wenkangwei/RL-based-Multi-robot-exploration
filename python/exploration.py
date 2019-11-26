@@ -63,7 +63,7 @@ def actor_critic_2(Env,max_iteration=10,epoch=3,num_agents =2):
     w_global = []
     theta = []
     Env.update_cnt_map(global_s)
-    max_iteration =5
+    max_iteration =10
     epoch =10
     epi = 1
     try:
