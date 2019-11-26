@@ -343,6 +343,8 @@ class Logger():
         pass
 
     def log_Q(self,step,w,theta):
+        w= list(w)
+        theta = list(theta)
         data = json.dumps({"step": step, "w": w,"theta":theta})
         self.q_params.write(data + "\n")
 
