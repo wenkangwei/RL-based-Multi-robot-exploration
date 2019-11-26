@@ -116,7 +116,7 @@ def actor_critic_2(Env,max_iteration=10,epoch=3,num_agents =2):
 
                 # update policy
                 theta = model.actor_step(global_s[0],global_a[0], global_s[1:], global_a[1:])
-                t += 1
+
                 # record real trajectory here
                 ##############################
                 track.append(grid_s_new)
@@ -140,6 +140,8 @@ def actor_critic_2(Env,max_iteration=10,epoch=3,num_agents =2):
                     print("Params: ", global_w[i])
                     print('==========================')
                     print()
+
+                t += 1
 
                 if is_terminal:
                     for i in range(10):

@@ -75,8 +75,8 @@
       <file leaf-file-name="exploration.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/python/exploration.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="17">
-              <caret line="65" column="21" selection-start-line="65" selection-start-column="21" selection-end-line="65" selection-end-column="21" />
+            <state relative-caret-position="-1118">
+              <caret line="59" column="5" selection-start-line="59" selection-start-column="4" selection-end-line="59" selection-end-column="5" />
               <folding>
                 <element signature="e#0#22#0" expanded="true" />
               </folding>
@@ -95,7 +95,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>prob_obs</find>
       <find>map_coverage</find>
       <find>self.coverage</find>
       <find>self.map_coverage</find>
@@ -125,6 +124,7 @@
       <find>sam</find>
       <find>log</find>
       <find>reward_tb</find>
+      <find>t</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -425,8 +425,13 @@
           <line>68</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/python/exploration.py</url>
+          <line>70</line>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
       </breakpoints>
-      <option name="time" value="2" />
+      <option name="time" value="3" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
@@ -737,8 +742,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/python/exploration.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="17">
-          <caret line="65" column="21" selection-start-line="65" selection-start-column="21" selection-end-line="65" selection-end-column="21" />
+        <state relative-caret-position="-1118">
+          <caret line="59" column="5" selection-start-line="59" selection-start-column="4" selection-end-line="59" selection-end-column="5" />
           <folding>
             <element signature="e#0#22#0" expanded="true" />
           </folding>
