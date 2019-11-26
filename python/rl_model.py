@@ -136,7 +136,8 @@ class actor_critic_q():
             prob = [self.policy_estimator(si, ai, s, []) for ai in self.actions]
             print("Pi(a|s):", prob)
             # a = self.actions[np.argmax(prob)]
-            ind= np.random.choice(range(len(self.actions)), p=prob)
+            ls = [i for i in range(len(self.actions))]
+            ind= np.random.choice(ls, p=prob)
             a = self.actions[ind]
             pass
         else:
@@ -309,7 +310,7 @@ class actor_critic_q():
         # print("e:",e,"e sum:",e_sum)
         prob =np.round(e/e_sum,5)
         # print("a:",a, "Prob:",prob)
-        return prob
+        return prob[0,:]
 
 
 
