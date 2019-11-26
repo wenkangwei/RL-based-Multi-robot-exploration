@@ -470,11 +470,12 @@ class World(object):
         self.action = [0.0,0.0]
         self.reward_tb = {}
         # map coverage count reward
+        # old:  infrared: +10,  hit:-2
         self.reward_tb["map_cnt"]= 2.0
         # infrared from dock
-        self.reward_tb["infrared"] = 10.0
+        self.reward_tb["infrared"] = 5.0
         # bumper hitting
-        self.reward_tb["hit"] = -2.0
+        self.reward_tb["hit"] = -3.0
         # wheel drop
         self.reward_tb["drop"] = -5.0
         # light bumper bump signal
