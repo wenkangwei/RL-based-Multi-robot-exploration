@@ -310,7 +310,7 @@ class actor_critic_q():
         # print("e:",e,"e sum:",e_sum)
         prob =np.round(e/e_sum,5)
         # print("a:",a, "Prob:",prob)
-        return prob[0,:]
+        return prob[0]
 
 
 
