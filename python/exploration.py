@@ -120,7 +120,7 @@ def actor_critic_2(Env,max_iteration=10,epoch=3,num_agents =2):
                 # record real trajectory here
                 ##############################
                 track.append(grid_s_new)
-                Env.logger.log(t,real_s_old, a, s_new, immediate_r, is_terminal, Env.obs_ls,Env.map_coverage,Env.bonus_pos,w_global, theta)
+                Env.logger.log(t,real_s_old, a, s_new, immediate_r, is_terminal, Env.obs_ls,Env.map_coverage,Env.bonus_pos,w_global[0,:], theta[0,:])
                 ##############################
                 print()
                 print()
