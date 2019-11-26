@@ -135,11 +135,14 @@ class actor_critic_q():
         if random.random() >epi:
             prob = [self.policy_estimator(si, ai, s, []) for ai in self.actions]
             print("Pi(a|s):", prob)
-            a = self.actions[np.argmax(prob)]
+            # a = self.actions[np.argmax(prob)]
+            ind= np.random.choice(range(len(self.actions)), p=prob)
+            a = self.actions[ind]
             pass
         else:
             a = random.choice(self.actions)
         return  a
+
     def get_features(self, si, ai, s, a):
         """
         This is a function to update feature x(s,a) used for approximation in RL
