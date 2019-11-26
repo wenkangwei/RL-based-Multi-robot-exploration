@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="f9b42f44-d5b1-448c-a67e-6d8be2fc0991" name="Default" comment="" />
+    <list default="true" id="f9b42f44-d5b1-448c-a67e-6d8be2fc0991" name="Default" comment="">
+      <change beforePath="$PROJECT_DIR$/Data/Roomba_4/Bonus.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Data/Roomba_3/Bonus.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Data/Roomba_4/Trajectory.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Data/Roomba_3/Trajectory.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Data/Roomba_4/coverage.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Data/Roomba_3/coverage.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Data/Roomba_4/cum_reward.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Data/Roomba_3/cum_reward.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Data/Roomba_4/obstacles.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Data/Roomba_3/obstacles.txt" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -38,13 +44,18 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="LightBumperTestCode.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="LightBumperTestCode.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Roomba-Tests/LightBumperTestCode.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="-187">
               <caret line="52" column="48" selection-start-line="52" selection-start-column="48" selection-end-line="52" selection-end-column="48" />
             </state>
           </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Bonus.txt" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Data/Roomba_3/Bonus.txt">
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
       <file leaf-file-name="RoombaCI_lib.py" pinned="false" current-in-tab="false">
@@ -85,15 +96,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="102">
               <caret line="3" column="18" selection-start-line="3" selection-start-column="13" selection-end-line="3" selection-end-column="18" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="coverage.txt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Data/Roomba_2/coverage.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="119">
-              <caret line="7" column="21" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="21" />
             </state>
           </provider>
         </entry>
@@ -228,6 +230,12 @@
               <item name="RL-based-multi-robot-exploration" type="b2602c69:ProjectViewProjectNode" />
               <item name="RL-based-multi-robot-exploration" type="462c0819:PsiDirectoryNode" />
               <item name="Data" type="462c0819:PsiDirectoryNode" />
+              <item name="Roomba_3" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="RL-based-multi-robot-exploration" type="b2602c69:ProjectViewProjectNode" />
+              <item name="RL-based-multi-robot-exploration" type="462c0819:PsiDirectoryNode" />
+              <item name="Data" type="462c0819:PsiDirectoryNode" />
               <item name="Roomba_5" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -263,6 +271,7 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\MyProjects\ECE8040\RL-based-multi-robot-exploration\Data\Roomba_4" />
       <recent name="D:\MyProjects\ECE8040\RL-based-multi-robot-exploration\Data\Roomba_6" />
       <recent name="D:\MyProjects\ECE8040\RL-based-multi-robot-exploration\Data\Roomba_5" />
     </key>
@@ -402,7 +411,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
-    <editor active="true" />
     <layout>
       <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.49912128" visible="true" weight="0.14474554" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -451,13 +459,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python35/Lib/json/__init__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-381">
-          <caret line="181" column="4" selection-start-line="181" selection-start-column="4" selection-end-line="181" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/.PyCharmCE2018.1/system/python_stubs/-1476723290/math.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
@@ -777,6 +778,9 @@
           <caret line="52" column="48" selection-start-line="52" selection-start-column="48" selection-end-line="52" selection-end-column="48" />
         </state>
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Data/Roomba_3/Bonus.txt">
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
   </component>
 </project>
