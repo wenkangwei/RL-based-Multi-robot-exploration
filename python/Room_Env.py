@@ -463,7 +463,7 @@ class World(object):
             real_state= [0.0,0.0,0.0]
         self.real_state = real_state
 
-        self.angle_set = [0, 45, 90, 135, 180, -45, -90, -135, -180]
+        self.angle_set = [0, 45, 90, 135, 180, -45, -90, -135]
         #Initial position discrete state in grid world
         self.grid_state = self.get_gridState(real_state)
         # Current actions: [d,theta1]: d distance to move forward, theta1: change of heading angle
