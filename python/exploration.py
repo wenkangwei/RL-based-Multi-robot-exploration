@@ -110,7 +110,7 @@ def actor_critic_2(Env,max_iteration=10,epoch=3,num_agents =2):
                 global_t,global_id, global_s, global_sn, global_a, global_d, global_w = Env.xb.decode()
                 print("global w:",global_w)
                 # update global w
-                model.update_w_gbl(global_d[0], global_d[1:], global_w)
+                w_global= model.update_w_gbl(global_d[0], global_d[1:], global_w)
 
                 # update policy
                 model.actor_step(global_s[0],global_a[0], global_s[1:], global_a[1:])
@@ -118,7 +118,7 @@ def actor_critic_2(Env,max_iteration=10,epoch=3,num_agents =2):
                 # record real trajectory here
                 ##############################
                 track.append(grid_s_new)
-                Env.logger.log(t,real_s_old, a, s_new, immediate_r, is_terminal, Env.obs_ls,Env.map_coverage,Env.bonus_pos)
+                Env.logger.log(t,real_s_old, a, s_new, immediate_r, is_terminal, Env.obs_ls,Env.map_coverage,Env.bonus_pos,w_global)
                 ##############################
                 print()
                 print()

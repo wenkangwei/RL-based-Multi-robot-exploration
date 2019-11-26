@@ -337,7 +337,15 @@ class Logger():
         file_name = os.path.join(self.dir_path, 'Bonus' + ".txt")  # text file extension
         self.bonus = open(file_name, "w")  # Open a text file for storing data
 
+        file_name = os.path.join(self.dir_path, 'Q_params' + ".txt")  # text file extension
+        self.q_params = open(file_name, "w")  # Open a text file for storing data
+
         pass
+
+    def log_Q(self,step,w):
+        data = json.dumps({"step": step, "w": w})
+        self.q_params.write(data + "\n")
+
     def log_bonus_pos(self,step,bonus_pos):
         data = json.dumps({"step": step, "bonus": bonus_pos})
         self.bonus.write(data + "\n")
@@ -362,9 +370,11 @@ class Logger():
         data = json.dumps({"step":step,"coverage":coverage})
         self.coverage.write(data+"\n")
         pass
-    def log(self,step, s,a,s_,r,t,obs,coverage,bonus_pos):
+    def log(self,step, s,a,s_,r,t,obs,coverage,bonus_pos,w):
         self.log_trajecctory(step,s,a,s_,r,t)
         self.log_cum_reward(step,r)
+        self.log_Q(step, w)
+
         self.log_obstacles(step,obs)
         self.log_coverage(step,coverage)
         self.log_bonus_pos(step, bonus_pos)
