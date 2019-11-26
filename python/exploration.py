@@ -60,6 +60,8 @@ def actor_critic_2(Env,max_iteration=10,epoch=3,num_agents =2):
     t = 0
     global_s = [[0.0,0.0,0.0] for i in range(num_agents)]
     global_s[0] = Env.real_state
+    w_global = []
+    theta = []
     Env.update_cnt_map(global_s)
     max_iteration =5
     epoch =10
@@ -113,12 +115,12 @@ def actor_critic_2(Env,max_iteration=10,epoch=3,num_agents =2):
                 w_global= model.update_w_gbl(global_d[0], global_d[1:], global_w)
 
                 # update policy
-                model.actor_step(global_s[0],global_a[0], global_s[1:], global_a[1:])
+                theta = model.actor_step(global_s[0],global_a[0], global_s[1:], global_a[1:])
                 t += 1
                 # record real trajectory here
                 ##############################
                 track.append(grid_s_new)
-                Env.logger.log(t,real_s_old, a, s_new, immediate_r, is_terminal, Env.obs_ls,Env.map_coverage,Env.bonus_pos,w_global)
+                Env.logger.log(t,real_s_old, a, s_new, immediate_r, is_terminal, Env.obs_ls,Env.map_coverage,Env.bonus_pos,w_global, theta)
                 ##############################
                 print()
                 print()
@@ -178,12 +180,12 @@ def actor_critic_2(Env,max_iteration=10,epoch=3,num_agents =2):
     print('Track:')
     for i in track:
         print(i)
+
     pass
 
-
-
-
-
+    print("w : ", w_global)
+    print("theta:", theta)
+    print()
 
 
 def actor_critic(Env,max_iteration=10,epoch=3,num_agents =2):

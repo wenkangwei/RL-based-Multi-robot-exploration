@@ -342,8 +342,8 @@ class Logger():
 
         pass
 
-    def log_Q(self,step,w):
-        data = json.dumps({"step": step, "w": w})
+    def log_Q(self,step,w,theta):
+        data = json.dumps({"step": step, "w": w,"theta":theta})
         self.q_params.write(data + "\n")
 
     def log_bonus_pos(self,step,bonus_pos):
@@ -370,10 +370,10 @@ class Logger():
         data = json.dumps({"step":step,"coverage":coverage})
         self.coverage.write(data+"\n")
         pass
-    def log(self,step, s,a,s_,r,t,obs,coverage,bonus_pos,w):
+    def log(self,step, s,a,s_,r,t,obs,coverage,bonus_pos,w,theta):
         self.log_trajecctory(step,s,a,s_,r,t)
         self.log_cum_reward(step,r)
-        self.log_Q(step, w)
+        self.log_Q(step, w,theta)
 
         self.log_obstacles(step,obs)
         self.log_coverage(step,coverage)

@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f9b42f44-d5b1-448c-a67e-6d8be2fc0991" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/Data/Roomba_3/Q_params.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/python/Room_Env.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/Room_Env.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/python/exploration.py" beforeDir="false" afterPath="$PROJECT_DIR$/python/exploration.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -20,8 +20,8 @@
       <file leaf-file-name="Room_Env.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/python/Room_Env.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="196">
-              <caret line="372" column="59" selection-start-line="372" selection-start-column="59" selection-end-line="372" selection-end-column="59" />
+            <state relative-caret-position="202">
+              <caret line="345" column="61" selection-start-line="345" selection-start-column="61" selection-end-line="345" selection-end-column="61" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
@@ -37,13 +37,18 @@
       <file leaf-file-name="rl_model.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/python/rl_model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="102">
-              <caret line="6" column="21" selection-start-line="6" selection-start-column="21" selection-end-line="6" selection-end-column="21" />
+            <state relative-caret-position="242">
+              <caret line="257" column="18" lean-forward="true" selection-start-line="257" selection-start-column="18" selection-end-line="257" selection-end-column="18" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
               </folding>
             </state>
           </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Q_params.txt" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/Data/Roomba_6/Q_params.txt">
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
       <file leaf-file-name="LightBumperTestCode.py" pinned="false" current-in-tab="false">
@@ -72,10 +77,11 @@
       <file leaf-file-name="exploration.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/python/exploration.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="476">
-              <caret line="169" column="20" lean-forward="true" selection-start-line="169" selection-start-column="20" selection-end-line="169" selection-end-column="20" />
+            <state relative-caret-position="191">
+              <caret line="122" column="29" lean-forward="true" selection-start-line="122" selection-start-column="29" selection-end-line="122" selection-end-column="29" />
               <folding>
                 <element signature="e#0#22#0" expanded="true" />
+                <element signature="e#6191#6451#0" />
               </folding>
             </state>
           </provider>
@@ -89,15 +95,6 @@
               <folding>
                 <element signature="e#0#32#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="cum_reward.txt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Data/Roomba_2/cum_reward.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="68">
-              <caret line="4" column="35" selection-start-line="4" selection-start-column="35" selection-end-line="4" selection-end-column="35" />
             </state>
           </provider>
         </entry>
@@ -125,8 +122,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>grid_size</find>
-      <find>wrote</find>
       <find>global_p</find>
       <find>prob_obs</find>
       <find>map_coverage</find>
@@ -155,6 +150,8 @@
       <find>bonus</find>
       <find>angle_set</find>
       <find>Logger</find>
+      <find>actor</find>
+      <find>log</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -234,6 +231,12 @@
             <path>
               <item name="RL-based-multi-robot-exploration" type="b2602c69:ProjectViewProjectNode" />
               <item name="RL-based-multi-robot-exploration" type="462c0819:PsiDirectoryNode" />
+              <item name="Data" type="462c0819:PsiDirectoryNode" />
+              <item name="Roomba_6" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="RL-based-multi-robot-exploration" type="b2602c69:ProjectViewProjectNode" />
+              <item name="RL-based-multi-robot-exploration" type="462c0819:PsiDirectoryNode" />
               <item name="python" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -264,8 +267,8 @@
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="D:\MyProjects\ECE8040\RL-based-multi-robot-exploration\Data\Roomba_4" />
       <recent name="D:\MyProjects\ECE8040\RL-based-multi-robot-exploration\Data\Roomba_6" />
+      <recent name="D:\MyProjects\ECE8040\RL-based-multi-robot-exploration\Data\Roomba_4" />
       <recent name="D:\MyProjects\ECE8040\RL-based-multi-robot-exploration\Data\Roomba_5" />
     </key>
   </component>
@@ -449,17 +452,17 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="1" />
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/python/exploration.py</url>
+          <line>68</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+      <option name="time" value="2" />
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$USER_HOME$/.PyCharmCE2018.1/system/python_stubs/-1476723290/numpy/random/mtrand.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="2178" column="4" selection-start-line="2178" selection-start-column="4" selection-end-line="2178" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/AppData/Local/Programs/Python/Python35/Lib/site-packages/serial/serialjava.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="8">
@@ -722,6 +725,12 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Data/Roomba_3/Bonus.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Data/Roomba_3/Q_params.txt">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/python/RoombaCI_lib.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="238">
@@ -729,18 +738,8 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Data/Roomba_3/Bonus.txt">
+    <entry file="file://$PROJECT_DIR$/Data/Roomba_6/Q_params.txt">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/python/exploration.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="476">
-          <caret line="169" column="20" lean-forward="true" selection-start-line="169" selection-start-column="20" selection-end-line="169" selection-end-column="20" />
-          <folding>
-            <element signature="e#0#22#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Roomba-Tests/LightBumperTestCode.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -751,21 +750,29 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/python/rl_model.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="6" column="21" selection-start-line="6" selection-start-column="21" selection-end-line="6" selection-end-column="21" />
+        <state relative-caret-position="242">
+          <caret line="257" column="18" lean-forward="true" selection-start-line="257" selection-start-column="18" selection-end-line="257" selection-end-column="18" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Data/Roomba_3/Q_params.txt">
-      <provider selected="true" editor-type-id="text-editor" />
+    <entry file="file://$PROJECT_DIR$/python/exploration.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="191">
+          <caret line="122" column="29" lean-forward="true" selection-start-line="122" selection-start-column="29" selection-end-line="122" selection-end-column="29" />
+          <folding>
+            <element signature="e#0#22#0" expanded="true" />
+            <element signature="e#6191#6451#0" />
+          </folding>
+        </state>
+      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/python/Room_Env.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="196">
-          <caret line="372" column="59" selection-start-line="372" selection-start-column="59" selection-end-line="372" selection-end-column="59" />
+        <state relative-caret-position="202">
+          <caret line="345" column="61" selection-start-line="345" selection-start-column="61" selection-end-line="345" selection-end-column="61" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>
